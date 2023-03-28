@@ -9,8 +9,8 @@
 			</div>
 			<div class="header-ct">
 				<div class="header-ct-title">
-					<span>青海巡地学旅游</span>
-					<div class="header-ct-warning">平台高峰预警信息</div>
+					<span>青海巡地学旅游系统</span>
+					<!-- <div class="header-ct-warning">平台高峰预警信息</div> -->
 				</div>
 			</div>
 			<div class="header-rg">
