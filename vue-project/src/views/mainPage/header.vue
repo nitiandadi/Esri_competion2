@@ -1,35 +1,35 @@
 <template>
 	<div class="dataScreen-container">
-		<div class="dataScreen" ref="dataScreenRef">
-			<div class="dataScreen-header">
-				<div class="header-lf">
-					<span class="header-vistors">游客管理</span>
-					<span class="header-facility">设施管理</span>
-					<span class="header-science">科普管理</span>
-				</div>
-				<div class="header-ct">
-					<div class="header-ct-title">
-						<span>青海巡地学旅游后台管理系统</span>
-						<div class="header-ct-warning">平台高峰预警信息</div>
-					</div>
-				</div>
-				<div class="header-rg">
-					<span class="header-download">景点管理</span>
-					<span class="header-feedback">反馈管理</span>
-					<span class="header-protection">景点保护</span>
+		<!-- <div class="dataScreen" ref="dataScreenRef"> -->
+		<div class="dataScreen-header">
+			<div class="header-lf">
+				<span class="header-vistors">游客管理</span>
+				<span class="header-facility">设施管理</span>
+				<span class="header-science">科普管理</span>
+			</div>
+			<div class="header-ct">
+				<div class="header-ct-title">
+					<span>青海巡地学旅游</span>
+					<div class="header-ct-warning">平台高峰预警信息</div>
 				</div>
 			</div>
-			<div class="dataScreen-main">
+			<div class="header-rg">
+				<span class="header-download">景点管理</span>
+				<span class="header-feedback">反馈管理</span>
+				<span class="header-protection">景点保护</span>
 			</div>
 		</div>
-		<InitView />
+		<div class="dataScreen-main">
+			<InitView />
+
+		</div>
+		<!-- </div> -->
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
-import { useTime } from "@/hooks/useTime";
 import InitView from "./InitView.vue";
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
@@ -58,19 +58,6 @@ const resize = () => {
 	}
 };
 
-// 获取当前时间
-const { nowTime } = useTime();
-let timer: any
-let time: Ref<string> = ref(nowTime.value);
-timer = setInterval(() => {
-	time.value = useTime().nowTime.value;
-}, 1000);
-
-// 销毁时触发
-onBeforeUnmount(() => {
-	window.removeEventListener("resize", resize);
-	clearInterval(timer!);
-});
 </script>
 <style lang="scss" scoped>
 @import "../../style/mainPage.scss";

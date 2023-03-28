@@ -1,5 +1,5 @@
 <template>
-  <div id="viewDiv"></div>
+  <div id="viewDiv" scroll="no"></div>
 </template>
 
 <script setup lang="ts">
@@ -13,7 +13,7 @@ onMounted(() => {
   esriconfig.apiKey = "AAPK38a95a31090f4db7af0665c5f4ad34996GXd4nU-HoOwfI68DHDryRWBagf1jRCFl-zOHFdrsipPV6sHAcJXfniZzD7HS8BB";
   const webmap = new WebMap({
     portalItem: { // autocasts as new PortalItem()
-      id: "5d8067a7969f4c58afe196046fe30b91"
+      id: "5d8067a7969f4c58afe196046fe30b91",
     },
     // basemap: "streets"
   });
@@ -31,11 +31,16 @@ onMounted(() => {
       wkid: 4326
     }
   });
+  
 });
 </script>
 
 <style scoped>
 #viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 </style>
