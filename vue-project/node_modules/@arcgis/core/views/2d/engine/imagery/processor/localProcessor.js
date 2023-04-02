@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{setMultipleImageTextures as t,setCoordsAndTransforms as n}from"./utils.js";import{ContextType as a}from"../../../../webgl/context-util.js";const e={vsPath:"raster/rfx/vs",fsPath:"raster/rfx/local",attributes:new Map([["a_position",0],["a_texcoord",1]])},o=new Set(["sinh","cosh","tanh","asinh","acosh","atanh"]);function r(t){const{painter:n,rasterFunction:r}=t,{imageCount:s,operationName:i,rasters:u,isOutputRounded:c}=r.parameters;let m=i.toLowerCase();t.context.type===a.WEBGL1&&o.has(m)&&(m=`polyfill${m}`);const p=[m];2===s&&p.push("twoImages");const h=u.filter((t=>"Constant"===t.name));return h.length&&(p.push("oneConstant"),2===h.length&&p.push("twoConstant")),c&&p.push("roundOutput"),n.materialManager.getProgram(e,p)}function s(a,e,o){t(a,e,o),n(e);const{domainRange:r}=a.rasterFunction.parameters;e.setUniform2fv("u_domainRange",r)}const i={createProgram:r,bindTextureAndUniforms:s};export{i as default};

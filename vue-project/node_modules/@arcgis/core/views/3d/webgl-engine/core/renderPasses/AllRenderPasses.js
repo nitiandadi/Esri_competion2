@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{c as t}from"../../../../../chunks/vec3f64.js";import{ShaderOutput as s}from"../shaderLibrary/ShaderOutput.js";import{VertexNormalPassParameters as i,VertexNormalDrawParameters as r}from"../shaderLibrary/attributes/VertexNormal.glsl.js";class e extends i{constructor(){super(...arguments),this.slicePlaneLocalOrigin=t(),this.origin=this.slicePlaneLocalOrigin}}class a extends r{}var o;!function(t){t[t.Material=0]="Material",t[t.ShadowMap=1]="ShadowMap",t[t.Highlight=2]="Highlight"}(o||(o={}));class h extends e{constructor(){super(...arguments),this.identifier=o.Material,this.output=s.Color,this.transparent=!1,this.integratedMesh=!1}}class n extends e{constructor(){super(...arguments),this.identifier=o.ShadowMap}}class c extends e{constructor(){super(...arguments),this.identifier=o.Highlight}}export{a as DrawParameters,c as HighlightPassParameters,h as MaterialPassParameters,e as PassParameters,o as RenderPassIdentifier,n as ShadowMapPassParameters};

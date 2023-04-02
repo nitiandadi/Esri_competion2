@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+class t{constructor(t){this._notify=t,this._accessed=[],this._handles=[],this._observerObject=new s(this._notify),e.register(this,this._observerObject)}destroy(){this._accessed.length=0,this._observerObject?.destroy(),this.clear(),e.unregister(this)}onObservableAccessed(t){const s=this._accessed;s.includes(t)||s.push(t)}onTrackingEnd(){const t=this._handles,s=this._accessed,e=this._observerObject;for(let i=0;i<s.length;++i)t.push(s[i].observe(e));s.length=0}clear(){const t=this._handles;for(let s=0;s<t.length;++s)t[s].remove();t.length=0}}class s{constructor(t){this._notify=t,this._invalidCount=0,this.destroyed=!1}onInvalidated(){this._invalidCount++}onCommitted(){if(this.destroyed)return;const t=this._invalidCount;if(1===t)return this._invalidCount=0,void this._notify();this._invalidCount=t>0?t-1:0}destroy(){this.destroyed=!0,this._notify=i}}const e=new FinalizationRegistry((t=>{t.destroy()}));function i(){}export{t as SimpleTrackingTarget};

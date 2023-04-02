@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{_ as r}from"../../../chunks/tslib.es6.js";import{property as t}from"../../../core/accessorSupport/decorators/property.js";import"../../../core/accessorSupport/ensureType.js";import"../../../core/arrayUtils.js";import{subclass as s}from"../../../core/accessorSupport/decorators/subclass.js";import e from"./BaseFunctionArguments.js";var o;let i=o=class extends e{constructor(){super(...arguments),this.visibleBandID=0,this.infraredBandID=1,this.scientificOutput=!1}clone(){const{visibleBandID:r,infraredBandID:t,scientificOutput:s}=this;return new o({visibleBandID:r,infraredBandID:t,scientificOutput:s})}};r([t({json:{write:!0}})],i.prototype,"visibleBandID",void 0),r([t({json:{write:!0}})],i.prototype,"infraredBandID",void 0),r([t({json:{write:!0}})],i.prototype,"scientificOutput",void 0),i=o=r([s("esri.layers.support.rasterFunctions.NDVIFunctionArguments")],i);const n=i;export{n as default};

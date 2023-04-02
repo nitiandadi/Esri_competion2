@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{isSome as e,isNone as t}from"../../../core/maybe.js";class l{constructor(e,t,l){this.pixelBlock=e,this.extent=t,this.originalPixelBlock=l}get width(){return e(this.pixelBlock)?this.pixelBlock.width:0}get height(){return e(this.pixelBlock)?this.pixelBlock.height:0}render(e){const l=this.pixelBlock;if(t(l))return;const i=this.filter({extent:this.extent,pixelBlock:this.originalPixelBlock??l});if(t(i.pixelBlock))return;i.pixelBlock.maskIsAlpha&&(i.pixelBlock.premultiplyAlpha=!0);const o=i.pixelBlock.getAsRGBA(),s=e.createImageData(i.pixelBlock.width,i.pixelBlock.height);s.data.set(o),e.putImageData(s,0,0)}getRenderedRasterPixels(){const e=this.filter({extent:this.extent,pixelBlock:this.pixelBlock});return t(e.pixelBlock)?null:(e.pixelBlock.maskIsAlpha&&(e.pixelBlock.premultiplyAlpha=!0),{width:e.pixelBlock.width,height:e.pixelBlock.height,renderedRasterPixels:new Uint8Array(e.pixelBlock.getAsRGBA().buffer)})}}export{l as default};
