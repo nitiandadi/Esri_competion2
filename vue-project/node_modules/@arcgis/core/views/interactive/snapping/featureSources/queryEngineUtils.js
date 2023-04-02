@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{isSome as e}from"../../../../core/maybe.js";import{f as t}from"../../../../chunks/vec3f64.js";import{asSnappingPoint as n}from"../SnappingPoint.js";import{DrapedEdgeSnappingCandidate as r}from"../candidates/DrapedEdgeSnappingCandidate.js";import{EdgeSnappingCandidate as a}from"../candidates/EdgeSnappingCandidate.js";import{VertexSnappingCandidate as d}from"../candidates/VertexSnappingCandidate.js";function o({x:e,y:r,z:a}){return n(t(e,r,a??0))}function i(e,t){switch(e.type){case"edge":return e.draped?new r({edgeStart:o(e.start),edgeEnd:o(e.end),targetPoint:o(e.target),objectId:e.objectId,getGroundElevation:t}):new a({edgeStart:o(e.start),edgeEnd:o(e.end),targetPoint:o(e.target),objectId:e.objectId,isDraped:!1});case"vertex":return new d({targetPoint:o(e.target),objectId:e.objectId,isDraped:!1})}}function p(t){return e(t)&&"3d"===t.type?(e,n,r)=>t.elevationProvider.getElevation(e,n,r??0,t.spatialReference,"ground"):()=>null}export{i as convertSnappingCandidate,p as makeGetGroundElevation};

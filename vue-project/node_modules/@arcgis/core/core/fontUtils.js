@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import e from"../config.js";const t="woff2",r=new Map;async function n(n){const s=o(n);let a=r.get(s);if(a)return a;const i=new FontFace(n.family,`url('${e.fontsUrl}/woff2/${s}.${t}') format('${t}')`),c=document.fonts;return c.has(i)&&"loading"===i.status?i.loaded:(a=i.load(),r.set(s,a),c.add(i),a)}function s(e){if(!e)return"arial-unicode-ms";const t=e.toLowerCase().split(" ").join("-");switch(t){case"serif":return"noto-serif";case"sans-serif":return"arial-unicode-ms";case"monospace":return"ubuntu-mono";case"fantasy":return"cabin-sketch";case"cursive":return"redressed";default:return t}}function o(e){const t=a(e)+i(e);return s(e.family)+(t.length>0?t:"-regular")}function a(e){if(!e.weight)return"";switch(e.weight.toLowerCase()){case"bold":case"bolder":return"-bold"}return""}function i(e){if(!e.style)return"";switch(e.style.toLowerCase()){case"italic":case"oblique":return"-italic"}return""}export{s as getFontFamily,o as getFullyQualifiedFontName,n as loadFont};

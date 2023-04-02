@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{_ as o}from"../../../../chunks/tslib.es6.js";import{JSONSupport as e}from"../../../../core/JSONSupport.js";import{property as t}from"../../../../core/accessorSupport/decorators/property.js";import"../../../../core/accessorSupport/ensureType.js";import"../../../../core/arrayUtils.js";import{subclass as s}from"../../../../core/accessorSupport/decorators/subclass.js";let r=class extends e{constructor(o){super(o),this.hasConflicts=!1,this.moment=null,this.didPost=!1,this.success=!1}};o([t({type:Boolean,json:{write:!0}})],r.prototype,"hasConflicts",void 0),o([t({type:Date,json:{type:Number,write:{writer:(o,e)=>{e.moment=o?o.getTime():null}}}})],r.prototype,"moment",void 0),o([t({type:Boolean,json:{write:!0}})],r.prototype,"didPost",void 0),o([t({type:Boolean,json:{write:!0}})],r.prototype,"success",void 0),r=o([s("esri.rest.versionManagementService.gdbVersion.support.ReconcileResult")],r);const p=r;export{p as default};

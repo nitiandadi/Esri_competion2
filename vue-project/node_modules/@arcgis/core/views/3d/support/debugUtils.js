@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import"../../../geometry.js";import o from"../../../Graphic.js";import"../../../symbols.js";import{isNone as r,isSome as i}from"../../../core/maybe.js";import s from"../../../symbols/PointSymbol3D.js";import e from"../../../symbols/IconSymbol3DLayer.js";import t from"../../../symbols/TextSymbol3DLayer.js";import m from"../../../geometry/Point.js";class h{constructor(o,r,i=""){this.graphics=o,this._symbol=new s({symbolLayers:[new e({material:{color:r},outline:{color:[255,255,255],size:1},resource:{primitive:"circle"}}),new t({text:i,halo:{color:"white",size:1/.75},material:{color:r},size:12})]})}show(i,s){if(r(s))return;this.hide();const e=new m({x:i[0],y:i[1],z:i[2],spatialReference:s});this._graphic=new o({geometry:e,symbol:this._symbol}),this.graphics.add(this._graphic)}hide(){i(this._graphic)&&(this.graphics.remove(this._graphic),this._graphic=null)}}export{h as PointGraphics};

@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{clone as t}from"../lang.js";import{assumeNonNull as e}from"../maybe.js";import{merge as r}from"./utils.js";function o(r){let o=r.constructor.__accessorMetadata__;const c=Object.prototype.hasOwnProperty.call(r.constructor,"__accessorMetadata__");if(o){if(!c){o=Object.create(o);for(const e in o)o[e]=t(o[e]);Object.defineProperty(r.constructor,"__accessorMetadata__",{value:o,enumerable:!1,configurable:!0,writable:!0})}}else o={},Object.defineProperty(r.constructor,"__accessorMetadata__",{value:o,enumerable:!1,configurable:!0,writable:!0});return e(r.constructor.__accessorMetadata__)}function c(t,e){const r=o(t);let c=r[e];return c||(c=r[e]={}),c}function a(t,e,r){o(t)[e]=r}function n(t,e){return r(t,e,u)}const s=/^(?:[^.]+\.)?(?:value|type|(?:json\.type|json\.origins\.[^.]\.type))$/;function u(t){return s.test(t)?"replace":"merge"}export{o as getPropertiesMetadata,c as getPropertyMetadata,n as mergeProperty,a as setPropertyMetadata};

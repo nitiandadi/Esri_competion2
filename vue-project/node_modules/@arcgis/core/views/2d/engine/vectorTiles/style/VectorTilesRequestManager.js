@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import t from"../../../../../request.js";import{clone as r}from"../../../../../core/lang.js";import{getOrCreateMapValue as e}from"../../../../../core/MapUtils.js";import{onAbort as o,isAborted as s}from"../../../../../core/promiseUtils.js";class i{constructor(t){this._tileUrl=t,this._promise=null,this._abortController=null,this._abortOptions=[]}getData(t){null===this._promise&&(this._abortController=new AbortController,this._promise=this._makeRequest(this._tileUrl,this._abortController.signal));const e=this._abortOptions;return e.push(t),o(t,(()=>{e.every((t=>s(t)))&&this._abortController.abort()})),this._promise.then((t=>r(t)))}async _makeRequest(r,e){const{data:o}=await t(r,{responseType:"array-buffer",signal:e});return o}}const n=new Map;function l(t,r,e,o,s){return a(t.replace(/\{z\}/gi,r.toString()).replace(/\{y\}/gi,e.toString()).replace(/\{x\}/gi,o.toString()),s)}function a(t,r){return e(n,t,(()=>new i(t))).getData(r).then((r=>(n.delete(t),r))).catch((r=>{throw n.delete(t),r}))}export{l as request};

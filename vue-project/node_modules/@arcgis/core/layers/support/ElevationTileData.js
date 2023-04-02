@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{isNone as a,unwrap as t,isSome as s}from"../../core/maybe.js";class e{constructor(a,t,s,e){this._hasNoDataValues=null,this._minValue=null,this._maxValue=null,"pixelData"in a?(this.values=a.pixelData,this.width=a.width,this.height=a.height,this.noDataValue=a.noDataValue):(this.values=a,this.width=t,this.height=s,this.noDataValue=e)}get hasNoDataValues(){if(a(this._hasNoDataValues)){const a=this.noDataValue;this._hasNoDataValues=this.values.includes(a)}return this._hasNoDataValues}get minValue(){return this._ensureBounds(),t(this._minValue)}get maxValue(){return this._ensureBounds(),t(this._maxValue)}_ensureBounds(){if(s(this._minValue))return;const{noDataValue:a,values:t}=this;let e=1/0,i=-1/0,h=!0;for(const s of t)s===a?this._hasNoDataValues=!0:(e=s<e?s:e,i=s>i?s:i,h=!1);h?(this._minValue=0,this._maxValue=0):(this._minValue=e,this._maxValue=i>-3e38?i:0)}}export{e as ElevationTileData};

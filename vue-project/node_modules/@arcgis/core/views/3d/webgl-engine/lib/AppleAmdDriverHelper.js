@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{BufferObject as r}from"../../../webgl/BufferObject.js";import{Usage as e,BufferType as t,PrimitiveType as i,DataType as s}from"../../../webgl/enums.js";class n{constructor(r){this._rctx=r,this._indexBuffer=this._createIndexbuffer(),this._program=this._createProgram()}_createProgram(){const r="\n    void main(void) {\n      gl_Position = vec4(0.0, 0.0, float(gl_VertexID)-2.0, 1.0);\n    }",e="\n    void main(void) {\n      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n    }";return this._rctx.programCache.acquire(r,e,new Map([]))}_createIndexbuffer(){return r.createIndex(this._rctx,e.STATIC_DRAW,new Uint32Array([0]))}resetIndicesType(){this._program.compiled&&this._indexBuffer&&(this._rctx.bindVAO(null),this._rctx.useProgram(this._program),this._rctx.bindBuffer(this._indexBuffer,t.ELEMENT_ARRAY_BUFFER),this._rctx.drawElements(i.POINTS,1,s.UNSIGNED_INT,0))}dispose(){this._program.dispose(),this._indexBuffer.dispose()}}export{n as AppleAmdDriverHelper};

@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.26/esri/copyright.txt for details.
+*/
+import{isNone as t}from"../../../../../core/maybe.js";import{dragGraphic as e,resetGraphic as n}from"../../../../interactive/dragEventPipeline.js";function r(t,r,a,c){const i=t.graphic,s=(t,e)=>r({action:t,graphic:i,dxScreen:e.screenDeltaX,dyScreen:e.screenDeltaY});return a(((t,r,a)=>(r.next((t=>("start"===t.action&&s("start",t),t))).next(e(i,c)).next((t=>{switch(t.action){case"start":case"update":(t.translationX||t.translationY||t.translationZ)&&s("update",t);break;case"end":s("end",t)}return t})),{steps:r,cancel:a=a.next(n(i)).next((t=>(s("end",{screenDeltaX:0,screenDeltaY:0}),t)))})))}function a(e){if(t(e)||"polyline"!==e.type&&"polygon"!==e.type)return 0;const n=("polyline"===e.type?e.paths:e.rings)[0];if(!n||n.length<2)return 0;const r=n[0],a=n[1];return Math.atan2(a[1]-r[1],a[0]-r[0])}function c(e){if(t(e)||t(e.axis))return 1;const{mapStart:n,mapEnd:r,axis:a}=e,c=[r.x-n.x,r.y-n.y];return c[0]*a[0]+c[1]*a[1]>0?1:-1}export{c as axisConstrainedDragSign,r as createGraphicMoveDragPipeline,a as shapeOrientation};
