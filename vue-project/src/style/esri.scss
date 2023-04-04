@@ -79,3 +79,18 @@ h2.esri-widget__heading{
 .esri-widget table tr td, .esri-widget table tr th{
   color: #92c3e4;
 }
+
+/* 地图样式修改 */
+.esri-view .esri-view-root{
+  position: absolute;
+  flex: 1 1 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.esri-view-user-storage{
+  background-color: rgba(255, 255, 255, 0); /* 透明背景 */
+  z-index: 2;
+  pointer-events: none;
+  width: 100%;
+}

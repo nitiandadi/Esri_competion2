@@ -14,17 +14,16 @@
 					</div>
 				</div>
 				<div class="header-rg">
-					<span class="header-download">景点管理</span>
+					<span class="header-download" v-on:click="router.push('/home/AttractionManage')">景点管理</span>
 					<span class="header-feedback">反馈管理</span>
 					<span class="header-protection">景点保护</span>
 				</div>
 			</div>
 		</div>
-		<!-- <div class="">
-			<RouterView></RouterView>
-		</div>	 -->
 		<div>
-			<InitView/>
+			<InitView>
+				<RouterView></RouterView>
+			</InitView>
 		</div>
 	</div>
 </template>
@@ -45,7 +44,6 @@ onMounted(() => {
 	}
 	window.addEventListener("resize", resize);
 });
-
 
 const getScale = (width = 1920, height = 1080) => {
 	let ww = window.innerWidth / width;
