@@ -12,6 +12,13 @@ const router = createRouter({
       path: '/home',
       name: 'home',
       component: ()=>import('../views/mainPage/header.vue'),
+      children: [
+        {
+          path: 'AttractionManage',
+          name: 'AttractionManage',
+          component: ()=>import('../components/AttractionManage.vue'),
+        },
+      ]
     },
     {
       path: '/login',

@@ -1,5 +1,6 @@
 <template>
   <div id="viewDiv">
+    <slot></slot>
   </div>
 </template>
 
@@ -11,7 +12,6 @@ import MapView from "@arcgis/core/views/MapView.js";
 import esriconfig from "@arcgis/core/config.js";
 import PopupTemplate from "@arcgis/core/PopupTemplate.js";
 import styles from "../../style/esri.scss?inline";
-
 
 onMounted(() => {
   esriconfig.apiKey = "AAPK73d1f032eb4243ecb5e8a63c99c39fd12BNLILjg2lhqCNOKDvIHP_4FVEzPIt6cRUZRtNWw7oBST4fXE3NBOaq7XcI76cXz";
