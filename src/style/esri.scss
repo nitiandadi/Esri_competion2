@@ -1,0 +1,81 @@
+/* popup样式修改 */
+.esri-popup {
+    width: 460px;
+    height: 260px;
+    z-index: 2;
+    background-color: #444343;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #040627 ;
+    position: relative;
+    top: 50%;
+    .esri-feature-element-info{
+      height: 0px;
+    }
+    &--is-docked-top-left,
+    &--is-docked-top-right,
+    &--is-docked-bottom-left,
+    &--is-docked-bottom-right {
+      .esri-popup__main-container {
+                  max-height: 100%;
+      }
+    }
+    &__header {
+      height: 40px;
+      line-height: 50px;
+      font-size: 20px;
+      color: #ffffff;
+      &-buttons {
+        height: 30px;
+        position: relative;
+      }
+    }
+    &__header-title {
+      margin-block: 3px;
+      overflow: visible;  /* 让标题文字在 title 区域外也可以显示 */
+      white-space: normal; /* 让标题文字换行，避免过长的标题被截断 */
+      height: 32px; /* 设置 title 高度 */
+      width: 100%; /* 让 title 宽度自适应 */
+      font-size: 1.5em; /* 改变标题字体大小 */
+      font-weight: bold; /* 加粗字体 */
+      font-style: italic; /* 斜体字 */
+
+    }
+    &__content {
+      // background-color: #0f0;
+    
+      margin: 0;
+      p {
+        font-family: "Microsoft YaHei", sans-serif;
+      }
+      height: calc(100% - 100px);   
+    }
+    &__footer {
+      // background-color: #00f;
+      height: 30px;
+    }
+    &__main-container {
+      background-color: hwb(222 25% 52%); 
+      border-radius: 6px; /* 添加边角弧度 */
+      background-image: linear-gradient(-90deg, #182940 0%, #115687 100%); /* 添加渐变 */
+    }
+    &__navigation{
+      background-image: linear-gradient(-90deg, #182940 0%, #1d415a 100%);
+      border-radius: 6px; /* 添加边角弧度 */
+    }
+    &__header-container--button:hover,
+    &__button:hover{
+      border-radius: 6px; /* 添加边角弧度 */
+      background-color: #5e6b86; /* 鼠标悬浮时的背景颜色 */
+      border-color: #244f86; /* 鼠标悬浮时的边框颜色 */
+      transition: background-color 0.3s ease-in-out; /* 添加过渡效果 */
+    }
+}
+h2.esri-widget__heading{
+  color: white;
+}
+.esri-feature__content-element:last-child{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+}
+.esri-widget table tr td, .esri-widget table tr th{
+  color: #92c3e4;
+}
