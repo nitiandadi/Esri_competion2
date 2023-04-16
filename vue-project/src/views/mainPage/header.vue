@@ -3,7 +3,7 @@
 		<div class="dataScreen" ref="dataScreenRef">
 			<div class="dataScreen-header">
 				<div class="header-lf">
-					<span class="header-vistors">游客管理</span>
+					<span class="header-vistors" v-on:click="router.push('/home/VisitorManage')">游客管理</span>
 					<span class="header-facility">设施管理</span>
 					<span class="header-science">科普管理</span>
 				</div>
@@ -21,9 +21,9 @@
 			</div>
 		</div>
 		<div>
-			<InitView>
-				<RouterView></RouterView>
-			</InitView>
+			<baseMapView ref="baseMap">
+				<RouterView @addChinaLayer="addChinaLayer"></RouterView>
+			</baseMapView>
 		</div>
 	</div>
 </template>
@@ -31,10 +31,12 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
-import InitView from "./InitView.vue";
+import baseMapView from "./baseMapView.vue";
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
-
+const baseMap = ref({
+	addChinaLayer: () => {}
+});
 onMounted(() => {
 	// 初始化时为外层盒子加上缩放属性，防止刷新界面时就已经缩放
 	if (dataScreenRef.value) {
@@ -57,12 +59,14 @@ const resize = () => {
 		dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
 	}
 };
-
-
+function addChinaLayer() {
+	baseMap.value.addChinaLayer();
+}
 // 销毁时触发
 onBeforeUnmount(() => {
 	window.removeEventListener("resize", resize);
 });
+
 </script>
 <style lang="scss" scoped>
 @import "../../style/mainPage.scss";

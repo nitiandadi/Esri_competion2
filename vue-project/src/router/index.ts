@@ -18,6 +18,11 @@ const router = createRouter({
           name: 'AttractionManage',
           component: () => import('../components/AttractionManage.vue'),
         },
+        {
+          path: 'VisitorManage',
+          name: 'VisitorManage',
+          component: () => import('../components/VisitorManage.vue'),
+        },
       ]
     },
     {

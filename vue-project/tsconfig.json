@@ -8,9 +8,9 @@
     },
     "preserveValueImports": false,
     "lib": ["dom", "esnext"],
-    "ignoreDeprecations": "5.0"
+    "ignoreDeprecations": "5.0",
+    "outDir": "dist",
   },
-
   "references": [
     {
       "path": "./tsconfig.node.json"
