@@ -12,7 +12,6 @@
     "target": "es2015",
     "ignoreDeprecations": "5.0",
  
-    "outDir": "dist",
   },
   "references": [
     {
