@@ -8,7 +8,9 @@
     },
     "preserveValueImports": false,
     "lib": ["dom", "esnext"],
-    "ignoreDeprecations": "5.0"
+    // "typeRoots": ["./node_modules/@types", "./src/types"],
+    "target": "es2015",
+    "ignoreDeprecations": "5.0",
   },
 
   "references": [

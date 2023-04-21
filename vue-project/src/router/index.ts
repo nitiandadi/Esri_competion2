@@ -16,7 +16,7 @@ const router = createRouter({
         {
           path: 'AttractionManage',
           name: 'AttractionManage',
-          component: ()=>import('../components/AttractionManage.vue'),
+          component: ()=>import('../views/attractionPages/AttractionManage.vue'),
         },
       ]
     },

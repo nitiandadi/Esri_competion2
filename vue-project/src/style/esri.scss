@@ -1,6 +1,6 @@
 /* popup样式修改 */
 .esri-popup {
-    width: 460px;
+    width: 380px;
     height: 260px;
     z-index: 2;
     background-color: #444343;
@@ -80,6 +80,16 @@ h2.esri-widget__heading{
   color: #92c3e4;
 }
 
+.esri-view-width-less-than-medium 
+.esri-popup__main-container{
+  width: 100%;
+}
+
+.esri-view-width-medium 
+.esri-popup__main-container{
+  width: 100%;
+}
+
 /* 地图样式修改 */
 .esri-view .esri-view-root{
   position: absolute;
@@ -94,3 +104,40 @@ h2.esri-widget__heading{
   pointer-events: none;
   width: 100%;
 }
+
+/* 时间滑块样式修改 */
+.esri-slider{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  &__tick-label{
+    color: #92c3e4;
+  }
+  &__ticks{
+    max-height: 0;
+  }
+}
+.esri-time-slider{
+  
+  &__slider{
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  }
+  &__row{
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    color: #92c3e4;
+  }
+  &__time-extent-group {
+    color: #ffffff;
+  }
+  &__previous-button,
+  &__animation-button,
+  &__next-button
+  {
+    background-color:  #92c3e4 ;
+  }
+  &__previous,
+  &__animation,
+  &__next
+  {
+    height: 25px;
+  }
+}
+
