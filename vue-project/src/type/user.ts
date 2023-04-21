@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import type { IRole, IRoleWithAuth } from "@/type/role";
+=======
+import {IRole, IRoleWithAuth} from "@/type/role";
+>>>>>>> origin/baimain
 
 // 用户接口
 export interface IUser {

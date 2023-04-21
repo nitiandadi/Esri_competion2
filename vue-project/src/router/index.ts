@@ -11,12 +11,21 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: ()=>import('../views/mainPage/header.vue'),
+      component: () => import('../views/mainPage/header.vue'),
       children: [
         {
           path: 'AttractionManage',
           name: 'AttractionManage',
+<<<<<<< HEAD
           component: ()=>import('../views/attractionPages/AttractionManage.vue'),
+=======
+          component: () => import('../components/AttractionManage.vue'),
+        },
+        {
+          path: 'VisitorManage',
+          name: 'VisitorManage',
+          component: () => import('../components/VisitorManage.vue'),
+>>>>>>> origin/baimain
         },
       ]
     },
@@ -30,5 +39,13 @@ const router = createRouter({
     }
   ]
 })
-
+router.beforeEach((to, from, next) => {
+  const token: string | null = localStorage.getItem("token")
+  if (!token && to.path !== "/login") {
+    next("/login")
+  }
+  else {
+    next()
+  }
+})
 export default router
