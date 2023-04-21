@@ -3,7 +3,7 @@
 		<div class="dataScreen" ref="dataScreenRef">
 			<div class="dataScreen-header">
 				<div class="header-lf">
-					<span class="header-vistors">游客管理</span>
+					<span class="header-vistors" v-on:click="router.push('/home/VisitorManage')">游客管理</span>
 					<span class="header-facility">设施管理</span>
 					<span class="header-science">科普管理</span>
 				</div>
