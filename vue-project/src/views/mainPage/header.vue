@@ -22,7 +22,7 @@
 		</div>
 		<div>
 			<baseMapView ref="baseMap">
-				<RouterView @addChinaLayer="addChinaLayer"></RouterView>
+				<RouterView></RouterView>
 			</baseMapView>
 		</div>
 	</div>
@@ -35,7 +35,7 @@ import baseMapView from "./baseMapView.vue";
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
 const baseMap = ref({
-	addChinaLayer: () => {}
+	addChinaLayer: () => { }
 });
 onMounted(() => {
 	// 初始化时为外层盒子加上缩放属性，防止刷新界面时就已经缩放
@@ -59,9 +59,9 @@ const resize = () => {
 		dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
 	}
 };
-function addChinaLayer() {
-	baseMap.value.addChinaLayer();
-}
+// function addChinaLayer() {
+// 	baseMap.value.addChinaLayer();
+// }
 // 销毁时触发
 onBeforeUnmount(() => {
 	window.removeEventListener("resize", resize);

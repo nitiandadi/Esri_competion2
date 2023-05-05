@@ -1,23 +1,24 @@
 "use strict";
 exports.__esModule = true;
+exports.worldLayer = void 0;
 var ClassBreaksRenderer_1 = require("@arcgis/core/renderers/ClassBreaksRenderer");
 var SimpleMarkerSymbol_1 = require("@arcgis/core/symbols/SimpleMarkerSymbol");
 var FeatureLayer_1 = require("@arcgis/core/layers/FeatureLayer");
 var PopupTemplate_1 = require("@arcgis/core/PopupTemplate");
 var classBreaksRenderer = new ClassBreaksRenderer_1["default"]({
-    field: "Peo_Number",
+    field: "number",
     classBreakInfos: [{
             minValue: 0,
             maxValue: 6,
             symbol: new SimpleMarkerSymbol_1["default"]({
-                size: 5,
+                size: 3,
                 color: "red"
             })
         }, {
             minValue: 6,
             maxValue: 70,
             symbol: new SimpleMarkerSymbol_1["default"]({
-                size: 10,
+                size: 6,
                 color: "red"
             })
         },
@@ -25,7 +26,7 @@ var classBreaksRenderer = new ClassBreaksRenderer_1["default"]({
             minValue: 70,
             maxValue: 150,
             symbol: new SimpleMarkerSymbol_1["default"]({
-                size: 15,
+                size: 9,
                 color: "red"
             })
         },
@@ -33,14 +34,14 @@ var classBreaksRenderer = new ClassBreaksRenderer_1["default"]({
             minValue: 150,
             maxValue: 200,
             symbol: new SimpleMarkerSymbol_1["default"]({
-                size: 20,
+                size: 12,
                 color: "red"
             })
         }, {
             minValue: 200,
             maxValue: 277,
             symbol: new SimpleMarkerSymbol_1["default"]({
-                size: 25,
+                size: 15,
                 color: "red"
             })
         },
@@ -48,42 +49,59 @@ var classBreaksRenderer = new ClassBreaksRenderer_1["default"]({
             minValue: 277,
             maxValue: 400,
             symbol: new SimpleMarkerSymbol_1["default"]({
-                size: 30,
+                size: 18,
+                color: "red"
+            })
+        },
+        {
+            minValue: 400,
+            maxValue: 700,
+            symbol: new SimpleMarkerSymbol_1["default"]({
+                size: 21,
                 color: "red"
             })
         },
     ]
 });
-var sourceLayer = new FeatureLayer_1["default"]({
-    url: 'https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E6%97%85%E6%B8%B8%E4%BA%BA%E6%95%B0/FeatureServer',
-    renderer: classBreaksRenderer
+var chinaLayer = new FeatureLayer_1["default"]({
+    url: 'https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E6%97%B6%E9%97%B4%E6%97%85%E6%B8%B8%E4%BA%BA%E6%95%B0/FeatureServer'
 });
-sourceLayer.popupTemplate = new PopupTemplate_1["default"]({
+var worldLayer = new FeatureLayer_1["default"]({
+    url: 'https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%85%A8%E7%90%83%E4%BA%BA%E6%95%B0/FeatureServer'
+});
+exports.worldLayer = worldLayer;
+chinaLayer.popupTemplate = new PopupTemplate_1["default"]({
     title: "游客人数",
     content: [{
             type: "fields",
             fieldInfos: [
                 {
-                    fieldName: 'Province',
-                    label: 'Province'
+                    fieldName: 'province',
+                    label: '省份'
                 },
                 {
-                    fieldName: 'Capital',
-                    label: 'Capital'
+                    fieldName: 'capital',
+                    label: '省会'
                 },
                 {
-                    fieldName: 'Longitude',
-                    label: 'Longitude'
+                    fieldName: 'longitude',
+                    label: '经度'
                 },
                 {
-                    fieldName: 'Latitude',
-                    label: 'Latitude'
+                    fieldName: 'latitude',
+                    label: '纬度'
                 },
                 {
-                    fieldName: 'Peo_Number',
-                    label: 'Peo_Number'
+                    fieldName: 'number',
+                    label: '人数'
+                },
+                {
+                    fieldName: 'year',
+                    label: '年份'
                 },
             ]
         }]
 });
-exports["default"] = sourceLayer;
+chinaLayer.definitionExpression = "year = 2020";
+chinaLayer.outFields = ["*"];
+exports["default"] = chinaLayer;

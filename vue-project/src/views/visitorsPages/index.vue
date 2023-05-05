@@ -9,48 +9,49 @@
       <el-row :gutter="20" style="height: auto;">
         <el-col :span="24" style="padding: 5px;">
           <el-text class="mx-1" tag="i" size="large">查看游客来源</el-text>
-          <el-switch v-model="value1" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" @change="onAddMap" />
+          <el-switch v-model="switchList[0].value" class="mt-2" style="margin-left: 24px" inline-prompt
+            :active-icon="Check" :inactive-icon="Close" @change="checkSwitch(0)" />
         </el-col>
         <el-col :span="24" style="padding: 5px;">
-          <el-text class="mx-1" tag="i" size="large">查看用户分布</el-text>
-          <el-switch v-model="value2" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" />
+          <el-text class="mx-1" tag="i" size="large">管理游客信息</el-text>
+          <el-switch v-model="switchList[1].value" class="mt-2" style="margin-left: 24px" inline-prompt
+            :active-icon="Check" :inactive-icon="Close" @change="checkSwitch(1)" />
         </el-col>
         <el-col :span="24" style="padding: 5px;">
           <el-text class="mx-1" tag="i" size="large">游客类型分类</el-text>
-          <el-switch v-model="value3" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" />
+          <el-switch v-model="switchList[2].value" class="mt-2" style="margin-left: 24px" inline-prompt
+            :active-icon="Check" :inactive-icon="Close" @change="checkSwitch(2)" />
         </el-col>
       </el-row>
     </el-card>
   </transition>
-  <visitor-source v-show="value1" />
+  <visitor-source v-show="switchList[0].value" :visiable="switchList[0].value" />
+  <visitorInformation v-show="switchList[1].value" />
 </template>
   
 <script setup lang="ts">
 import { ElText, ElSwitch, ElRow, ElCol, ElCard, ElButton } from 'element-plus';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive, watch, inject } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
-import visitorSource from '../views/visitorsPages/visitorSource.vue'
+import visitorSource from './components/visitorSource.vue'
+import visitorInformation from './components/visitorInFormation.vue';
 const value1 = ref(false)
 const value2 = ref(false)
 const value3 = ref(false)
+
+let switchList = [value1, value2, value3];
+function checkSwitch(index: number) {
+  for (let i = 0; i < switchList.length; i++) {
+    if (i !== index) {
+      switchList[i].value = false;
+    }
+  }
+}
 const showCard = ref(false)
 // 触发卡片进入动画
 const triggerCardAnimation = () => {
   showCard.value = true;
 };
-//定义触发添加地图事件
-const emit = defineEmits(['addChinaLayer'])
-function onAddMap() {
-  if (value1.value) {
-  console.log(value1.value);
-    emit('addChinaLayer', 'china')
-  }
-}
-// emit('addMap', 'china')
-// 在组件挂载后触发卡片进入动画
 onMounted(() => {
 
   setTimeout(() => {

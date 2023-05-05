@@ -3,3 +3,9 @@ html,body,div{
   padding: 0;
   height: 100%;
 }
+.gray-list{
+  height: 300px;
+}
+.el-select-dropdown{
+  height: 300px;
+}

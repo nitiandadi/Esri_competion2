@@ -21,7 +21,7 @@ const router = createRouter({
         {
           path: 'VisitorManage',
           name: 'VisitorManage',
-          component: () => import('../components/VisitorManage.vue'),
+          component: () => import('../views/visitorsPages/index.vue'),
         },
       ]
     },
