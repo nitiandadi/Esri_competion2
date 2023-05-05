@@ -9,11 +9,10 @@ import { HeatmapRenderer } from '@arcgis/core/renderers';
  */
 
 let heatmapRenderer: __esri.Renderer | null;
-let Timecopylayer: __esri.FeatureLayer;
 
 
 /**定义一个热力层 */
-export function initTimeHeatmap(mapview: __esri.MapView,timefeatureLayer: __esri.FeatureLayer,field: string){
+export function initHeatmap(mapview: __esri.MapView,timefeatureLayer: __esri.FeatureLayer,field: string){
   heatmapRenderer = new HeatmapRenderer({
     field: field,
     colorStops: [
@@ -29,30 +28,31 @@ export function initTimeHeatmap(mapview: __esri.MapView,timefeatureLayer: __esri
     
   });
       
-  Timecopylayer = timefeatureLayer;
   //填充时间热力层
-  Timecopylayer.renderer = heatmapRenderer;
-  //定义时间热力图不可见
-  Timecopylayer.visible = false
+  timefeatureLayer.renderer = heatmapRenderer;
+  //设置时间热力层的不可见
+  timefeatureLayer.visible = false;
   //添加到图层中
-  mapview.map.add(Timecopylayer);
-  return Timecopylayer;
+  mapview.map.add( timefeatureLayer);
+  return  timefeatureLayer;
 }
 
 /**取消热力层 */
-export  function cancelHeatmap(mapview: __esri.MapView) {
+export  function cancelHeatmap(mapview: __esri.MapView,timefeatureLayer: __esri.FeatureLayer) {
   if (heatmapRenderer) {
     heatmapRenderer = null;
-    mapview.map.remove(Timecopylayer);
+    // 将mapview.map中的热力图层移除
+    mapview.map.remove(timefeatureLayer);
+
   } 
 }
 
 /**供外界使用的热力层开关 */
-export function toggleTimeHeatmap(mapview: __esri.MapView,featureLayer: __esri.FeatureLayer,field: string) {
+export function toggleHeatmap(mapview: __esri.MapView,featureLayer: __esri.FeatureLayer,field: string) {
   if (heatmapRenderer) {
-    cancelHeatmap(mapview);
+    cancelHeatmap(mapview,featureLayer);
   } else {
     //使原图层不可见
-    return  initTimeHeatmap(mapview,featureLayer,field);
+    return  initHeatmap(mapview,featureLayer,field);
   }
 }

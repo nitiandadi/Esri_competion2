@@ -54,6 +54,7 @@
       height: 30px;
     }
     &__main-container {
+      max-width: 380px;
       background-color: hwb(222 25% 52%); 
       border-radius: 6px; /* 添加边角弧度 */
       background-image: linear-gradient(-90deg, #182940 0%, #115687 100%); /* 添加渐变 */
@@ -67,6 +68,11 @@
       border-radius: 6px; /* 添加边角弧度 */
       background-color: #5e6b86; /* 鼠标悬浮时的背景颜色 */
       border-color: #244f86; /* 鼠标悬浮时的边框颜色 */
+      transition: background-color 0.3s ease-in-out; /* 添加过渡效果 */
+    }
+    &__pointer-direction{
+      background-color: #244f86;
+      border-color: #244f86;
       transition: background-color 0.3s ease-in-out; /* 添加过渡效果 */
     }
 }
@@ -88,6 +94,11 @@ h2.esri-widget__heading{
 .esri-view-width-medium 
 .esri-popup__main-container{
   width: 100%;
+}
+
+.esri-feature-content{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  color: #92c3e4;
 }
 
 /* 地图样式修改 */
@@ -141,3 +152,65 @@ h2.esri-widget__heading{
   }
 }
 
+
+/* 图例修改 */
+.esri-legend{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  color: #92c3e4;
+  border-radius: 6px; /* 添加边角弧度 */
+  max-height: 150px;
+  max-width: 360px;
+  overflow: hidden;
+  //自定义位置
+  position: relative;
+  bottom: 40%;
+  left: 1.1%;
+  //卡片样式
+  &--card{
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    &__section{
+      padding: 12px 12px 50px 12px;
+    }
+    &__layer-row{
+      height: auto;
+    }
+    &__interval-separators-container{
+      display: none;
+    }
+    &__carousel-title{
+      color: #ffffff;
+      //字体倾斜
+      font-style: italic;
+    }
+    //将图例中的文字放在中间
+    &__layer-caption{
+      text-align: center; 
+      color: #92c3e4;
+    }
+  }
+  &--stacked{
+    // 取消flex-direction: column;
+    flex-direction: row;
+  }
+  //原型样式
+  &__service-label{
+    color: #ffffff;
+    line-height: 50px;
+    font-size: 20px;
+  }
+  &__service{
+    padding: 0px 15px;
+  }
+  &__layer{
+    overflow: hidden;
+  }
+  &__layer-row,
+  &__layer-table--size-ramp {
+    // 使display失去作用
+    display: contents;
+  }
+}
+
+.esri-legend--stacked .esri-legend--card__section{
+  overflow: hidden;
+}

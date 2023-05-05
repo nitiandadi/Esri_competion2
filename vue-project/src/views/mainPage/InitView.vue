@@ -10,22 +10,23 @@ import { onMounted,ref,Ref } from 'vue';
 import MapView from "@arcgis/core/views/MapView.js";
 import WebMap from "@arcgis/core/WebMap.js";
 import PopupTemplate from "@arcgis/core/PopupTemplate.js";
+import esriConfig from "@arcgis/core/config";
 import styles from "@/style/esri.scss?inline";
-import {useTimesliderStore} from '@/store/timeslider_heatmap.js'
-import { useMapviewStore } from '@/store/mapview'
-import {useUpdate} from '@/hooks/useUpdata'
-import { pointslayer, AQIfeatures} from '@/features'
+import {useTimesliderStore} from '@/store/environment/timesliderstore.js'
+import { useMapviewStore } from '@/store/mapviewstore.js'
+import { pointslayer} from '@/features'
 const viewDivRef =  ref<HTMLDivElement | null>(null);
 const timeSliderRef =  ref<HTMLDivElement | null>(null);
 const mapviewStore = useMapviewStore();
 
 onMounted(() => {
+  esriConfig.apiKey = "AAPK787b700a1e3b4acfa3e242e51c892e11I_WaMFXTKd_ZT55uirhG7rr7faPIvr2T13cep7x0iqh-L-AwgIwyh9_UW7pjEyFd";
   const mymap = new WebMap({
     portalItem: {
       id:"a4e01842a5424d5883de46634546965a"
     }
   });
-  
+
   const view = new MapView({
     map: mymap,  // The WebMap instance created above
     container:  viewDivRef.value as HTMLDivElement,
@@ -82,7 +83,7 @@ onMounted(() => {
             }]
           });
           pointslayer.popupTemplate = popupTemplate;        
-          view.popup.dockEnabled = true;
+          // view.popup.dockEnabled = true;
           view.popup.dockOptions = {
             buttonEnabled: false,
             breakpoint: false,

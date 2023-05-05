@@ -6,7 +6,7 @@
 
 //提供一个copylayer，并支持编辑
 export function useCopylayer(featureLayer: __esri.FeatureLayer){
-    let copylayer: __esri.FeatureLayer;
+    let copylayer: __esri.FeatureLayer | null = null;
     //复制图层
     copylayer = featureLayer.clone();
     

@@ -25,17 +25,19 @@
 </template>
 
 <script setup lang="ts">
-import { useScreen } from "../hooks/useScreen";
+import { useScreen } from "@/hooks/useScreen";
 import { ref,onMounted,toRaw,onUnmounted} from "vue";
-import {useEcharts} from "../hooks/useEcharts";
-import { useTime } from '../hooks/useTime';
+import {useEcharts} from "@/hooks/useEcharts";
+import { useTime } from '@/hooks/useTime';
 import 'echarts-liquidfill';
 import * as echarts from 'echarts';
-import { useHeatmapStore } from '@/store/heatmap'
-import {useTimesliderStore} from '@/store/timeslider_heatmap'
+import { useHeatmapStore } from '@/store/environment/heatmapstore'
+import {useTimesliderStore} from '@/store/environment/timesliderstore'   
+import { useOnlayerStore } from '@/store/environment/onlayerstore'
 
 const HeatmapStore = useHeatmapStore();
 const TimesliderStore = useTimesliderStore();
+const OnlayerStore = useOnlayerStore();
 
 const envirmentRef = ref<HTMLElement | null>(null);
 const time = useTime();
@@ -45,12 +47,14 @@ const chartRadarRef = ref<HTMLElement | null>(null);
 const chartBarRef = ref<HTMLElement | null>(null);
 useScreen(envirmentRef,500,880);
 
-//时间滑块
+// 时间滑块
 const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
-//创建热力图
-HeatmapStore.createTimeHeatmap() 
-onMounted(() => {
-    //实例化ECharts对象
+// 创建热力图
+HeatmapStore.createTimeHeatmap();
+onMounted(() => { 
+    // 创建图层点击事件
+    OnlayerStore.createOnlayer();
+    // 实例化ECharts对象
     let ChartLine: echarts.ECharts | null = null;
     let ChartRadar: echarts.ECharts | null = null;
     let ChartBar: echarts.ECharts | null = null;
@@ -176,12 +180,16 @@ onMounted(() => {
                             title: 'AQI热力图',
                             icon: 'image://https://img.icons8.com/color/48/000000/fire-element.png',
                             onclick: function (){
-                    
-                                //显示时间热力图
-                                TimesliderStore.watchHeatmap();
-                               //时间滑块控制显示热力图
-                                timeslider.visible = !timeslider.visible;
-                                timeslider.playRate = 2000;
+                                //判断热力图是否存在
+                                if(HeatmapStore.isHeatmapLoaded()){
+                                    //显示时间热力图
+                                    HeatmapStore.toggleHeatmap();
+                                    //时间滑块控制显示热力图
+                                    timeslider.visible = !timeslider.visible;
+                                    timeslider.playRate = 3000;
+                                }else{
+                                    alert('请先创建热力图');
+                                }
                             }
                         },
                     },
@@ -407,6 +415,7 @@ onMounted(() => {
 });
 onUnmounted(() => {
     timeslider.visible = false;
+    // 销毁热力图
     HeatmapStore.cancelTimeHeatmap();
 });
 

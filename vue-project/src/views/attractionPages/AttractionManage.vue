@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { ElText,ElSwitch,ElRow, ElCol,ElCard,} from 'element-plus';
-import { ref,onMounted} from 'vue'
+import { ref,onMounted,onUnmounted} from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import environment from '../../components/environment.vue'
 const value1 = ref(false)
@@ -59,13 +59,14 @@ const showCard = ref(false)
 const triggerCardAnimation = () => {
   showCard.value = true;
 };
-// 在组件挂载后触发卡片进入动画
+// 在组件挂载后触发卡片进入动画,并创建热力图
 onMounted(() => {
-  
+  // 100ms后触发卡片进入动画
   setTimeout(() => {
     triggerCardAnimation();
   }, 100);
 });
+
 </script>
 
 <style lang="scss" >
