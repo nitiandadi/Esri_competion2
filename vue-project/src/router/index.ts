@@ -16,12 +16,12 @@ const router = createRouter({
         {
           path: 'AttractionManage',
           name: 'AttractionManage',
-          component: () => import('../components/AttractionManage.vue'),
+          component: ()=>import('../views/attractionPages/AttractionManage.vue'),
         },
         {
           path: 'VisitorManage',
           name: 'VisitorManage',
-          component: () => import('../components/VisitorManage.vue'),
+          component: () => import('../views/visitorsPages/index.vue'),
         },
       ]
     },
