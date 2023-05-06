@@ -30,8 +30,8 @@
 </template>
   
 <script setup lang="ts">
-import { ElText, ElSwitch, ElRow, ElCol, ElCard, ElButton } from 'element-plus';
-import { ref, onMounted, reactive, watch, inject } from 'vue'
+import { ElText, ElSwitch, ElRow, ElCol, ElCard } from 'element-plus';
+import { ref, onMounted } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import visitorSource from './components/visitorSource.vue'
 import visitorInformation from './components/visitorInFormation.vue';
@@ -142,4 +142,3 @@ onMounted(() => {
   margin-inline: 7px;
 }
 </style>
-  

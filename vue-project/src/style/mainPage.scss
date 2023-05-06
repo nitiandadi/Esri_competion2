@@ -6,20 +6,22 @@
 	// overflow: hidden;
 	.dataScreen {
 		position: fixed;
-		top: 7%;
+		top: 6.5%;
 		left:50%;
 		max-height: 125px;
-		z-index: 99;
+		z-index: 10;
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
 		transition: all 0.3s;
 		transform-origin: left top;
 		white-space: nowrap;
+		pointer-events: none;
 		.dataScreen-header {
 			display: flex;
 			width: 100%;
 			height: 30px;
+			pointer-events: auto;
 			.header-lf,
 			.header-rg {
 				position: relative;
@@ -112,17 +114,17 @@
 				background-size: 100% 100%;
 			}
 			.header-download {
-				left: 20px;
+				
 				padding-right: 0;
 				// background: url("../images/dataScreen-header-btn-bg-r.png") no-repeat;
 			}
 			.header-feedback{
-				left: 200px;
+				left: 195px;
 				// background: url("../images/dataScreen-header-btn-bg-r.png") no-repeat;
 				padding-right: 0;
 			}
 			.header-protection{
-				left: 380px;
+				left: 386px;
 				// background: url("../images/dataScreen-header-btn-bg-r.png") no-repeat;
 				padding-right: 0;
 			}
@@ -131,7 +133,7 @@
 				padding-right: 0;
 			}
 			.header-vistors{
-				right: 375px;
+				right: 384px;
 				padding-right: 0;
 			}
 			.header-science:hover,

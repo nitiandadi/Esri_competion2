@@ -15,6 +15,7 @@ export default class EchartsLayer {
         div.style.width = mapView.width + 'px';
         div.style.top = 0 + 'px';
         div.style.left = 0 + 'px';
+        div.style.zIndex = '999';
         div.id = 'echartLayer'
         let parent = document.getElementsByClassName("esri-view-user-storage")[0];
         parent.appendChild(div);

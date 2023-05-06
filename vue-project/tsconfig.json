@@ -8,8 +8,10 @@
     },
     "preserveValueImports": false,
     "lib": ["dom", "esnext"],
+    // "typeRoots": ["./node_modules/@types", "./src/types"],
+    "target": "es2015",
     "ignoreDeprecations": "5.0",
-    "outDir": "dist",
+ 
   },
   "references": [
     {

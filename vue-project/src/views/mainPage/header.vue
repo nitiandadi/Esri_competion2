@@ -29,44 +29,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, } from "vue";
 import { useRouter } from "vue-router";
+import { useScreen } from "../../hooks/useScreen";
 import baseMapView from "./baseMapView.vue";
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
-const baseMap = ref({
-	addChinaLayer: () => { }
-});
-onMounted(() => {
-	// 初始化时为外层盒子加上缩放属性，防止刷新界面时就已经缩放
-	if (dataScreenRef.value) {
-		dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
-		dataScreenRef.value.style.width = `1920px`;
-		dataScreenRef.value.style.height = `1080px`;
-	}
-	window.addEventListener("resize", resize);
-});
 
-const getScale = (width = 1920, height = 1080) => {
-	let ww = window.innerWidth / width;
-	let wh = window.innerHeight / height;
-	return ww < wh ? ww : wh;
-};
-
-// 监听浏览器 resize 事件
-const resize = () => {
-	if (dataScreenRef.value) {
-		dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
-	}
-};
-// function addChinaLayer() {
-// 	baseMap.value.addChinaLayer();
-// }
-// 销毁时触发
-onBeforeUnmount(() => {
-	window.removeEventListener("resize", resize);
-});
-
+useScreen(dataScreenRef, 1920, 1080);
 </script>
 <style lang="scss" scoped>
 @import "../../style/mainPage.scss";
