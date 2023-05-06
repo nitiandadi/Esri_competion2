@@ -4,6 +4,7 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
 import { computed, onMounted, provide, reactive, ref, toRef } from 'vue';
 import WebMap from "@arcgis/core/WebMap.js";
