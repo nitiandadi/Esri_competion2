@@ -50,7 +50,7 @@
 import { ElText,ElSwitch,ElRow, ElCol,ElCard,} from 'element-plus';
 import { ref,onMounted,onUnmounted} from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
-import environment from '../../components/environment.vue'
+import environment from './component/environment.vue'
 const value1 = ref(false)
 const value2 = ref(false)
 const value3 = ref(false)

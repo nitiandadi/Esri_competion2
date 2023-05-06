@@ -93,6 +93,11 @@ export const useHeatmapStore = defineStore('heatmap', () => {
 
     //控制热力图的显示与隐藏
     function toggleHeatmap() {
+        // 视图恢复到初始位置
+        view.goTo({
+            center: [97, 36],
+            zoom: 6,
+        });
         // 该mapview.map中第三图层之后的热力图层可见性取反
         for (let i = 2; i < view.map.allLayers.length; i++) {
             view.map.allLayers.getItemAt(i).visible = !view.map.allLayers.getItemAt(i).visible;
