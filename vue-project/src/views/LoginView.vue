@@ -3,8 +3,8 @@
     <div class="form-cls">
       <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="70px">
         <h2>欢迎登录青海巡</h2>
-        <el-form-item label="用户名:" prop="username">
-          <el-input v-model="ruleForm.username" type="text" autocomplete="off" class="input" />
+        <el-form-item label="用户名:" prop="email">
+          <el-input v-model="ruleForm.email" type="text" autocomplete="off" class="input" />
         </el-form-item>
 
         <el-form-item label="密码:" prop="password">
@@ -29,6 +29,7 @@ import { defineComponent, reactive, ref, toRefs } from "vue";
 import { login } from "@/request/api";
 import { useRouter } from "vue-router";
 import 'element-plus/dist/index.css'
+import axios from "axios";
 
 export default defineComponent({
   setup() {
@@ -63,13 +64,12 @@ export default defineComponent({
         }
       ]
     }
-
     // 登录
     const ruleFormRef = ref<FormInstance>()
 
     // 重置
     const resetForm = () => {
-      data.ruleForm.username = ""
+      data.ruleForm.email = ""
       data.ruleForm.password = ""
     }
 
@@ -78,12 +78,14 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
+          console.log(data.ruleForm)
           login(data.ruleForm).then((res: any) => {
             console.log(res)
             // 将token进行保存
-            localStorage.setItem("token", res.data.token)
+            localStorage.setItem("Authorization", 'Bearer ' + res[0])
             // console.log(res.data.token);
             // 跳转页面
+            console.log('登录成功');
             router.push('/')
           })
         } else {

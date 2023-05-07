@@ -11,5 +11,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       "@arcgis/core": path.resolve(__dirname, "node_modules/@arcgis/core"),
     }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:3000/',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, '')
+      },
+    }
+
   }
 })

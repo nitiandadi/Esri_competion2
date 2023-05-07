@@ -28,15 +28,12 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/LoginView.vue')
     }
   ]
 })
 router.beforeEach((to, from, next) => {
-  const token: string | null = localStorage.getItem("token")
+  const token: string | null = localStorage.getItem("Authorization")
   if (!token && to.path !== "/login") {
     next("/login")
   }
