@@ -16,7 +16,7 @@
 </template>
   
 <script setup lang="ts">
-import { Ref, inject, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import * as echarts from 'echarts';
 import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery.js";
 import TopFilter from "@arcgis/core/rest/support/TopFilter.js";
@@ -26,6 +26,7 @@ import { useViewStore } from '../../../store/mapViewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';
 import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 const store = useViewStore();
+console.log(store.getView());
 const yearValue = ref('2018');
 const radio = ref(1)
 const props = defineProps({
@@ -293,12 +294,10 @@ watch(props, () => {
 })
 onMounted(() => {
     let app = document.getElementById('app');
-    console.log(app?.parentElement?.childNodes[5]);
     let proper = app?.parentElement?.childNodes[5] as HTMLDivElement
     proper.style.position='absolute';
     proper.style.left=0+'px';
     proper.style.top=0+'px';
-    
     let view = store.getView() as __esri.MapView;
     chinaLayer.load().then(async () => {
         const results = await chinaLayer.queryTopFeatures(query);
@@ -313,7 +312,6 @@ onMounted(() => {
         myChart = echarts.init(chartDom);
         option1 && myChart.setOption(option1);
         view.when(() => {
-            console.log(props.visiable);
             if (props.visiable) {
                 //@ts-ignore
                 option2.series[1].symbolSize = function (val: number[]) {

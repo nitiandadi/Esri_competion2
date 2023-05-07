@@ -20,7 +20,7 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
-import myTable from './assets/table.vue'
+import myTable from './table.vue'
 const column = ref()
 const formInline = reactive({
     user: '',
@@ -45,14 +45,17 @@ onMounted(() => {
     padding: 0px;
     display: flex;
     flex-direction: column;
+
     .el-form {
         height: 50px;
+
         .el-select {
             height: 30px;
             width: 150px;
             margin-left: 8px;
             margin-right: 8px;
         }
+
         .el-button {
             height: 30px;
             width: 100px;

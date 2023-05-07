@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
 import { toRaw } from 'vue'
-import WebScene from "@arcgis/core/WebScene.js";
 import SceneView from "@arcgis/core/views/SceneView.js";
 import WebMap from '@arcgis/core/WebMap';
 import MapView from '@arcgis/core/views/MapView';
-export const useViewStore = defineStore('mapview', () => {
-    let view: __esri.View | null = null;
+export const useViewStore = defineStore('view', () => {
+    let myView: __esri.View | null = null;
     let myContainer: string | HTMLDivElement;
     //获取自己创建的mapview实例
     function setView(view: __esri.View) {
@@ -16,24 +15,24 @@ export const useViewStore = defineStore('mapview', () => {
     }
     //转换为可编辑的view供其他pinia使用
     function getView() {
-        if (view) {
-            // console.log(view);
-            return view = toRaw(view);
+        console.log(myView);
+        if (myView) {
+            return myView = toRaw(myView);
         }
         else {
             throw console.error('please register Mapview first or wait the sceneView to be ready');
         }
     };
     function CreateSceneView() {
-        if (view) {
-            view.destroy();
-            view = null;
+        if (myView) {
+            myView.destroy();
+            myView = null;
             const webmap = new WebMap({
                 portalItem: { // autocasts as new PortalItem()
                     id: "c8e3d51ec07246b58238eed8056c9000"
                 },
             });
-            view = new SceneView({
+            myView = new SceneView({
                 map: webmap,
                 container: myContainer,
                 padding: {
@@ -42,26 +41,26 @@ export const useViewStore = defineStore('mapview', () => {
                 center: [117, 36],
                 zoom: 5,
             });
-            view.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass'])
+            myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass'])
         }
     }
 
     function CreateMapView() {
-        if (view) {
-            view.destroy();
-            view = null;
+        if (myView) {
+            myView.destroy();
+            myView = null;
             const webmap = new WebMap({
                 portalItem: { // autocasts as new PortalItem()
                     id: "c8e3d51ec07246b58238eed8056c9000"
                 },
             });
-            view = new MapView({
+            myView = new MapView({
                 map: webmap,  // The WebMap instance created above
                 container: myContainer,
                 center: [117, 36],
                 zoom: 4
             });
-            view.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
+            myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
         }
         else {
             const webmap = new WebMap({
@@ -70,15 +69,15 @@ export const useViewStore = defineStore('mapview', () => {
                 },
             });
 
-            view = new MapView({
+            myView = new MapView({
                 map: webmap,  // The WebMap instance created above
                 container: myContainer,
                 center: [117, 36],
                 zoom: 4
             });
-            view.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
+            myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
         }
 
     }
-    return { setView, setContainer, getView, CreateSceneView, CreateMapView }
+    return {myView, setView, setContainer, getView, CreateSceneView, CreateMapView }
 })

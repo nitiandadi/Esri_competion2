@@ -38,7 +38,6 @@ import visitorInformation from './components/visitorInFormation.vue';
 const value1 = ref(false)
 const value2 = ref(false)
 const value3 = ref(false)
-
 let switchList = [value1, value2, value3];
 function checkSwitch(index: number) {
   for (let i = 0; i < switchList.length; i++) {
