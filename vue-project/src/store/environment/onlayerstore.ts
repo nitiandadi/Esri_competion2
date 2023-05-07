@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { Ref,ref } from "vue";
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import { useGetdata } from '@/hooks/useGetseries'
 import { useTimeoption} from '@/hooks/useTimeoption'
 import { climate,pollution,waterquality } from '@/features';

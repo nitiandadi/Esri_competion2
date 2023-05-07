@@ -28,19 +28,19 @@
 import { useScreen } from "@/hooks/useScreen";
 import { ref, onMounted, toRaw, onUnmounted, onBeforeMount } from "vue";
 import { useEcharts } from "@/hooks/useEcharts";
-import { useTime } from '@/hooks/useTime';
 import 'echarts-liquidfill';
 import * as echarts from 'echarts';
 import { useHeatmapStore } from '@/store/environment/heatmapstore'
 import { useTimesliderStore } from '@/store/environment/timesliderstore'
 import { useOnlayerStore } from '@/store/environment/onlayerstore'
-
+import Lineoptions from "./chartOptions/Lineoptions";//引入折线图配置项
+import Baroptions from "./chartOptions/Baroptions";//引入柱状图配置项
 const HeatmapStore = useHeatmapStore();
 const TimesliderStore = useTimesliderStore();
 const OnlayerStore = useOnlayerStore();
 
 const envirmentRef = ref<HTMLElement | null>(null);
-const time = useTime();
+
 // 定义引用需要渲染的DOM元素的ref对象
 const chartLineRef = ref<HTMLElement | null>(null);
 const chartRadarRef = ref<HTMLElement | null>(null);
@@ -53,6 +53,7 @@ const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
 HeatmapStore.createTimeHeatmap();
 // 创建图层点击事件
 OnlayerStore.createOnlayer();
+
 onMounted(() => { 
     // 实例化ECharts对象
     let ChartLine: echarts.ECharts | null = null;
@@ -60,111 +61,6 @@ onMounted(() => {
     let ChartBar: echarts.ECharts | null = null;
     if (chartLineRef.value) {
         ChartLine = echarts.init(chartLineRef.value);
-        // 在onMounted生命周期钩子中,设置Echarts配置项
-        const Lineoptions = {
-            // 设置折线颜色分别为红色，蓝色，黄色
-            color: ['#ed3f35','#00f2f1',  '#f7b851'],
-            title: {
-                text: time.nowTime.value,
-                textStyle: {
-                    color: '#fff'
-                }
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    lineStyle: {
-                        color: '#ccc',
-                        width: 1,
-                        type: 'solid'
-                    }
-                },
-                backgroundColor: '#115687',
-                borderColor: '#ccc',
-                borderWidth: 1,
-                padding: [5, 10],
-                textStyle: {
-                    color: '#fff',
-                    fontSize: 12
-                },
-                extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);max-width: 200px; max-height: 90px;',
-                formatter: function (params: any[]) {
-                    let html = '<div style="font-size: 18px; font-weight: bold;height: 30px; ">' + params[0].name + '</div>';
-                    params.forEach(function (item) {
-                        let suffix = '';
-                        if (item.seriesIndex === 0 || item.seriesIndex === 1) {
-                            suffix = '°C';
-                        } else {
-                            suffix = '%';
-                        }
-                        html += '<span style="display: inline-block; width: 10px; height: 10px; margin-right: 5px;font-size: 18px; border-radius: 50%; background-color: ' + item.color + ';"></span>' + item.seriesName + '：' + item.value + suffix + '<br>';
-                    });
-                    // html += '</div>';
-                    return html;
-                },
-            },
-            legend: {
-                textStyle: {
-                    color: '#4c9bfd'
-                },
-                right: '3%',
-            },
-            grid: {
-                top: '20%',
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                show: true,
-                borderColor: "#012f4a",
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-                axisTick: {
-                    show: false,
-                },
-                axisLabel: {
-                    color: '#4c9bfd'
-                },
-                axisLine: {
-                    show: false,
-                },
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    color: '#4c9bfd'
-                },
-                splitLine: {
-                    lineStyle: {
-                        color: '#012f4a'
-                    }
-                },
-            },
-            series: [
-                {
-                    name: '最高温度',
-                    type: 'line',
-                    smooth: true,
-                    data: []
-                },
-                {
-                    name: '最低温度',
-                    type: 'line',
-                    smooth: true,
-                    data: []
-                },
-                {
-                    name: '湿度',
-                    type: 'line',
-                    smooth: true,
-                    data: []
-                },
-            
-            ]
-        };
         // 使用useEcharts钩子，实现响应式
         useEcharts(ChartLine as echarts.ECharts, Lineoptions);
         // 将图表上传store
@@ -299,113 +195,7 @@ onMounted(() => {
         OnlayerStore.setChartRadar(ChartRadar);
     }
     if (chartBarRef.value) {
-        ChartBar = echarts.init(chartBarRef.value);
-        const Baroptions = {
-            grid: {
-                top: '12%',
-                left: '15%',
-                bottom: '10%',
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {  // 坐标轴指示器，坐标轴触发有效
-                    type: 'shadow' // 显示为直线，对于柱状图，可以设置为 'shadow'，表示显示阴影
-                },
-                backgroundColor: '#115687',
-                borderColor: '#ccc',
-                borderWidth: 1,
-                padding: [5, 10],
-                textStyle: {
-                    color: '#fff',
-                    fontSize: 12
-                },
-                extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);max-width: 200px; max-height: 110px;',
-                formatter: function (params: any[]) {
-                    let html = '<div style="font-size: 18px; font-weight: bold;height: 30px; ">' + params[0].name + '</div>';
-                    params.forEach(function (item) {
-
-                        html += '<span style="display: inline-block; width: 10px; height: 10px; margin-right: 5px;font-size: 18px; border-radius: 50%; background-color: ' + item.color + ';"></span>' + item.seriesName + '：' + item.value + '<br>';
-                    });
-                    // html += '</div>';
-                    return html;
-                },
-            },
-            xAxis: {
-                type: 'category',
-                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-                axisLine: {
-                    show: false
-                },
-                axisTick: {
-                    show: false
-                },
-                axisLabel: {
-                    color: '#4c9bfd'
-                }
-
-            },
-            legend: {
-                data: ['pH值', '溶解氧', '化学需氧量', '总氮'],
-                textStyle: {
-                    color: '#4c9bfd'
-                },
-
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    color: '#4c9bfd'
-                }
-            },
-            toolbox: {
-                show: true,
-                orient: 'vertical',
-                left: 'right',
-                top: 'center',
-                showTitle: false,
-                feature: {
-                    magicType: { show: true, type: ['line', 'bar'] },
-                },
-                iconStyle: {
-                    color: '#4c9bfd',
-                    borderColor: '#4c9bfd'
-                }
-            },
-            series: [
-                {
-                    name: 'pH值',
-                    type: 'bar',
-                    data: [],
-                    itemStyle: {
-                        borderRadius: 20,
-                    },
-                },
-                {
-                    name: '溶解氧',
-                    type: 'bar',
-                    data: [],
-                    itemStyle: {
-                        borderRadius: 20,
-                    },
-                },
-                {
-                    name: '化学需氧量',
-                    type: 'bar',
-                    data: [],
-                    itemStyle: {
-                        borderRadius: 20,
-                    },
-                },
-                {
-                    name: '总氮',
-                    type: 'bar',
-                    data: [],
-                    itemStyle: {
-                        borderRadius: 20,
-                    },
-                },
-            ]
-        };
+        ChartBar = echarts.init(chartBarRef.value);        
         // 使用useEcharts钩子，实现响应式
         useEcharts(ChartBar as echarts.ECharts, Baroptions);
         // 将图表上传到store中

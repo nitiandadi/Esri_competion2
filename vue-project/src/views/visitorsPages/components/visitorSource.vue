@@ -22,7 +22,7 @@ import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery.js";
 import TopFilter from "@arcgis/core/rest/support/TopFilter.js";
 import chinaLayer from '@/features/Layer/visitorLayer';
 import { worldLayer } from '@/features/Layer/visitorLayer';
-import { useViewStore } from '../../../store/mapViewstore';
+import { useViewStore } from '../../../store/mapviewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';
 import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 const store = useViewStore();

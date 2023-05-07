@@ -9,7 +9,7 @@
 import { onMounted, ref, Ref } from 'vue';
 import esriconfig from "@arcgis/core/config.js";
 import styles from "../../style/esri.scss?inline";
-import { useViewStore } from '@/store/mapViewstore';
+import { useViewStore } from '@/store/mapviewstore';
 import { useTimesliderStore } from '@/store/environment/timesliderstore.js';
 
 const timeSliderRef = ref<HTMLDivElement | null>(null);
@@ -19,7 +19,7 @@ onMounted(() => {
   let container = document.getElementById("viewDiv") as HTMLDivElement;
   store.setContainer(container);
   store.CreateMapView();
-  const view = store.getView();
+  const view = store.getView() as __esri.MapView;
   view.when(() => {
     //创建时间滑块
     useTimesliderStore().createTimeslider(timeSliderRef as Ref<HTMLDivElement>);
