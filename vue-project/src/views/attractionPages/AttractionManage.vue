@@ -49,21 +49,16 @@ const triggerCardAnimation = () => {
 
 // 在组件挂载后触发卡片进入动画,并创建热力图
 onMounted(() => {
-   // 触发卡片进入动画
-   triggerCardAnimation();
+  
 
   setTimeout(() => {
+     // 触发卡片进入动画
+     triggerCardAnimation();
     const store = usepointslayerStore();
     // 创建点图层
     store.addpointslayer();
-    
-    
-    // 监视点图层是否加载完成
-    
-    store.pointslayer.when(() => {
-        isDisabled.value = false;
-    });
-    
+    // 判断点图层是否加载完成
+    store.ispointslayerLoaded(isDisabled )
 
   }, 100);
 

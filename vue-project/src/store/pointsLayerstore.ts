@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useViewStore } from '@/store/mapviewstore'
+import { useViewStore } from '@/store/mapViewstore'
 import { pointslayer } from '@/features'
 import PopupTemplate from "@arcgis/core/PopupTemplate.js";
 import { ref } from 'vue';
@@ -54,14 +54,19 @@ export const usepointslayerStore = defineStore('pointslayer', () => {
         });
     }
     // 监视要素图层的view是否加载完成，加载完成后放回true,否则返回false
-    function ispointslayerLoaded() {
-        // 监视view中的layer的视图是否加载完成
-        if( view.allLayerViews.getItemAt(1) ){
-            return false;
-        }
-        else{
-            return true;
-        }
+    function ispointslayerLoaded( isDisabled: any ) {
+        
+       // 监视点图层是否加载完成,加载完成后将开关设置为可用
+        view.when(() => {
+            debugger
+            // 监视点图层是否加载完成
+            view.watch('updating', (val) => {
+                if (!val) {
+                    isDisabled.value = false;
+                }
+            });
+        });
+    
     }
     // 将要素图层从view中移除
     function removepointslayer() {

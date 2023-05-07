@@ -10,7 +10,7 @@
 import { onMounted, ref, Ref } from 'vue';
 import esriconfig from "@arcgis/core/config.js";
 import styles from "../../style/esri.scss?inline";
-import { useViewStore } from '@/store/mapviewstore';
+import { useViewStore } from '@/store/mapViewstore';
 import { useTimesliderStore } from '@/store/environment/timesliderstore.js';
 
 const timeSliderRef = ref<HTMLDivElement | null>(null);
