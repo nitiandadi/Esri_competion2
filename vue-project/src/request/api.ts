@@ -5,7 +5,7 @@ console.log(service);
 export function login(data: ILoginData) {
     console.log(data);
     return service({
-        url: "/login",
+        url: "/users/login",
         method: "POST",
         data
     })

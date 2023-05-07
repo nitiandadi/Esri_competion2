@@ -47,7 +47,6 @@ onMounted(() => {
     flex-direction: column;
     .el-form {
         height: 50px;
-
         .el-select {
             height: 30px;
             width: 150px;

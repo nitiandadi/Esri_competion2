@@ -5,6 +5,7 @@
   <div id="timeSlider" ref="timeSliderRef"></div>
 </template>
 
+
 <script setup lang="ts">
 import { onMounted, ref, Ref } from 'vue';
 import esriconfig from "@arcgis/core/config.js";
@@ -36,7 +37,6 @@ document.head.appendChild(style);
 #viewDiv {
   width: 100%;
 }
-
 #timeSlider {
   position: absolute;
   left: 1.2%;
