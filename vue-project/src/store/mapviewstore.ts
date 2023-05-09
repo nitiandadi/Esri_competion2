@@ -15,9 +15,8 @@ export const useViewStore = defineStore('view', () => {
     }
     //转换为可编辑的view供其他pinia使用
     function getView() {
-        console.log(myView);
-        if (myView) {
-            return myView = toRaw(myView);
+        if (myView ) {
+            return myView = toRaw(myView );
         }
         else {
             throw console.error('please register Mapview first or wait the sceneView to be ready');
@@ -39,9 +38,9 @@ export const useViewStore = defineStore('view', () => {
                     top: 40
                 },
                 center: [117, 36],
-                zoom: 5,
+                zoom: 4,
             });
-            myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass'])
+            myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
         }
     }
 
@@ -79,5 +78,5 @@ export const useViewStore = defineStore('view', () => {
         }
 
     }
-    return {myView, setView, setContainer, getView, CreateSceneView, CreateMapView }
+    return { setView, setContainer, getView, CreateSceneView, CreateMapView }
 })

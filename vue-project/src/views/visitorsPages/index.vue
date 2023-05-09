@@ -52,7 +52,6 @@ const triggerCardAnimation = () => {
   showCard.value = true;
 };
 onMounted(() => {
-
   setTimeout(() => {
     triggerCardAnimation();
   }, 100);

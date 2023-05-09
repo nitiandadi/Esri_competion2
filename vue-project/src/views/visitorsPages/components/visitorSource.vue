@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" ref="visitorRef">
         <div class="header">
             <el-select v-model="yearValue" placeholder="请选择年份" popper-class="gray-list" :popper-append-to-body="false"
                 @change="select_Changed">
@@ -16,23 +16,25 @@
 </template>
   
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
 import * as echarts from 'echarts';
 import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery.js";
 import TopFilter from "@arcgis/core/rest/support/TopFilter.js";
 import chinaLayer from '@/features/Layer/visitorLayer';
 import { worldLayer } from '@/features/Layer/visitorLayer';
-import { useViewStore } from '../../../store/mapViewstore';
+import { useViewStore } from '../../../store/mapviewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';
 import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import { useScreen } from '@/hooks/useScreen';
+import { useEcharts } from '@/hooks/useEcharts';
 const store = useViewStore();
-console.log(store.getView());
 const yearValue = ref('2018');
 const radio = ref(1)
 const props = defineProps({
     visiable: Boolean,
 })
-
+let visitorRef = ref<HTMLElement | null>(null);
+useScreen(visitorRef, 500, 500);
 const options = [
     {
         value: '2020',
@@ -295,10 +297,10 @@ watch(props, () => {
 onMounted(() => {
     let app = document.getElementById('app');
     let proper = app?.parentElement?.childNodes[5] as HTMLDivElement
-    proper.style.position='absolute';
-    proper.style.left=0+'px';
-    proper.style.top=0+'px';
-    let view = store.getView() as __esri.MapView;
+    proper.style.position = 'absolute';
+    proper.style.left = 0 + 'px';
+    proper.style.top = 0 + 'px';
+    proper.style.margin=0+'px';
     chinaLayer.load().then(async () => {
         const results = await chinaLayer.queryTopFeatures(query);
         results.features.forEach((grahphic, index) => {
@@ -310,37 +312,40 @@ onMounted(() => {
         })
         let chartDom = document.getElementById('main_pro')!;
         myChart = echarts.init(chartDom);
-        option1 && myChart.setOption(option1);
+        useEcharts(myChart, option1);
+        // option1 && myChart.setOption(option1);
+        let view = store.getView() as __esri.MapView;
         view.when(() => {
-            if (props.visiable) {
-                //@ts-ignore
-                option2.series[1].symbolSize = function (val: number[]) {
-                    return val[2] / 30;
-                }
-                //@ts-ignore
-                option2.series[1].data = flightData.map(function (dataItem, index) {
-                    dataItem.coords[0].push(seriesData[index] as unknown as number);
-                    return {
-                        value: dataItem.coords[0],
-                    }
-                });
-                echartLayer = new EchartLayer(view, option2);
+            //@ts-ignore
+            option2.series[1].symbolSize = function (val: number[]) {
+                return val[2] / 30;
             }
+            //@ts-ignore
+            option2.series[1].data = flightData.map(function (dataItem, index) {
+                dataItem.coords[0].push(seriesData[index] as unknown as number);
+                return {
+                    value: dataItem.coords[0],
+                }
+            });
+            view.zoom=4;
+            echartLayer = new EchartLayer(view, option2);
+            echartLayer?.setVisiable(false);
         })
-
     });
 
 });
+onUnmounted(() => {
+    echartLayer?.destroy();
+    echartLayer = null;
+})
 </script>
   
 <style lang="scss" scoped>
 .container {
     position: absolute;
     background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
-    top: 12%;
-    left: 72.2%;
-    width: 400px;
-    height: 400px;
+    top:0%;
+    right: -4%;
     border-radius: 6px;
     pointer-events: auto;
     border: 0px solid var(--el-card-border-color);
@@ -353,7 +358,7 @@ onMounted(() => {
         display: flex;
         top: 4px;
         left: 5px;
-        width: 390px;
+        width: 490px;
         height: 30px;
         border-radius: 3px;
         flex-direction: row;
@@ -378,8 +383,8 @@ onMounted(() => {
         position: absolute;
         top: 40px;
         left: 5px;
-        width: 390px;
-        height: 300px;
+        width: 490px;
+        height: 400px;
         opacity: 0.5;
         background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
     }

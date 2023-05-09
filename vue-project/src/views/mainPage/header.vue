@@ -29,13 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, } from "vue";
+import { onBeforeMount, onMounted, ref, } from "vue";
 import { useRouter } from "vue-router";
 import { useScreen } from "../../hooks/useScreen";
 import baseMapView from "./baseMapView.vue";
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
-
 useScreen(dataScreenRef, 1920, 1080);
 </script>
 <style lang="scss" scoped>

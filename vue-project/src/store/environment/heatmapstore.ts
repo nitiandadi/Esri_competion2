@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import { initHeatmap } from '@/utils/timeheatmapUtils'
 import { timepointslaers, AQIfeatures } from '@/features'
 import { useUpdate } from '@/hooks/useUpdata';
@@ -86,8 +86,10 @@ export const useHeatmapStore = defineStore('heatmap', () => {
         view.ui.remove(legend as __esri.Legend);
         // 将mapview.map中第三图层之后的热力图层移除
         for (let i = 2; i < view.map.allLayers.length; i++) {
-            view.map.allLayers.getItemAt(i).destroy();
-            view.map.remove(view.map.allLayers.getItemAt(i));
+            if (view.map.allLayers.getItemAt(i)) {
+                view.allLayerViews.getItemAt(i).destroy();
+                view.map.remove(view.map.allLayers.getItemAt(i));  
+            }          
         }
         view.map.allLayers.getItemAt(1).visible = true
     }

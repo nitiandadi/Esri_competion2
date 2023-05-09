@@ -28,6 +28,7 @@ export const useScreen = (dataScreenRef: Ref<HTMLElement | null>,width:number,he
     });
     
     const getScale = () => {
+        // debugger
         let ww = window.innerWidth / 1920;
         let wh = window.innerHeight / 1080;
         return ww < wh ? ww : wh;

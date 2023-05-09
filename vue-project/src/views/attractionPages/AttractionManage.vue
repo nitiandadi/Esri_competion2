@@ -10,17 +10,17 @@
         <el-col :span="24" style="padding: 5px;">
           <el-text class="mx-1" tag="i" size="large">景点环境监测</el-text>
           <el-switch v-model="value1" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" />
+            :inactive-icon="Close" :disabled="isDisabled" />
         </el-col>
         <el-col :span="24" style="padding: 5px;">
           <el-text class="mx-1" tag="i" size="large">景点对比分析</el-text>
           <el-switch v-model="value2" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" />
+            :inactive-icon="Close" :disabled="isDisabled" />
         </el-col>
         <el-col :span="24" style="padding: 5px;">
           <el-text class="mx-1" tag="i" size="large">修正旅游景点</el-text>
           <el-switch v-model="value3" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" />
+            :inactive-icon="Close" :disabled="isDisabled" />
         </el-col>
       </el-row>
     </el-card>
@@ -30,33 +30,50 @@
 
 <script setup lang="ts">
 import { ElText, ElSwitch, ElRow, ElCol, ElCard, } from 'element-plus';
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, onBeforeMount,watch,toRaw } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import environment from './components/environment.vue'
 import { usepointslayerStore } from '@/store/pointsLayerstore';
 
+const isDisabled = ref(true);
 const value1 = ref(false)
 const value2 = ref(false)
 const value3 = ref(false)
 const showCard = ref(false)
-const store = usepointslayerStore()
+
 // 触发卡片进入动画
 const triggerCardAnimation = () => {
   showCard.value = true;
 };
+
+
 // 在组件挂载后触发卡片进入动画,并创建热力图
 onMounted(() => {
-  // 添加点图层
-  store.addpointslayer();
-  // 100ms后触发卡片进入动画
+   // 触发卡片进入动画
+   triggerCardAnimation();
+
   setTimeout(() => {
-    triggerCardAnimation();
-  }, 100);
+    const store = usepointslayerStore();
+    // 创建点图层
+    store.addpointslayer();
+    
+    
+    // 监视点图层是否加载完成
+    
+    store.pointslayer.when(() => {
+        isDisabled.value = false;
+    });
+    
+
+  }, 0);
+
 });
 
 // 在组件卸载前将点图层移除
 onUnmounted(() => {
+  const store = usepointslayerStore();
   store.removepointslayer();
+
 });
 </script>
 
@@ -125,20 +142,5 @@ onUnmounted(() => {
 .right-slide-in-leave-to {
   opacity: 0;
   transform: translateX(100%);
-}
-
-.nihao {
-  position: relative;
-  top: 10%;
-  right: 10%;
-  width: 200px;
-  height: 200px;
-  border-radius: 6px;
-  /* 添加边角弧度 */
-  background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
-  /* 添加渐变 */
-  pointer-events: auto;
-  border: 0px solid var(--el-card-border-color);
-  margin-inline: 7px;
 }
 </style>

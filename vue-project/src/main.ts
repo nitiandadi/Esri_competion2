@@ -6,7 +6,6 @@ import './assets/main.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '@arcgis/core/assets/esri/themes/light/main.scss';
-
 const pinia = createPinia()
 const app = createApp(App)
 app.use(ElementPlus);

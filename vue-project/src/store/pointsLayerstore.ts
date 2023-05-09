@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia'
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import { pointslayer } from '@/features'
 import PopupTemplate from "@arcgis/core/PopupTemplate.js";
+import { ref } from 'vue';
 
 export const usepointslayerStore = defineStore('pointslayer', () => {
     // 获取到view实例
     const view = useViewStore().getView() as __esri.MapView;
     // 将要素图层添加到view中
     function addpointslayer() {
-        view.map.add(pointslayer);
         view.when(() => {
+            view.map.add(pointslayer);
             //自定义弹窗模板     
             view.on("click", () => {
                 //设置pointslayer弹窗模板
@@ -52,14 +53,20 @@ export const usepointslayerStore = defineStore('pointslayer', () => {
             });
         });
     }
-    // 监测要素图层是否加载完毕
-    function ispointslayerLoaded(){
-        
+    // 监视要素图层的view是否加载完成，加载完成后放回true,否则返回false
+    function ispointslayerLoaded() {
+        // 监视view中的layer的视图是否加载完成
+        if( view.allLayerViews.getItemAt(1) ){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
     // 将要素图层从view中移除
     function removepointslayer() {
         view.map.remove(pointslayer);
     }
 
-    return { addpointslayer, removepointslayer }
+    return { addpointslayer, removepointslayer,ispointslayerLoaded,pointslayer }
 })
