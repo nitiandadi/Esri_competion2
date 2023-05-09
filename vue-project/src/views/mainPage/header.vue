@@ -36,7 +36,7 @@ import baseMapView from "./baseMapView.vue";
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
 
-useScreen(dataScreenRef, 1920, 1080);
+useScreen(dataScreenRef);
 </script>
 <style lang="scss" scoped>
 @import "../../style/mainPage.scss";

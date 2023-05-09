@@ -39,9 +39,9 @@ document.head.appendChild(style);
 }
 #timeSlider {
   position: absolute;
-  left: 1.2%;
+  left: 5.3%;
   right: 5%;
-  bottom: 18%;
+  bottom: 17%;
   max-height: 100px;
   max-width: 600px;
 }

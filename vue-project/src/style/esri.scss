@@ -161,9 +161,9 @@ h2.esri-widget__heading{
   max-width: 360px;
   overflow: hidden;
   //自定义位置
-  position: relative;
+  position: absolute;
   bottom: 40%;
-  left: 1.1%;
+  left: 5.3%;
   //卡片样式
   &--card{
     background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
