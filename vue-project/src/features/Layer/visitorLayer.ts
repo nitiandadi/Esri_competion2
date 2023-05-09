@@ -66,6 +66,7 @@ let classBreaksRenderer = new ClassBreaksRenderer({
 let chinaLayer = new Featurelayer({
     url: 'https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E6%97%B6%E9%97%B4%E6%97%85%E6%B8%B8%E4%BA%BA%E6%95%B0/FeatureServer',
     // renderer: classBreaksRenderer,
+    refreshInterval: 5000
 })
 let worldLayer = new Featurelayer({
     url: 'https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%85%A8%E7%90%83%E4%BA%BA%E6%95%B0/FeatureServer'
