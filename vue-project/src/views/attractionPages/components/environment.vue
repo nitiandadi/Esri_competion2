@@ -41,6 +41,7 @@ const OnlayerStore = useOnlayerStore();
 
 const envirmentRef = ref<HTMLElement | null>(null);
 
+
 // 定义引用需要渲染的DOM元素的ref对象
 const chartLineRef = ref<HTMLElement | null>(null);
 const chartRadarRef = ref<HTMLElement | null>(null);
@@ -49,8 +50,6 @@ const chartBarRef = ref<HTMLElement | null>(null);
 
 // 时间滑块
 const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
-// 创建热力图
-HeatmapStore.createTimeHeatmap();
 // 创建图层点击事件
 OnlayerStore.createOnlayer();
 

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useViewStore } from '@/store/mapviewstore'
+import { useViewStore } from '@/store/mapViewstore'
 import { initHeatmap } from '@/utils/timeheatmapUtils'
 import { timepointslaers, AQIfeatures } from '@/features'
 import { useUpdate } from '@/hooks/useUpdata';
@@ -13,7 +13,7 @@ export const useHeatmapStore = defineStore('heatmap', () => {
     let legend: __esri.Legend | null = null;
 
     //创建带有时间属性的热力图
-    function createTimeHeatmap() {
+    function createTimeHeatmap(  LegendRef: HTMLDivElement | null ) {
         //获取当日时间
         const time = useTime();
         const year = time.year;
@@ -35,7 +35,7 @@ export const useHeatmapStore = defineStore('heatmap', () => {
             for (const feature of AQIfeatures) {
                 // debugger
                 const where = `名称='${feature.name}'`;
-                const attributeUpdates = { AQI: feature.AQI[index] };
+                const attributeUpdates = { aqi: feature.AQI[index] };
                 const queryOpts: {
                     where: string;
                     attributeUpdates: {
@@ -51,7 +51,7 @@ export const useHeatmapStore = defineStore('heatmap', () => {
             //为图层提供时间数据
             for (const feature of AQIfeatures) {
                 const where = `名称='${feature.name}'`;
-                const attributeUpdates = { 日期: dates[index] };
+                const attributeUpdates = { time: dates[index].getTime() };
                 const queryOpts: {
                     where: string;
                     attributeUpdates: {
@@ -69,15 +69,15 @@ export const useHeatmapStore = defineStore('heatmap', () => {
         });
         // 为view上的一个热力图创建图例，用于显示热力图的颜色分布
         legend = new Legend({
+            container: LegendRef as HTMLDivElement,
             view: view,
             layerInfos: [{
                 layer: view.map.allLayers.getItemAt(2) as __esri.FeatureLayer,
                 title: 'AQI热力图图例'
             }],
             style: "card",
+            visible: false,
         });
-        // 将图例添加到mapview中
-        view.ui.add(legend);
     }
 
     //删除带有时间属性的热力图
@@ -85,17 +85,17 @@ export const useHeatmapStore = defineStore('heatmap', () => {
         // 销毁图例
         view.ui.remove(legend as __esri.Legend);
         // 将mapview.map中第三图层之后的热力图层移除
-        for (let i = 2; i < view.map.allLayers.length; i++) {
-            if (view.map.allLayers.getItemAt(i)) {
-                view.allLayerViews.getItemAt(i).destroy();
-                view.map.remove(view.map.allLayers.getItemAt(i));  
-            }          
+        for (let i = 0; i < 7; i++) {
+            view.map.findLayerById(`AQI${i}`).destroy();
+            view.map.remove(view.map.findLayerById(`AQI${i}`));           
         }
         view.map.allLayers.getItemAt(1).visible = true
     }
 
     //控制热力图的显示与隐藏
     function toggleHeatmap() {
+        if( legend)
+        legend.visible = !legend.visible;
         // 视图恢复到初始位置
         view.goTo({
             center: [97, 36],

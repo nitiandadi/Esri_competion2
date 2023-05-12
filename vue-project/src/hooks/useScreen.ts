@@ -11,8 +11,10 @@ import { Ref, onMounted, onBeforeUnmount } from "vue";
 
 export const useScreen = (dataScreenRef: Ref<HTMLElement | null>) => {
     onMounted(() => {
+        // debugger
         // 初始化时为外层盒子加上缩放属性，防止刷新界面时就已经缩放
-        if (dataScreenRef.value) {
+        if (dataScreenRef.value) {          
+            // console.log("缩放初始")
             dataScreenRef.value.style.width = 1920+"px";
             dataScreenRef.value.style.height = 1080+"px"; 
             dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;                      
@@ -33,6 +35,7 @@ export const useScreen = (dataScreenRef: Ref<HTMLElement | null>) => {
     // 监听浏览器 resize 事件
     const resize = () => {
         if (dataScreenRef.value ) {
+            // console.log("缩放")
             dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
         }
     };
