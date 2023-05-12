@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { Ref,ref } from "vue";
+//@ts-ignore
 import { useViewStore } from '@/store/mapViewstore'
 import { useGetdata } from '@/hooks/useGetseries'
 import { useTimeoption} from '@/hooks/useTimeoption'
@@ -9,10 +10,11 @@ export const useOnlayerStore = defineStore('onlayer', () => {
     // 获取mapview实例
     const view = useViewStore().getView() as __esri.MapView;
 
-    // 获取view中的要素图层
-    const pointslayer = view.map.allLayers.getItemAt(1) as __esri.FeatureLayer;
-    // 获取view中的要素图层视图
-    const pointslayerView = view.allLayerViews.getItemAt(1) as __esri.FeatureLayerView;
+    // 获取view中的id为points的图层
+    const pointslayer = view.map.findLayerById("points") as __esri.FeatureLayer;
+
+    // 获取上述图层的视图
+    const pointslayerView = view.layerViews.find(layerView => layerView.layer.id === "points") as __esri.FeatureLayerView;
 
     // 创建一个ref对象，用于存储查询到的要素的唯一值id
     const IdRef = ref<number>(0);
@@ -87,7 +89,7 @@ export const useOnlayerStore = defineStore('onlayer', () => {
             view.hitTest(event).then(function(response: __esri.HitTestResult){
                 if (response.results.length === 1) {
                     // 获取查询到的要素的唯一值id
-                    IdRef.value = (response.results[0] as __esri.GraphicHit).graphic.attributes["FID"];
+                    IdRef.value = (response.results[0] as __esri.GraphicHit).graphic.attributes["fid"];
                     // 查找要素图层中FID的要素,为图表添加新的数据
                     query.where = `FID = ${IdRef.value}`;
                     pointslayer.queryFeatures(query).then(function(results: __esri.FeatureSet){

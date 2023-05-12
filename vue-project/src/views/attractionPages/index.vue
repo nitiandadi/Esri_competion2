@@ -22,28 +22,36 @@
             :inactive-icon="Close" :disabled="isDisabled" />
         </el-col>
       </el-row>
-      </el-card>  
-    </transition>
+      </el-card> 
+    </transition> 
+    <div class="timeSlider" ref="timeSliderRef"></div>
+    <div class="lengend" ref="lengendRef"></div>
     <environment v-if="value1" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useScreen } from '@/hooks/useScreen';
-import { ElText, ElSwitch, ElRow, ElCol, ElCard, } from 'element-plus';
+import { ElText, ElSwitch, ElRow, ElCol, ElCard, } from 'element-plus'
 import { ref, onMounted, onUnmounted,  } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import environment from './components/environment.vue'
-import { usepointslayerStore } from '@/store/pointsLayerstore';
+import { usepointslayerStore } from '@/store/pointsLayerstore'
+import { useHeatmapStore } from '@/store/environment/heatmapstore'
+import { useTimesliderStore } from '@/store/environment/timesliderstore'
 
+const timeSliderRef = ref<HTMLDivElement | null>(null);
 const screenRef  = ref<HTMLElement | null>(null);
-useScreen(screenRef);
+const lengendRef = ref<HTMLDivElement | null>(null);
 
 const isDisabled = ref(true);
 const value1 = ref(false)
 const value2 = ref(false)
 const value3 = ref(false)
 const showCard = ref(false)
+
+// 使屏幕自适应
+useScreen(screenRef);
 
 // 触发卡片进入动画
 const triggerCardAnimation = () => {
@@ -53,16 +61,21 @@ const triggerCardAnimation = () => {
 
 // 在组件挂载后触发卡片进入动画,并创建热力图
 onMounted(() => {
-
   setTimeout(() => {
+    const store = usepointslayerStore();
+    const HeatmapStore = useHeatmapStore();
+    const TimesliderStore = useTimesliderStore();
+
     // 触发卡片进入动画
     triggerCardAnimation();
-    const store = usepointslayerStore();
     // 创建点图层
     store.addpointslayer();
     // 判断点图层是否加载完成,加载完后实现一些功能
-    store.ispointslayerLoaded(isDisabled);
-
+    store.ispointslayerLoaded(isDisabled);      
+    // 时间轴
+    TimesliderStore.createTimeslider( timeSliderRef );
+    // 创建热力图
+    HeatmapStore.createTimeHeatmap( lengendRef.value );
   }, 100);
 
 });
@@ -140,6 +153,22 @@ onUnmounted(() => {
   }
 
 }
+.timeSlider{
+  position: absolute;
+  left:  0%;
+  bottom: 9%;
+  height: 20%;
+  width: 50%;
+  pointer-events: auto;
+}
+.lengend{
+    position: absolute;
+    left:  0%;
+    bottom: 40%;
+    height: 20%;
+    width: 20%;
+    pointer-events: auto;
+}
 
 /* 过渡动画 */
 .right-slide-in-enter-active,
@@ -156,4 +185,6 @@ onUnmounted(() => {
   opacity: 0;
   transform: translateX(100%);
 }
+
+
 </style>

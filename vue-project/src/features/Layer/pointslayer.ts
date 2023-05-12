@@ -2,7 +2,8 @@ import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol.js";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer.js";
 const myFeature = new FeatureLayer({
-    url: "https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/pointslayer/FeatureServer"
+    url: "https://edutrial.geoscene.cn/geoscene/rest/services/Hosted/points/FeatureServer",
+    id: "points",
 });
 // 创建一个新的符号
 const symbol = new SimpleMarkerSymbol({

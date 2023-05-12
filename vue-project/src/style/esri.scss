@@ -117,22 +117,20 @@ h2.esri-widget__heading{
 }
 
 /* 时间滑块样式修改 */
-.esri-slider{
-  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
-  &__tick-label{
-    color: #92c3e4;
-  }
-  &__ticks{
-    max-height: 0;
-  }
-}
 .esri-time-slider{
-  &__slider{
-    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  &__layout--compact &__row:nth-child(1), &__layout--compact &__row:nth-child(3){
+    height: 20%;
+  }
+  &__layout--compact &__row:nth-child(2){
+    height: 60%;
   }
   &__row{
+    height: 100%;
     background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
     color: #92c3e4;
+  }
+  &__slider{
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
   }
   &__time-extent-group {
     color: #ffffff;
@@ -150,6 +148,15 @@ h2.esri-widget__heading{
     height: 25px;
   }
 }
+.esri-slider{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  &__tick-label{
+    color: #92c3e4;
+  }
+  &__ticks{
+    max-height: 0;
+  }
+}
 
 
 /* 图例修改 */
@@ -160,14 +167,16 @@ h2.esri-widget__heading{
   max-height: 150px;
   max-width: 360px;
   overflow: hidden;
-  //自定义位置
-  position: absolute;
-  bottom: 40%;
-  left: 5.3%;
-  //卡片样式
+  /* 卡片样式 */
   &--card{
     background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    &__message{
+      font-size: 1.3rem;
+    }
     &__section{
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
       padding: 12px 12px 50px 12px;
     }
     &__layer-row{
@@ -180,6 +189,7 @@ h2.esri-widget__heading{
       color: #ffffff;
       //字体倾斜
       font-style: italic;
+      margin: 0px 0px 10px 0px;
     }
     //将图例中的文字放在中间
     &__layer-caption{
@@ -190,8 +200,9 @@ h2.esri-widget__heading{
   &--stacked{
     // 取消flex-direction: column;
     flex-direction: row;
+    justify-content: center
   }
-  //原型样式
+  //* 原型样式 */
   &__service-label{
     color: #ffffff;
     line-height: 50px;
@@ -212,4 +223,7 @@ h2.esri-widget__heading{
 
 .esri-legend--stacked .esri-legend--card__section{
   overflow: hidden;
+}
+h3.esri-widget__heading, h4.esri-widget__heading, h5.esri-widget__heading, h6.esri-widget__heading{
+  font-size: 1.3rem;
 }

@@ -20,16 +20,16 @@ export async function useUpdate(featureLayer: __esri.FeatureLayer, queryOpts: {
   });
   //获取查询结果
   const queryResults = await featureLayer.queryFeatures(query);
-
   if (queryResults.features.length === 0) {
+    console.log(featureLayer.id + where);
     throw new Error("No features found for query");
   }
 
   const updatedFeatures: __esri.Graphic[] = [];
   //对查询结果进行克隆
   queryResults.features.forEach((feature) => {
-    const clonedFeature = feature.clone();
 
+    const clonedFeature = feature.clone();
     for (const key in attributeUpdates) {
       clonedFeature.attributes[key] = attributeUpdates[key];
     }
@@ -37,6 +37,7 @@ export async function useUpdate(featureLayer: __esri.FeatureLayer, queryOpts: {
     updatedFeatures.push(clonedFeature);
   });
   //更新要素
+ 
   const editResults = await featureLayer.applyEdits({
     updateFeatures: updatedFeatures
   });
@@ -44,6 +45,7 @@ export async function useUpdate(featureLayer: __esri.FeatureLayer, queryOpts: {
   if (!editResults.updateFeatureResults || editResults.updateFeatureResults.length === 0) {
     throw new Error("Update failed");
   }
+  // debugger
   //刷新图层
   featureLayer.refresh();
   
