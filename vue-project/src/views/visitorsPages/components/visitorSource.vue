@@ -1,40 +1,39 @@
 <template>
-    <div class="container" ref="visitorRef">
+    <div class="container">
         <div class="header">
             <el-select v-model="yearValue" placeholder="请选择年份" popper-class="gray-list" :popper-append-to-body="false"
                 @change="select_Changed">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <el-radio-group v-model="radio" class="radio" @change="radio_changed">
-                <el-radio :label="1" size="small">国内游客</el-radio>
-                <el-radio :label="2" size="small">世界游客</el-radio>
+                <el-radio :label="1" size="large">国内游客</el-radio>
+                <el-radio :label="2" size="large">世界游客</el-radio>
             </el-radio-group>
         </div>
-        <div class="envirment" id="main_pro">
+        <div class="body" id="main_pro" ref="body">
         </div>
     </div>
 </template>
   
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
+//@ts-ignore
 import * as echarts from 'echarts';
 import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery.js";
 import TopFilter from "@arcgis/core/rest/support/TopFilter.js";
 import chinaLayer from '@/features/Layer/visitorLayer';
 import { worldLayer } from '@/features/Layer/visitorLayer';
-import { useViewStore } from '../../../store/mapviewstore';
+//@ts-ignore
+import { useViewStore } from '../../../store/mapViewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';
 import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import { useScreen } from '@/hooks/useScreen';
-import { useEcharts } from '@/hooks/useEcharts';
+const body = ref<HTMLElement | null>(null);
 const store = useViewStore();
 const yearValue = ref('2018');
 const radio = ref(1)
 const props = defineProps({
     visiable: Boolean,
 })
-let visitorRef = ref<HTMLElement | null>(null);
-useScreen(visitorRef, 500, 500);
 const options = [
     {
         value: '2020',
@@ -65,7 +64,7 @@ const query = new TopFeaturesQuery({
     where: `year = '${yearValue.value}'`,
     outFields: ["*"],
     topFilter: new TopFilter({
-        topCount: 6,
+        topCount: 7,
         groupByFields: ["GeometryType"],
         orderByFields: ["number DESC"]
     })
@@ -292,15 +291,10 @@ function radio_changed(val: number) {
     }
 }
 watch(props, () => {
+    console.log(props.visiable);
     echartLayer?.setVisiable(props.visiable);
 })
 onMounted(() => {
-    let app = document.getElementById('app');
-    let proper = app?.parentElement?.childNodes[5] as HTMLDivElement
-    proper.style.position = 'absolute';
-    proper.style.left = 0 + 'px';
-    proper.style.top = 0 + 'px';
-    proper.style.margin=0+'px';
     chinaLayer.load().then(async () => {
         const results = await chinaLayer.queryTopFeatures(query);
         results.features.forEach((grahphic, index) => {
@@ -310,10 +304,11 @@ onMounted(() => {
             flightData[index].coords[0][0] = grahphic.attributes.longitude;
             flightData[index].coords[0][1] = grahphic.attributes.latitude;
         })
-        let chartDom = document.getElementById('main_pro')!;
-        myChart = echarts.init(chartDom);
-        useEcharts(myChart, option1);
-        // option1 && myChart.setOption(option1);
+        let chartDom = document.getElementById('main_pro');
+        myChart = echarts.init(chartDom as HTMLDivElement);
+        myChart.setOption(option1);
+        console.log(myChart);
+        
         let view = store.getView() as __esri.MapView;
         view.when(() => {
             //@ts-ignore
@@ -327,8 +322,10 @@ onMounted(() => {
                     value: dataItem.coords[0],
                 }
             });
-            view.zoom=4;
+            view.zoom = 4;
             echartLayer = new EchartLayer(view, option2);
+            console.log(echartLayer);
+            
             echartLayer?.setVisiable(false);
         })
     });
@@ -341,15 +338,21 @@ onUnmounted(() => {
 </script>
   
 <style lang="scss" scoped>
+// #viewDiv>div.esri-view-user-storage>div.screen>div:nth-child(2)>div.header>div.el-select>div>div>div {
+//     font-size: 18px !important;
+//     background-color: red;
+// }
+
 .container {
     position: absolute;
     background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
-    top:0%;
-    right: -4%;
+    top: 10%;
+    right: 0%;
     border-radius: 6px;
+    width: 500px;
+    height: 400px;
     pointer-events: auto;
     border: 0px solid var(--el-card-border-color);
-    margin-inline: 7px;
     display: flex;
     flex-direction: column;
     z-index: 1000;
@@ -358,8 +361,8 @@ onUnmounted(() => {
         display: flex;
         top: 4px;
         left: 5px;
-        width: 490px;
-        height: 30px;
+        width: 100%;
+        height: 8%;
         border-radius: 3px;
         flex-direction: row;
 
@@ -368,27 +371,25 @@ onUnmounted(() => {
             position: relative;
             align-items: center;
             flex-wrap: nowrap;
-            margin-left: 20px;
-
+            margin-left: 10%;
         }
 
         .el-select {
-            margin-left: 10px;
-            width: 100px;
+            margin-left: 2%;
+            width: 30%;
+
+
+        }
+
+        .body {
+            position: absolute;
+            top: 10%;
+            right: 2px;
+            width: 500px;
+            height: 350px;
+            margin: 1px;
         }
     }
-
-
-    .envirment {
-        position: absolute;
-        top: 40px;
-        left: 5px;
-        width: 490px;
-        height: 400px;
-        opacity: 0.5;
-        background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
-    }
-
 }
 </style>
   

@@ -30,7 +30,7 @@ const Lineoptions = {
         },
         extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);max-width: 200px; max-height: 90px;',
         formatter: function (params: any[]) {
-            let html = '<div style="font-size: 18px; font-weight: bold;height: 30px; ">' + params[0].name + '</div>';
+            let html = '<div style="font-size: 16px; font-weight: bold;height: 30px; ">' + params[0].name + '</div>';
             params.forEach(function (item) {
                 let suffix = '';
                 if (item.seriesIndex === 0 || item.seriesIndex === 1) {
@@ -38,7 +38,7 @@ const Lineoptions = {
                 } else {
                     suffix = '%';
                 }
-                html += '<span style="display: inline-block; width: 10px; height: 10px; margin-right: 5px;font-size: 18px; border-radius: 50%; background-color: ' + item.color + ';"></span>' + item.seriesName + '：' + item.value + suffix + '<br>';
+                html += '<span style="display: inline-block; width: 10px; height: 10px; margin-right: 5px;font-size: 14px; border-radius: 50%; background-color: ' + item.color + ';"></span>' + item.seriesName + '：' + item.value + suffix + '<br>';
             });
             // html += '</div>';
             return html;

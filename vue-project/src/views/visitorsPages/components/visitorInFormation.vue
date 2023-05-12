@@ -37,8 +37,8 @@ onMounted(() => {
 .container {
     position: absolute;
     top: 12%;
-    left: 65.2%;
-    width: 480px;
+    left: 70.2%;
+    width: 600px;
     height: 500px;
     pointer-events: auto;
     background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
@@ -47,8 +47,7 @@ onMounted(() => {
     flex-direction: column;
 
     .el-form {
-        height: 50px;
-
+        // height: 50px;
         .el-select {
             height: 30px;
             width: 150px;
@@ -60,18 +59,12 @@ onMounted(() => {
             height: 30px;
             width: 100px;
             margin-left: -20px;
-            // margin-left: 8px;
-            // margin-right: 8px;
         }
     }
 
     .table {
         height: 450px;
         width: 100%;
-        // .el-table {
-        //     height: 450px;
-        //     width: 100%;
-        // }
     }
 
 }</style>

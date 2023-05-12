@@ -12,7 +12,8 @@ export const useEcharts = (myChart: echarts.ECharts, options: echarts.EChartsCor
 	if (options && typeof options === "object") {
 		myChart.setOption(options);
 	}
-	const echartsResize = useDebounceFn(() => { 
+	const echartsResize = useDebounceFn(() => {
+		console.log("echartsResize");
 		myChart && myChart.resize();
 	}, 100);
 

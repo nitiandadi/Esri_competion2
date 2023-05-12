@@ -6,3 +6,11 @@ html,body,div{
 .gray-list{
   height: 300px;
 }
+[id^="el-popper-container"] {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+}

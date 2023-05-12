@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia'
-import { useViewStore } from '@/store/mapviewstore'
+import { useViewStore } from '@/store/mapViewstore'
 import { pointslayer } from '@/features'
 import PopupTemplate from "@arcgis/core/PopupTemplate.js";
-import { ref } from 'vue';
+import { ref,Ref, toRaw, useSSRContext } from 'vue';
+
 
 export const usepointslayerStore = defineStore('pointslayer', () => {
     // 获取到view实例
     const view = useViewStore().getView() as __esri.MapView;
-    // 将要素图层添加到view中
-    function addpointslayer() {
+
+    // 将要素图层添加到view中，同时设置弹窗模板，
+    function addpointslayer(  ) {
         view.when(() => {
             view.map.add(pointslayer);
             //自定义弹窗模板     
@@ -53,15 +55,21 @@ export const usepointslayerStore = defineStore('pointslayer', () => {
             });
         });
     }
+
     // 监视要素图层的view是否加载完成，加载完成后放回true,否则返回false
-    function ispointslayerLoaded() {
-        // 监视view中的layer的视图是否加载完成
-        if( view.allLayerViews.getItemAt(1) ){
-            return false;
-        }
-        else{
-            return true;
-        }
+    function ispointslayerLoaded( isDisabled: any) {
+        
+       // 监视点图层是否加载完成,加载完成后将开关设置为可用
+        view.when(() => {
+            // 监视点图层是否加载完成
+            view.watch('updating', (val) => {
+                if (!val) {
+                    // 将开关设置为可用
+                    isDisabled.value = false;
+                }
+            });
+        });
+    
     }
     // 将要素图层从view中移除
     function removepointslayer() {

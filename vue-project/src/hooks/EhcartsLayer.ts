@@ -1,22 +1,24 @@
+import type { EChartsOption } from 'echarts/types/dist/echarts';
 // import type View from "@arcgis/core/views/MapView.js";
 import type View from "@arcgis/core/views/View.js";
 import * as echarts from 'echarts';
 //@ts-ignore
 import getE3CoordinateSystem from "./ArcgisMapCoordSys";
 export default class EchartsLayer {
-    private _echartsContainer: HTMLDivElement|null;
+    public _echartsContainer: HTMLDivElement | null;
     mapView: View;
-    chart: echarts.ECharts|null;
+    chart: echarts.ECharts | null;
+    private option: EChartsOption;
     constructor(mapView: View, option: any = {}) {
         var div = this._echartsContainer = document.createElement('div');
+        this.option = option;
         this.mapView = mapView;
         div.style.position = 'absolute';
         div.style.height = mapView.height + 'px';
         div.style.width = mapView.width + 'px';
         div.style.bottom = 0 + 'px';
         div.style.right = 0 + 'px';
-        // div.style.top = 0 + 'px';
-        div.style.zIndex = '999';
+        div.style.zIndex = '1';
         div.id = 'echartLayer'
         let parent = document.getElementsByClassName("esri-view-user-storage")[0];
         parent.appendChild(div);
@@ -24,7 +26,6 @@ export default class EchartsLayer {
         if (mapView.isFulfilled()) {
             this.chart = echarts.init(div);
             this._init();
-            console.log(option);
             this.chart.setOption(option);
         }
         else {
@@ -33,8 +34,11 @@ export default class EchartsLayer {
     }
     private _init() {
         this.mapView.watch('extent', () => {
+            let container = this._echartsContainer as HTMLDivElement;
+            container.style.width = this.mapView.width + 'px';
+            container.style.height = this.mapView.height + 'px';
             this.chart?.resize();
-        })
+        });
     }
     /**
      * destroy the chart and relasee the resource
@@ -44,15 +48,16 @@ export default class EchartsLayer {
         this.chart = null;
         // this.echartsContainer.de
         this._echartsContainer?.remove();
-        this._echartsContainer=null;
+        this._echartsContainer = null;
     }
     /**
      * Redraw the chart
      */
     public Redraw(option: any) {
+        this.option = option;
         this.chart?.setOption(option);
     }
     public setVisiable(visiable: boolean) {
-       (this._echartsContainer as HTMLDivElement) .hidden = !visiable;
+        (this._echartsContainer as HTMLDivElement).hidden = !visiable;
     }
 }

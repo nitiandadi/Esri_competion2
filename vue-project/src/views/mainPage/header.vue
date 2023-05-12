@@ -29,13 +29,13 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, } from "vue";
+import {  ref, } from "vue";
 import { useRouter } from "vue-router";
 import { useScreen } from "../../hooks/useScreen";
 import baseMapView from "./baseMapView.vue";
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
-useScreen(dataScreenRef, 1920, 1080);
+useScreen(dataScreenRef);
 </script>
 <style lang="scss" scoped>
 @import "../../style/mainPage.scss";

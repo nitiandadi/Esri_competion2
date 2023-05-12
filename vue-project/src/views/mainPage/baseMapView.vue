@@ -8,7 +8,8 @@
 import { onMounted, ref, Ref } from 'vue';
 import esriconfig from "@arcgis/core/config.js";
 import styles from "../../style/esri.scss?inline";
-import { useViewStore } from '@/store/mapviewstore';
+//@ts-ignore
+import { useViewStore } from '@/store/mapViewstore';
 import { useTimesliderStore } from '@/store/environment/timesliderstore.js';
 
 const timeSliderRef = ref<HTMLDivElement | null>(null);
@@ -38,9 +39,9 @@ document.head.appendChild(style);
 
 #timeSlider {
   position: absolute;
-  left: 1.2%;
+  left: 5.3%;
   right: 5%;
-  bottom: 18%;
+  bottom: 17%;
   max-height: 100px;
   max-width: 600px;
 }

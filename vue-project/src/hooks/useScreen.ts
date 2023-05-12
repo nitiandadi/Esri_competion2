@@ -1,3 +1,4 @@
+import { number } from "echarts";
 import { Ref, onMounted, onBeforeUnmount } from "vue";
 
 /**
@@ -8,27 +9,22 @@ import { Ref, onMounted, onBeforeUnmount } from "vue";
  * @return void
  * */
 
-export const useScreen = (dataScreenRef: Ref<HTMLElement | null>,width:number,height:number) => {
+export const useScreen = (dataScreenRef: Ref<HTMLElement | null>) => {
     onMounted(() => {
         // 初始化时为外层盒子加上缩放属性，防止刷新界面时就已经缩放
         if (dataScreenRef.value) {
-            if(width === 1920){
-                dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
-            }
-            else{
-                dataScreenRef.value.style.transform = `scale(${getScale()})`;
-            }       
-            dataScreenRef.value.style.width = width+"px";
-            dataScreenRef.value.style.height = height+"px";        
+            dataScreenRef.value.style.width = 1920+"px";
+            dataScreenRef.value.style.height = 1080+"px"; 
+            dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;                      
         }
         setTimeout(() => {
             window.addEventListener("resize", resize);
+            console.log(dataScreenRef.value?.className);
         },100)
        
     });
     
-    const getScale = () => {
-        // debugger
+    const getScale = ( ) => {
         let ww = window.innerWidth / 1920;
         let wh = window.innerHeight / 1080;
         return ww < wh ? ww : wh;
@@ -36,11 +32,8 @@ export const useScreen = (dataScreenRef: Ref<HTMLElement | null>,width:number,he
     
     // 监听浏览器 resize 事件
     const resize = () => {
-        if (dataScreenRef.value && width > 1000 ) {
+        if (dataScreenRef.value ) {
             dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
-        }
-        else if(dataScreenRef.value){
-            dataScreenRef.value.style.transform = `scale(${getScale()})`;
         }
     };
     
