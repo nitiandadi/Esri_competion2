@@ -78,7 +78,9 @@ export const usepointslayerStore = defineStore('pointslayer', () => {
 
     // 将要素图层从view中移除
     function removepointslayer() {
-        view.map.remove(pointslayer);
+        // 将除了底图的所有图层移除
+        view.map.removeAll();
+        
     }
 
     return { addpointslayer, removepointslayer,ispointslayerLoaded,pointslayer }

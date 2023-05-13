@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+//@ts-ignore
 import { useViewStore } from '@/store/mapViewstore'
 import { initHeatmap } from '@/utils/timeheatmapUtils'
 import { timepointslaers, AQIfeatures } from '@/features'

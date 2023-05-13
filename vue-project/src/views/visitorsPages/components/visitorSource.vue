@@ -380,7 +380,7 @@ onUnmounted(() => {
 
 
         }
-
+    }
         .body {
             position: absolute;
             top: 10%;
@@ -390,6 +390,6 @@ onUnmounted(() => {
             margin: 1px;
         }
     }
-}
+
 </style>
   
