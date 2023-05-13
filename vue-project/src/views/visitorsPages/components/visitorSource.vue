@@ -80,7 +80,7 @@ let option1: echarts.EChartsOption = {
         type: 'category',
         data: xData,
         axisLabel: {
-            fontSize: 11,
+            fontSize: 15,
             color: '#4c9bfd',
             interval: 0,
         }
@@ -89,7 +89,7 @@ let option1: echarts.EChartsOption = {
         type: 'value',
         axisLabel: {
             color: '#4c9bfd',
-            fontSize: 13,
+            fontSize: 15,
         }
 
     },
@@ -330,7 +330,11 @@ onMounted(() => {
 onUnmounted(() => {
     echartLayer?.destroy();
     echartLayer = null;
+    if (store.getView().type === '3d') {
+        store.CreateMapView();
+    }
 })
+
 const style = document.createElement("style");
 style.setAttribute("lang", "scss");
 style.innerHTML = visitostyle;
@@ -338,10 +342,6 @@ document.head.appendChild(style);
 </script>
   
 <style lang="scss" scoped>
-.el-select .el-input__inner {
-    font-size: 2rem;
-}
-
 .el {
     &-select {
         margin-left: 2%;
