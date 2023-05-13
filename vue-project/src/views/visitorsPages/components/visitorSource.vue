@@ -27,6 +27,7 @@ import { worldLayer } from '@/features/Layer/visitorLayer';
 import { useViewStore } from '../../../store/mapViewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';
 import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import visitostyle from '@/style/visitor.scss?inline'
 const body = ref<HTMLElement | null>(null);
 const store = useViewStore();
 const yearValue = ref('2018');
@@ -291,7 +292,6 @@ function radio_changed(val: number) {
     }
 }
 watch(props, () => {
-    console.log(props.visiable);
     echartLayer?.setVisiable(props.visiable);
 })
 onMounted(() => {
@@ -307,8 +307,6 @@ onMounted(() => {
         let chartDom = document.getElementById('main_pro');
         myChart = echarts.init(chartDom as HTMLDivElement);
         myChart.setOption(option1);
-        console.log(myChart);
-        
         let view = store.getView() as __esri.MapView;
         view.when(() => {
             //@ts-ignore
@@ -324,8 +322,6 @@ onMounted(() => {
             });
             view.zoom = 4;
             echartLayer = new EchartLayer(view, option2);
-            console.log(echartLayer);
-            
             echartLayer?.setVisiable(false);
         })
     });
@@ -335,13 +331,24 @@ onUnmounted(() => {
     echartLayer?.destroy();
     echartLayer = null;
 })
+const style = document.createElement("style");
+style.setAttribute("lang", "scss");
+style.innerHTML = visitostyle;
+document.head.appendChild(style);
 </script>
   
 <style lang="scss" scoped>
-// #viewDiv>div.esri-view-user-storage>div.screen>div:nth-child(2)>div.header>div.el-select>div>div>div {
-//     font-size: 18px !important;
-//     background-color: red;
-// }
+.el-select .el-input__inner {
+    font-size: 2rem;
+}
+
+.el {
+    &-select {
+        margin-left: 2%;
+        width: 30%;
+        font-size: 15px;
+    }
+}
 
 .container {
     position: absolute;
@@ -374,21 +381,16 @@ onUnmounted(() => {
             margin-left: 10%;
         }
 
-        .el-select {
-            margin-left: 2%;
-            width: 30%;
 
+    }
 
-        }
-
-        .body {
-            position: absolute;
-            top: 10%;
-            right: 2px;
-            width: 500px;
-            height: 350px;
-            margin: 1px;
-        }
+    .body {
+        position: absolute;
+        top: 10%;
+        right: 2px;
+        width: 500px;
+        height: 350px;
+        margin: 1px;
     }
 }
 </style>

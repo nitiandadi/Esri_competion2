@@ -9,6 +9,7 @@ export default class EchartsLayer {
     mapView: View;
     chart: echarts.ECharts | null;
     private option: EChartsOption;
+    private handle: __esri.WatchHandle | null = null;
     constructor(mapView: View, option: any = {}) {
         var div = this._echartsContainer = document.createElement('div');
         this.option = option;
@@ -33,7 +34,7 @@ export default class EchartsLayer {
         }
     }
     private _init() {
-        this.mapView.watch('extent', () => {
+        this.handle = this.mapView.watch('extent', () => {
             let container = this._echartsContainer as HTMLDivElement;
             container.style.width = this.mapView.width + 'px';
             container.style.height = this.mapView.height + 'px';
@@ -49,6 +50,7 @@ export default class EchartsLayer {
         // this.echartsContainer.de
         this._echartsContainer?.remove();
         this._echartsContainer = null;
+        this.handle?.remove();
     }
     /**
      * Redraw the chart
