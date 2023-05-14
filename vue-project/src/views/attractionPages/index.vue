@@ -9,17 +9,17 @@
         <el-col>
           <el-text>景点环境监测</el-text>
           <el-switch v-model="value1" class="mt-2" size="large" style="margin-left: 8%" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" :disabled="isDisabled" />
+            :inactive-icon="Close" :disabled="isDisabled"  @change="checkSwitch(0)" />
         </el-col>
         <el-col>
           <el-text>景点对比分析</el-text>
           <el-switch v-model="value2" class="mt-2" size="large" style="margin-left: 8%" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" :disabled="isDisabled" />
+            :inactive-icon="Close" :disabled="isDisabled"  @change="checkSwitch(1)"  />
         </el-col>
         <el-col>
           <el-text>修正旅游景点</el-text>
           <el-switch v-model="value3" class="mt-2" size="large" style="margin-left: 8%" inline-prompt :active-icon="Check"
-            :inactive-icon="Close" :disabled="isDisabled" />
+            :inactive-icon="Close" :disabled="isDisabled"   @change="checkSwitch(2)" />
         </el-col>
       </el-row>
       </el-card> 
@@ -53,6 +53,14 @@ const showCard = ref(false)
 // 使屏幕自适应
 useScreen(screenRef);
 
+let switchList = [value1, value2, value3];
+function checkSwitch(index: number) {
+  for (let i = 0; i < switchList.length; i++) {
+    if (i !== index) {
+      switchList[i].value = false;
+    }
+  }
+}
 // 触发卡片进入动画
 const triggerCardAnimation = () => {
   showCard.value = true;

@@ -57,7 +57,7 @@ export const useOnlayerStore = defineStore('onlayer', () => {
 
         // 创建一个name，用于存储查询到的要素的名称
         let name: string = "";
-
+        console.log(pointslayer.id);
         // 查找要素图层中FID为1的要素，选中该要素
         const query = pointslayer.createQuery();
         query.where = "FID = 1";

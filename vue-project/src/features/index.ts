@@ -1,4 +1,4 @@
-import pointslayer from './Layer/pointslayer'
+import createPointslayer from './Layer/pointslayer'
 import timepointslaers from './Layer/timepointslayer'
 import AQIfeatures from './environment/AQI';
 import climate from './environment/climate';
@@ -12,6 +12,6 @@ export {
     waterquality,
     climate,
     AQIfeatures,
-    pointslayer,
+    createPointslayer,
     timepointslaers,
 };
