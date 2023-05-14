@@ -74,8 +74,9 @@ onMounted(() => {
     store.ispointslayerLoaded(isDisabled);      
     // 时间轴
     TimesliderStore.createTimeslider( timeSliderRef );
-    // 创建热力图
+    // // 创建热力图
     HeatmapStore.createTimeHeatmap( lengendRef.value );
+
   }, 100);
 
 });

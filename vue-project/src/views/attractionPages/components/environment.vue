@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, toRaw, onUnmounted, onBeforeMount } from "vue";
+import { ref, onMounted, toRaw, onUnmounted, onBeforeMount, } from "vue";
 import { useEcharts } from "@/hooks/useEcharts";
 import 'echarts-liquidfill';
 import * as echarts from 'echarts';
@@ -54,6 +54,7 @@ const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
 OnlayerStore.createOnlayer();
 
 onMounted(() => { 
+    
     // 实例化ECharts对象
     let ChartLine: echarts.ECharts | null = null;
     let ChartRadar: echarts.ECharts | null = null;

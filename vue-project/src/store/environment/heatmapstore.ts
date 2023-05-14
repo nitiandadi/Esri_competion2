@@ -65,8 +65,10 @@ export const useHeatmapStore = defineStore('heatmap', () => {
                 //提供数据
                 useUpdate(timelayer, queryOpts);
             };
-            //用热力图工具创建该图层
+
+
             initHeatmap(view, timelayer as __esri.FeatureLayer, 'AQI') as __esri.FeatureLayer;
+
         });
         // 为view上的一个热力图创建图例，用于显示热力图的颜色分布
         legend = new Legend({
@@ -87,7 +89,6 @@ export const useHeatmapStore = defineStore('heatmap', () => {
         view.ui.remove(legend as __esri.Legend);
         // 将mapview.map中第三图层之后的热力图层移除
         for (let i = 0; i < 7; i++) {
-            view.map.findLayerById(`AQI${i}`).destroy();
             view.map.remove(view.map.findLayerById(`AQI${i}`));           
         }
         view.map.allLayers.getItemAt(1).visible = true
