@@ -45,9 +45,6 @@ export async function useUpdate(featureLayer: __esri.FeatureLayer, queryOpts: {
   if (!editResults.updateFeatureResults || editResults.updateFeatureResults.length === 0) {
     throw new Error("Update failed");
   }
-  // debugger
-  //刷新图层
-  featureLayer.refresh();
-  
+
   return featureLayer;
 }

@@ -31,7 +31,7 @@ import 'echarts-liquidfill';
 import * as echarts from 'echarts';
 import { useHeatmapStore } from '@/store/environment/heatmapstore'
 import { useTimesliderStore } from '@/store/environment/timesliderstore'
-import { useOnlayerStore } from '@/store/environment/onlayerstore'
+import { useOnlayerStore } from '@/store/environment/onLayerstore'
 import Lineoptions from "./chartOptions/Lineoptions";//引入折线图配置项
 import Baroptions from "./chartOptions/Baroptions";//引入柱状图配置项
 import Radaroptions from "./chartOptions/Radaroptions";//引入雷达图配置项
@@ -54,7 +54,6 @@ const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
 OnlayerStore.createOnlayer();
 
 onMounted(() => { 
-    
     // 实例化ECharts对象
     let ChartLine: echarts.ECharts | null = null;
     let ChartRadar: echarts.ECharts | null = null;

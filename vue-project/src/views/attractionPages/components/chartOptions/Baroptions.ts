@@ -1,3 +1,20 @@
+import { useTime } from '@/hooks/useTime';
+
+const time = useTime();
+//获得当前时间为中心的连续五天的日期
+function getFiveDays() {
+    let fiveDays: string[] = [];
+    let nowTime = new Date(time.year.value, time.month.value - 1, time.day.value).getTime();
+    let oneDayTime = 24 * 60 * 60 * 1000;
+    for (let i = 0; i < 5; i++) {
+        let ShowTime = new Date(nowTime + (i - 4) * oneDayTime);
+        let month = ShowTime.getMonth() + 1;
+        let day = ShowTime.getDate();
+        let time = month + '-' + day;
+        fiveDays.push(time);
+    }
+    return fiveDays;
+}
 const Baroptions = {
     grid: {
         top: '12%',
@@ -30,7 +47,7 @@ const Baroptions = {
     },
     xAxis: {
         type: 'category',
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+        data: getFiveDays(),
         axisLine: {
             show: false
         },
@@ -43,7 +60,7 @@ const Baroptions = {
 
     },
     legend: {
-        data: ['pH值', '溶解氧', '化学需氧量', '总氮'],
+        data: ['pH值', '溶解氧', '高锰酸盐指数', '总氮'],
         textStyle: {
             color: '#4c9bfd'
         },
@@ -87,7 +104,7 @@ const Baroptions = {
             },
         },
         {
-            name: '化学需氧量',
+            name: '高锰酸盐指数',
             type: 'bar',
             data: [],
             itemStyle: {

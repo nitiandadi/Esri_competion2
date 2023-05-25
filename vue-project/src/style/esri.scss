@@ -1,7 +1,7 @@
 /* popup样式修改 */
 .esri-popup {
     width: 380px;
-    height: 260px;
+    height: auto;
     z-index: 2;
     background-color: #444343;
     border-radius: 10px;
@@ -16,7 +16,7 @@
     &--is-docked-bottom-left,
     &--is-docked-bottom-right {
       .esri-popup__main-container {
-                  max-height: 100%;
+        max-height: 100%;
       }
     }
     &__header {
@@ -42,12 +42,14 @@
     }
     &__content {
       // background-color: #0f0;
-    
       margin: 0;
       p {
         font-family: "Microsoft YaHei", sans-serif;
       }
-      height: calc(100% - 100px);   
+      height: auto;   
+    }
+    .esri-feature__content-node{
+      overflow: hidden;
     }
     &__footer {
       // background-color: #00f;
@@ -164,8 +166,8 @@ h2.esri-widget__heading{
   background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
   color: #92c3e4;
   border-radius: 6px; /* 添加边角弧度 */
-  max-height: 150px;
-  max-width: 360px;
+  max-height: auto;
+  width: auto;
   overflow: hidden;
   /* 卡片样式 */
   &--card{

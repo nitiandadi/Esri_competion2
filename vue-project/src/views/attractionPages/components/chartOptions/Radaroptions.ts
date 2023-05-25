@@ -1,3 +1,21 @@
+import { useTime } from '@/hooks/useTime';
+
+const time = useTime();
+//获得当前时间为中心的连续五天的日期
+function getFiveDays() {
+    let fiveDays: string[] = [];
+    let nowTime = new Date(time.year.value, time.month.value - 1, time.day.value).getTime();
+    let oneDayTime = 24 * 60 * 60 * 1000;
+    for (let i = 0; i < 5; i++) {
+        let ShowTime = new Date(nowTime + (i - 4) * oneDayTime);
+        let month = ShowTime.getMonth() + 1;
+        let day = ShowTime.getDate();
+        let time = month + '-' + day;
+        fiveDays.push(time);
+    }
+    return fiveDays;
+}
+
 const Radaroptions: echarts.EChartsOption = {
     baseOption: {
         toolbox: {
@@ -32,11 +50,11 @@ const Radaroptions: echarts.EChartsOption = {
         },
         radar: {
             indicator: [
-                { name: 'PM2.5', max: 50,color:'#4c9bfd'},
                 { name: 'PM10', max: 100 ,color:'#4c9bfd'},
+                { name: 'PM2.5', max: 50,color:'#4c9bfd'},   
+                { name: 'CO', max: 1 ,color:'#4c9bfd'},            
                 { name: 'SO₂', max: 50 ,color:'#4c9bfd'},
                 { name: 'NO₂', max: 50,color:'#4c9bfd' },
-                { name: 'CO', max: 1 ,color:'#4c9bfd'},
             ],  
             center: ['70%', '50%'],             
         },
@@ -48,15 +66,16 @@ const Radaroptions: echarts.EChartsOption = {
     },
     options: [],
 };
+// 获取五天的日期
+const fiveDays = getFiveDays();
+
 // 配置数据
 const dataMap: { [key: string]: number[] }  = {
-    '周一': [],
-    '周二': [],
-    '周三': [],
-    '周四': [],
-    '周五': [],
-    '周六': [],
-    '周日': []
+    [fiveDays[0]]: [],
+    [fiveDays[1]]: [],
+    [fiveDays[2]]: [],
+    [fiveDays[3]]: [],
+    [fiveDays[4]]: [],
 };  
 // 获取雷达图的指标信息
 const radarOption: echarts.RadarComponentOption = Radaroptions.baseOption?.radar as echarts.RadarComponentOption;

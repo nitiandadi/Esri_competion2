@@ -1,6 +1,20 @@
 import { useTime } from '@/hooks/useTime';
 
 const time = useTime();
+//获得当前时间为中心的连续五天的日期
+function getFiveDays() {
+    let fiveDays: string[] = [];
+    let nowTime = new Date(time.year.value, time.month.value - 1, time.day.value).getTime();
+    let oneDayTime = 24 * 60 * 60 * 1000;
+    for (let i = 0; i < 5; i++) {
+        let ShowTime = new Date(nowTime + (i - 3) * oneDayTime);
+        let month = ShowTime.getMonth() + 1;
+        let day = ShowTime.getDate();
+        let time = month + '-' + day;
+        fiveDays.push(time);
+    }
+    return fiveDays;
+}
 
 const Lineoptions = {
     // 设置折线颜色分别为红色，蓝色，黄色
@@ -62,7 +76,7 @@ const Lineoptions = {
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+        data: getFiveDays(),
         axisTick: {
             show: false,
         },

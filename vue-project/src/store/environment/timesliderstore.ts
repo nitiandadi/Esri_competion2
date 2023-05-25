@@ -17,8 +17,8 @@ export const useTimesliderStore = defineStore('timerslider', () => {
         const year = time.year;
         const month = time.month;
         const day = time.day;
-        const start = new Date(year.value, month.value - 1, day.value - 3);
-        const end = new Date(year.value, month.value - 1, day.value + 3);
+        const start = new Date(year.value, month.value - 1, day.value - 4);
+        const end = new Date(year.value, month.value - 1, day.value );
         const currentTime = new Date(year.value, month.value - 1, day.value); // 设置初始值为 现在
         if( timeSliderRef ) 
         //用时间滑块工具创建该图层

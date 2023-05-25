@@ -5,8 +5,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, Ref } from 'vue';
-import esriconfig from "@arcgis/core/config.js";
-import styles from "../../style/esri.scss?inline";
+import styles from "@/style/esri.scss?inline";
 //@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 
@@ -14,7 +13,6 @@ import { useViewStore } from '@/store/mapviewstore';
 
 const store = useViewStore();
 onMounted(() => {
-  esriconfig.apiKey = "AAPK73d1f032eb4243ecb5e8a63c99c39fd12BNLILjg2lhqCNOKDvIHP_4FVEzPIt6cRUZRtNWw7oBST4fXE3NBOaq7XcI76cXz";
   let container = document.getElementById("viewDiv") as HTMLDivElement;
   store.setContainer(container);
   store.CreateMapView();

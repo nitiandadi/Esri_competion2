@@ -1,0 +1,38 @@
+.correction{
+    &-card{
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0%;
+        bottom: 10%;
+        width: 30%;
+        height: auto;
+        /* 卡片开始的位置在右边屏幕外 */
+        /* ...其余样式... */
+        border-radius: 6px;
+        /* 添加边角弧度 */
+        background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
+        /* 添加渐变 */
+        pointer-events: auto;
+        border: 0px solid var(--el-card-border-color); 
+        &__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 1.6rem;
+            /* 改变标题字体大小 */
+            font-weight: bold;
+            /* 加粗字体 */
+            font-style: italic;
+            /* 斜体字 */
+        }
+    }    
+}
+.esri-feature-form{
+    color: #92c3e4;
+    background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
+    &__description-text {
+        color: #49c5f2a6;
+    }
+}  
