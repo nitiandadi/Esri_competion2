@@ -30,15 +30,15 @@ export const usepointslayerStore = defineStore('pointslayer', () => {
                             label: "名称"
                         },
                         {
-                            fieldName: "类型名",
-                            label: "类型名"
+                            fieldName: "类型名称",
+                            label: "类型名称"
                         },
                         {
-                            fieldName: "经度",
+                            fieldName: "longitude",
                             label: "经度"
                         },
                         {
-                            fieldName: "纬度",
+                            fieldName: "latitude",
                             label: "纬度"
                         },
                         {

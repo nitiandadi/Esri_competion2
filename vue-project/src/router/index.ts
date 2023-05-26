@@ -23,6 +23,11 @@ const router = createRouter({
           name: 'VisitorManage',
           component: () => import('../views/visitorsPages/index.vue'),
         },
+        {
+          path: 'ProtectionManage',
+          name: 'ProtectionManage',
+          component: () => import('../views/protectionPages/index.vue'),
+        },
       ]
     },
     {

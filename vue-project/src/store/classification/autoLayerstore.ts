@@ -114,7 +114,7 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                         label: "溶解氧"
                     },
                     {
-                        fieldName: "permanganateindex",
+                        fieldName: "permanganate",
                         label: "高锰酸盐指数"
                     },
                     {
@@ -181,8 +181,7 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                         if(index === 'ph' || index === 'dissolvedoxygen' || index === 'permanganateindex' || index === 'totalnitrogen'){
                             const where = `名称='${feature.attributes['名称']}'`;
                             let attributeUpdates = { [index.toLocaleLowerCase()] : res.data[index] };
-                            if(index === 'permanganateindex') attributeUpdates = { ['permanganate'] : res.data[index] } ;
-                            debugger
+                            if(index === 'permanganateindex') attributeUpdates = { ['permanganate'] : res.data[index] } ;                        
                             const queryOpts = {
                                 where: where,
                                 attributeUpdates: attributeUpdates
@@ -210,7 +209,7 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                             if(index === 'tempMax') attributeUpdates = { ['maxtemp'] : res.data[index] } ;
                             if(index === 'date'){
                                 const date = new Date(res.data[index]);
-                                attributeUpdates = { ['time'] : date.getTime() };
+                                attributeUpdates = { ['pointstime'] : date.getTime() };
                             } 
                             const queryOpts = {
                                 where: where,
@@ -324,15 +323,16 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                         label: "名称"
                     },
                     {
-                        fieldName: "类型名",
-                        label: "类型名"
+                        fieldName: "类型名称",
+                        label: "类型名称"
                     },
                     {
-                        fieldName: "经度",
+                        //经度英文名为longitude，纬度英文名为latitude
+                        fieldName: "longitude",
                         label: "经度"
                     },
                     {
-                        fieldName: "纬度",
+                        fieldName: "latitude",
                         label: "纬度"
                     },
                     {

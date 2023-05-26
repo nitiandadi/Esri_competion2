@@ -56,7 +56,7 @@ export const useHeatmapStore = defineStore('heatmap', () => {
                     await axios.post("http://81.70.22.42:9000/quality/airLast5d",data).then(async (res) => {
                         //为图层提供数据  
                         const where = `名称='${feature.name}'`;                     
-                        const attributeUpdates = { aqi: res.data.aqi[index] };
+                        const attributeUpdates = { AQI: res.data.aqi[index] };
                         const queryOpts: {
                             where: string;
                             attributeUpdates: {

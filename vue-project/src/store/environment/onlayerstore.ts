@@ -45,9 +45,8 @@ export const useOnlayerStore = defineStore('onlayer', () => {
         view.zoom = 6;
         // 查找要素图层中objectid为1的要素，选中该要素
         const query = pointslayer.createQuery();
-        query.where = "objectid = 1";
+        query.where = "FID = 1";
         await pointslayer.queryFeatures(query).then(async function (results: __esri.FeatureSet) {
-            
             // 选中要素
             handle = pointslayerView.highlight(results.features[0]);
             // 刷新图层
@@ -68,9 +67,9 @@ export const useOnlayerStore = defineStore('onlayer', () => {
             view.hitTest(event).then(async function(response: __esri.HitTestResult){
                 if (response.results.length === 1) {
                     // 获取查询到的要素的唯一值id
-                    IdRef.value = (response.results[0] as __esri.GraphicHit).graphic.attributes["objectid"];
+                    IdRef.value = (response.results[0] as __esri.GraphicHit).graphic.attributes["FID"];
                     // 查找要素图层中FID的要素,为图表添加新的数据
-                    query.where = `objectid = ${IdRef.value}`;
+                    query.where = `FID = ${IdRef.value}`;
                     await pointslayer.queryFeatures(query).then(async function(results: __esri.FeatureSet){
                         await useGetdata(results, "tempMax" , ChartLine , ChartRadar , ChartBar);
                     });  
@@ -81,6 +80,7 @@ export const useOnlayerStore = defineStore('onlayer', () => {
 
     // 销毁点击事件和相关手柄
     function destroyOnlayer( ){
+        if (handle)
         handle!.remove();
         handle = null;
         // 视图恢复到初始位置

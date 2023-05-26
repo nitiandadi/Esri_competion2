@@ -27,7 +27,7 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
                 },
                 {
                     type: "field",
-                    fieldName: "time",
+                    fieldName: "pointstime",
                     label: "日期",
                     editableExpression: "return false"
                 },
@@ -88,9 +88,9 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
     let featureForm: __esri.FeatureForm;
 
     //选择要素,并显示要素表单
-    async function selectFeature(objectId: number,featureLayer: __esri.FeatureLayer,form: __esri.FeatureForm) {
+    async function selectFeature(FID: number,featureLayer: __esri.FeatureLayer,form: __esri.FeatureForm) {
         //从要素图层中查询要素
-        await featureLayer.queryFeatures({objectIds: [objectId],outFields: ["*"],returnGeometry: true}).then((results) => {
+        await featureLayer.queryFeatures({objectIds: [FID],outFields: ["*"],returnGeometry: true}).then((results) => {
             if (results.features.length > 0) {
                 editFeature = results.features[0];
                 //显示要素表单
@@ -133,7 +133,7 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
               if(response.results.length === 0) return;
               const result = response.results[0]  as __esri.GraphicHit;
               if (result.graphic &&result.graphic.layer === pointsLayer) {
-                selectFeature(result.graphic.attributes['objectid'],pointsLayer,featureForm);
+                selectFeature(result.graphic.attributes['FID'],pointsLayer,featureForm);
               }
             });
         });

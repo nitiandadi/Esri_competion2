@@ -7,7 +7,7 @@ interface CityInfo {
 }
 //创建水质检测站点
 const qualityname: CityInfo =  {
-    "西寧市":{
+    "西宁市":{
         "小峡桥":{ 
             "行政区划":"630100",
         },
