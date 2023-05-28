@@ -7,6 +7,7 @@
 <script setup lang='ts'>
 import { ref, onMounted } from 'vue';
 import { useScreen } from '@/hooks/useScreen';
+
 const screenRef = ref<HTMLElement | null>(null);
 useScreen(screenRef);
 </script>
