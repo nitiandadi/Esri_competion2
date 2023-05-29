@@ -1,3 +1,4 @@
+
 import { HeatmapRenderer } from '@arcgis/core/renderers';
 
 /**
@@ -12,7 +13,7 @@ let heatmapRenderer: __esri.Renderer | null;
 
 
 /**定义一个热力层 */
-export function initHeatmap(mapview: __esri.MapView,timefeatureLayer: __esri.FeatureLayer,field: string){
+export function initHeatmap(timefeatureLayer: __esri.FeatureLayer,field: string){
   heatmapRenderer = new HeatmapRenderer({
     field: field,
     colorStops: [
@@ -32,27 +33,5 @@ export function initHeatmap(mapview: __esri.MapView,timefeatureLayer: __esri.Fea
   timefeatureLayer.renderer = heatmapRenderer;
   //设置时间热力层的不可见
   timefeatureLayer.visible = false;
-  //添加到图层中
-  mapview.map.add( timefeatureLayer);
   return  timefeatureLayer;
-}
-
-/**取消热力层 */
-export  function cancelHeatmap(mapview: __esri.MapView,timefeatureLayer: __esri.FeatureLayer) {
-  if (heatmapRenderer) {
-    heatmapRenderer = null;
-    // 将mapview.map中的热力图层移除
-    mapview.map.remove(timefeatureLayer);
-
-  } 
-}
-
-/**供外界使用的热力层开关 */
-export function toggleHeatmap(mapview: __esri.MapView,featureLayer: __esri.FeatureLayer,field: string) {
-  if (heatmapRenderer) {
-    cancelHeatmap(mapview,featureLayer);
-  } else {
-    //使原图层不可见
-    return  initHeatmap(mapview,featureLayer,field);
-  }
 }

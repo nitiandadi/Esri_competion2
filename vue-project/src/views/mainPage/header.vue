@@ -16,7 +16,7 @@
 				<div class="header-rg">
 					<span class="header-download" v-on:click="router.push('/home/AttractionManage')">景点管理</span>
 					<span class="header-feedback">反馈管理</span>
-					<span class="header-protection">景点保护</span>
+					<span class="header-protection" v-on:click="router.push('/home/ProtectionManage')">景点保护</span>
 				</div>
 			</div>
 		</div>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import {  ref, } from "vue";
+import { ref, } from "vue";
 import { useRouter } from "vue-router";
 import { useScreen } from "../../hooks/useScreen";
 import baseMapView from "./baseMapView.vue";

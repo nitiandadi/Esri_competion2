@@ -1,20 +1,33 @@
 <template>
-  <div ref="screenRef" class="screen">
+  <div ref="screenRef" class="screen" >
+    <el-progress 
+        v-if="isActive"
+        type="circle"
+        :stroke-width="15"
+        :percentage="percentage" 
+        style="position: absolute; left: 18%;top: 17%;pointer-events: auto;height: auto;" 
+    />
     <transition name="right-slide-in">
       <el-card class="box-card"  
-      :style="{ left: showCard ? '0%' : '-380px' }" 
-      :body-style="{height: '80%'}"
+        :style="{ left: showCard ? '0%' : '-380px' }" 
+        :body-style="{height: '80%'}"
+        
       >
         <template #header>
           <div class="box-card__header">
             <span>景点管理</span>
           </div>
         </template>
-          <el-row justify="space-between">
+          <el-row justify="space-between" >
           <el-col style="height: 33.33%;">
             <el-text>景点环境监测</el-text>
             <el-switch v-model="value1" class="box-card__switch" size="large" style="margin-left: 8%" inline-prompt :active-icon="Check"
-              :inactive-icon="Close" :disabled="isDisabled"  @change="checkSwitch(0)" />
+              :inactive-icon="Close" :disabled="isDisabled"  @change="checkSwitch(0)"                
+              v-loading="loading"
+              element-loading-text="Loading..."
+              :element-loading-spinner="svg"
+              element-loading-svg-view-box="-10, -10, 50, 50"
+              element-loading-background="rgba(122, 122, 122, 0.8)"/>
           </el-col>
           <el-col style="height: 33.33%;">
             <el-text>景点模糊分类</el-text>
@@ -39,7 +52,7 @@
 
 <script setup lang="ts">
 import { useScreen } from '@/hooks/useScreen';
-import { ElText, ElSwitch, ElRow, ElCol, ElCard, } from 'element-plus'
+import { ElText, ElSwitch, ElRow, ElCol, ElCard,ElProgress } from 'element-plus'
 import { ref, onMounted, onUnmounted, provide,watch} from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import environment from './components/environment.vue'
@@ -48,6 +61,18 @@ import correction from './components/correction.vue';
 import { usepointslayerStore } from '@/store/pointsLayerstore'
 import { useHeatmapStore } from '@/store/environment/heatmapstore'
 import { useTimesliderStore } from '@/store/environment/timesliderstore'
+
+const loading = ref(true)
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `
 
 const timeSliderRef = ref<HTMLDivElement | null>(null);
 const screenRef  = ref<HTMLElement | null>(null);
@@ -61,6 +86,10 @@ const showCard = ref(false)
 const watchV2 = ref(true)
 // 使屏幕自适应
 useScreen(screenRef);
+
+/**进度条 */
+const percentage = ref(0)
+const isActive = ref(false)
 
 let switchList = [value1, value2, value3];
 function checkSwitch(index: number) {
@@ -93,11 +122,17 @@ onMounted(() => {
     // 时间轴
     TimesliderStore.createTimeslider( timeSliderRef );
     // 创建热力图
-    HeatmapStore.createTimeHeatmap( lengendRef.value );
+    HeatmapStore.createTimeHeatmap( lengendRef.value , percentage, isActive);
   }, 100);
   // 监听value2的变化
   watch(value2, (newVal) => {
     if(!newVal) value3.value = false;
+  });
+  // 监听percentage的变化
+  watch(percentage, (newVal) => {
+    if(newVal === 100) {
+      loading.value = false;
+    }
   });
 });
 

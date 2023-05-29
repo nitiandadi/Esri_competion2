@@ -75,6 +75,10 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
                             name: "环境较差",
                             code: "环境较差"
                         },
+                        {
+                            name: "环境恶劣",
+                            code: "环境恶劣"
+                        }
                     ]   
                 }
               },

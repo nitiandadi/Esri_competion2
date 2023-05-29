@@ -36,27 +36,29 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
     //指标范围存储数组
     const indexsRangeHistory: typeof indexsRange[] = [indexsRange];
     //创建景点评价数组
-    const evaluation = ["环境优美","环境良好","环境一般","环境较差"]
+    const evaluation = ["环境优美","环境良好","环境一般","环境较差","环境脏乱"]
     //给图层新渲染器
     function addrender(myFeature: __esri.FeatureLayer) {
         // 定义颜色数组,从浅到深
         const innerColors = [
             [0, 255, 0, 0.5],   // 浅绿色,级别1 
             [0, 180, 0, 0.8],   // 深绿色,级别2
-            [255, 255, 0, 0.8], // 黄色,级别3
-            [255, 0, 0, 0.8],   // 红色,级别4
+            [0, 80, 210, 0.8], //浅蓝色,级别3   
+            [255, 255, 0, 0.8], // 黄色,级别4
+            [255, 0, 0, 0.8],   // 红色,级别5
         ];
         // 定义外部轮廓颜色数组,与内部填充颜色对应
         const outerColors = [
             "#17f5a7",   // 浅绿,与浅绿色对应 
             "#1F7A44",   // 深绿,与深绿色对应
+            "#1A6EA5",   // 浅蓝,与浅蓝色对应
             "#A59825",   // 棕色, 与黄色对应
             "#7F1A1C"    // 深红色,与红色对应
         ];
         const symbols = [];
   
         // 循环创建多个符号,对应不同的级别
-        for (let i=0; i<4; i++) {
+        for (let i=0; i<5; i++) {
           // 创建新的符号
           const symbol = new SimpleMarkerSymbol({
             style: "path",  
@@ -89,6 +91,10 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                 {
                     value: "环境较差",
                     symbol: symbols[3]
+                },
+                {
+                    value: "环境恶劣",
+                    symbol: symbols[4]
                 }
             ]     
         });
@@ -146,90 +152,91 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
         // 遍历要素图层中的所有要素
         const query = pointslayer.createQuery();
         query.where = "1=1";
-        await pointslayer.queryFeatures(query).then(({features}) => {
-            isActive.value = true
-            percentage.value = 0
-            let i = 0
-            features.forEach(async (feature) => {
-                //获得feature的坐标
-                const geometry = feature.geometry;
-                const point = geometry as __esri.Point;
-                //将坐标转换为json格式
-                const nowdata = {
-                    "location": `${point.longitude},${point.latitude}`
-                }
-                //获得feature的areaCode，站点name，日期
-                const city = feature.attributes['city'];
-                //获得该城市的行政代码
-                const message = qualityname[city];
-                let areaCode = '';
-                let name = '';
-                for(let index in message){
-                    areaCode = message[index].行政区划;
-                    name = index;
-                }
-                //转换为json格式
-                const waterdata = {
-                    "areaCode": areaCode,
-                    "name": name,
-                    "date": '',
-                }
-                //使用axios发送请求，获得feature的数据
-                await axios.post('http://81.70.22.42:9000/quality/water',waterdata).then((res) => {
-                //为图层提供数据
-                    for(let index in res.data){
-                        if(index === 'ph' || index === 'dissolvedoxygen' || index === 'permanganateindex' || index === 'totalnitrogen'){
-                            const where = `名称='${feature.attributes['名称']}'`;
-                            let attributeUpdates = { [index.toLocaleLowerCase()] : res.data[index] };
-                            if(index === 'permanganateindex') attributeUpdates = { ['permanganate'] : res.data[index] } ;                        
-                            const queryOpts = {
-                                where: where,
-                                attributeUpdates: attributeUpdates
-                            };
-                            //提供数据
-                            useUpdate(pointslayer, queryOpts);
-                            i++
-                            // 每次请求的进度和状态
-                            percentage.value = Math.floor((i / (features.length * 8)) * 100)
-                            if (i === (features.length * 9)) {
-                                setTimeout(() => {
-                                    isActive.value = false
-                                }, 600);
-                            }
-                        }
+        /***********************只执行一次*************************** */
+            await pointslayer.queryFeatures(query).then(({features}) => {
+                isActive.value = true
+                percentage.value = 0
+                let i = 0
+                features.forEach(async (feature) => {
+                    //获得feature的坐标
+                    const geometry = feature.geometry;
+                    const point = geometry as __esri.Point;
+                    //将坐标转换为json格式
+                    const nowdata = {
+                        "location": `${point.longitude},${point.latitude}`
                     }
-                });
-                //使用axios发送请求，获得feature的数据
-                await axios.post('http://81.70.22.42:9000/quality/now',nowdata).then((res) => {
+                    //获得feature的areaCode，站点name，日期
+                    const city = feature.attributes['city'];
+                    //获得该城市的行政代码
+                    const message = qualityname[city];
+                    let areaCode = '';
+                    let name = '';
+                    for(let index in message){
+                        areaCode = message[index].行政区划;
+                        name = index;
+                    }
+                    //转换为json格式
+                    const waterdata = {
+                        "areaCode": areaCode,
+                        "name": name,
+                        "date": '',
+                    }
+                    //使用axios发送请求，获得feature的数据
+                    await axios.post('http://81.70.22.42:9000/quality/water',waterdata).then((res) => {
                     //为图层提供数据
-                    for(let index in res.data){
-                        if(index === 'date' || index === 'tempMax' || index === 'aqi' || index === 'humidity'){
-                            const where = `名称='${feature.attributes['名称']}'`;
-                            let attributeUpdates = { [index.toLocaleLowerCase()] : res.data[index] };
-                            if(index === 'tempMax') attributeUpdates = { ['maxtemp'] : res.data[index] } ;
-                            if(index === 'date'){
-                                const date = new Date(res.data[index]);
-                                attributeUpdates = { ['pointstime'] : date.getTime() };
-                            } 
-                            const queryOpts = {
-                                where: where,
-                                attributeUpdates: attributeUpdates
-                            };
-                            //提供数据
-                            useUpdate(pointslayer, queryOpts);
-                            i++
-                            // 每次请求的进度和状态
-                            percentage.value = Math.floor((i / (features.length * 9)) * 100)
-                            if (i === (features.length * 8)) {
-                                setTimeout(() => {
-                                    isActive.value = false
-                                }, 600);
+                        for(let index in res.data){
+                            if(index === 'ph' || index === 'dissolvedoxygen' || index === 'permanganateindex' || index === 'totalnitrogen'){
+                                const where = `名称='${feature.attributes['名称']}'`;
+                                let attributeUpdates = { [index.toLocaleLowerCase()] : res.data[index] };
+                                if(index === 'permanganateindex') attributeUpdates = { ['permanganate'] : res.data[index] } ;                        
+                                const queryOpts = {
+                                    where: where,
+                                    attributeUpdates: attributeUpdates
+                                };
+                                //提供数据
+                                useUpdate(pointslayer, queryOpts);
+                                i++
+                                // 每次请求的进度和状态
+                                percentage.value = Math.floor((i / (features.length * 8)) * 100)
+                                if (i === (features.length * 8)) {
+                                    setTimeout(() => {
+                                        isActive.value = false
+                                    }, 600);
+                                }
                             }
                         }
-                    }
+                    });
+                    //使用axios发送请求，获得feature的数据
+                    await axios.post('http://81.70.22.42:9000/quality/now',nowdata).then((res) => {
+                        //为图层提供数据
+                        for(let index in res.data){
+                            if(index === 'date' || index === 'tempMax' || index === 'aqi' || index === 'humidity'){
+                                const where = `名称='${feature.attributes['名称']}'`;
+                                let attributeUpdates = { [index.toLocaleLowerCase()] : res.data[index] };
+                                if(index === 'tempMax') attributeUpdates = { ['maxtemp'] : res.data[index] } ;
+                                if(index === 'date'){
+                                    const date = new Date(res.data[index]);
+                                    attributeUpdates = { ['pointstime'] : date.getTime() };
+                                } 
+                                const queryOpts = {
+                                    where: where,
+                                    attributeUpdates: attributeUpdates
+                                };
+                                //提供数据
+                                useUpdate(pointslayer, queryOpts);
+                                i++
+                                // 每次请求的进度和状态
+                                percentage.value = Math.floor((i / (features.length * 8)) * 100)
+                                if (i === (features.length * 8)) {
+                                    setTimeout(() => {
+                                        isActive.value = false
+                                    }, 600);
+                                }
+                            }
+                        }
+                    });
                 });
             });
-        });
         // 为view上的一个图创建图例
         const legend = new Legend({
             container: LegendRef as HTMLDivElement,
@@ -291,16 +298,16 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                     }
                 }
                 //将count的值赋给feature的属性
-                if(count !== 0){
-                    const where = `名称='${feature.attributes['名称']}'`;
-                    const attributeUpdates = { class : evaluation[count-1] };
-                    const queryOpts = {
-                        where: where,
-                        attributeUpdates: attributeUpdates
-                    };
-                    //提供数据
-                    useUpdate(pointslayer, queryOpts);
-                } 
+                console.log(feature.attributes['名称'],count);
+                const where = `名称='${feature.attributes['名称']}'`;
+                const attributeUpdates = { class : evaluation[count] };
+                const queryOpts = {
+                    where: where,
+                    attributeUpdates: attributeUpdates
+                };
+                //提供数据
+                useUpdate(pointslayer, queryOpts);
+                
             });
             //添加分类渲染器
             addrender(pointslayer);
