@@ -26,5 +26,6 @@ export const useTimesliderStore = defineStore('timerslider', () => {
 
     };
 
+
     return { createTimeslider, timeSlider}
 })

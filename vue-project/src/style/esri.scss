@@ -229,3 +229,8 @@ h2.esri-widget__heading{
 h3.esri-widget__heading, h4.esri-widget__heading, h5.esri-widget__heading, h6.esri-widget__heading{
   font-size: 1.3rem;
 }
+
+/* 控件高度修改 */
+.esri-ui-corner .esri-component{
+  height: auto;
+}

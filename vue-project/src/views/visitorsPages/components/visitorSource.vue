@@ -330,9 +330,7 @@ onMounted(() => {
 onUnmounted(() => {
     echartLayer?.destroy();
     echartLayer = null;
-    if (store.getView().type === '3d') {
-        store.CreateMapView();
-    }
+    store.isViewType();
 })
 
 const style = document.createElement("style");
