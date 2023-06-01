@@ -1,12 +1,14 @@
 <template>
     <div class="container">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
-                <el-select v-model="formInline.region" placeholder="选择时间">
-                    <!-- <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" /> -->
-                </el-select>
-                <el-select v-model="formInline.region" placeholder="选择景点">
+                <el-radio-group v-model="radio" class="radio" @change="radio_changed">
+                    <el-radio :label="1" size="large">男</el-radio>
+                    <el-radio :label="2" size="large">女</el-radio>
+                </el-radio-group>
+                <el-slider v-model="beginAge" />
+                <el-slider v-model="endAge" />
+                <el-select v-model="attractions" placeholder="景点">
                     <!-- <el-option label="Zone one" value="shanghai" />
                     <el-option label="Zone two" value="beijing" /> -->
                 </el-select>
@@ -19,18 +21,43 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import myTable from './table.vue'
-const column = ref()
-const formInline = reactive({
-    user: '',
-    region: '',
+import { useViewStore } from '@/store/mapViewstore';
+import visitorLayer2 from '@/features/Layer/visitorLayers';
+import { usevisitor2Store } from '@/store/visitor/visitor2Store'
+import Point from '@arcgis/core/geometry/Point';
+import { polygonLayer, roadLayer } from '@/features/Layer/visitorLayers';
+let store = useViewStore();
+let visitorStore = usevisitor2Store();
+let beginAge = ref(0);
+let endAge = ref(100);
+let radio = ref(1);
+let attractions = ref('');
+const radio_changed = () => {
+    console.log(radio.value)
+}
+
+const props = defineProps({
+    visiable: Boolean,
 })
 const onSubmit = () => {
     console.log('submit!')
 }
+watch(props, () => {
+
+    if (props.visiable) {
+        let view = store.getView() as __esri.MapView;
+        view.map.layers.add(polygonLayer);
+        view.map.layers.add(roadLayer);
+        polygonLayer.when(() => {
+            view.zoom = 16;
+            view.goTo(polygonLayer.fullExtent.center)
+        })
+    }
+})
 onMounted(() => {
-    console.log(column.value)
+
 })
 </script>
 <style lang="scss" scoped>
@@ -47,12 +74,11 @@ onMounted(() => {
     flex-direction: column;
 
     .el-form {
-        // height: 50px;
+        margin: 0px;
+
         .el-select {
             height: 30px;
-            width: 150px;
-            margin-left: 8px;
-            margin-right: 8px;
+            width: 130px;
         }
 
         .el-button {
@@ -67,4 +93,5 @@ onMounted(() => {
         width: 100%;
     }
 
-}</style>
+}
+</style>

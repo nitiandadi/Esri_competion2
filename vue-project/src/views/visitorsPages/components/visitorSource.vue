@@ -21,8 +21,8 @@ import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
 import * as echarts from 'echarts';
 import TopFeaturesQuery from "@arcgis/core/rest/support/TopFeaturesQuery.js";
 import TopFilter from "@arcgis/core/rest/support/TopFilter.js";
-import chinaLayer from '@/features/Layer/visitorLayer';
-import { worldLayer } from '@/features/Layer/visitorLayer';
+import chinaLayer from '@/features/Layer/visitorLayer1';
+import { worldLayer } from '@/features/Layer/visitorLayer1';
 //@ts-ignore
 import { useViewStore } from '../../../store/mapViewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';

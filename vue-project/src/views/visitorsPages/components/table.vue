@@ -1,10 +1,12 @@
 <template>
     <div class="container1">
-        <el-table :data="tableData" border style="width: 100%" :row-style="rowStyle" :header-row-style="headStyle">
+        <el-table :data="tableData" border style="width: 100%">
             <el-table-column prop="name" label="姓名" width="100" />
             <el-table-column prop="age" label="年龄" width="100" />
             <el-table-column prop="gender" label="性别" />
+            <el-table-column prop="gender" label="省份" />
             <el-table-column prop="location" label="位置" />
+            <!-- <el-table-column prop="location" label="纬度" /> -->
         </el-table>
     </div>
 </template>
@@ -66,12 +68,6 @@ const tableData = [
         location: [106.11, 37.22],
     },
 ]
-function rowStyle() {
-    return { height: '40px' }
-}
-function headStyle() {
-    return { color: 'red', height: '40px' }
-}
 
 </script>
 <style lang="scss">

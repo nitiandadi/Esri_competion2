@@ -1,5 +1,15 @@
+.el-select .el-input__wrapper {
+  cursor: pointer;
+  width: 100%;
+}
 .el-select .el-input__inner {
-  font-size: 1.2rem; 
+  font-size: 18px;
+  width: 80px;
+  height: 50px;
+  // line-height: normal;
+  white-space: nowrap; /* 禁止换行 */
+  overflow: hidden; /* 溢出内容隐藏 */
+  text-overflow: ellipsis; /* 使用省略号表示溢出的文本 */
 }
 .el-radio.el-radio--large .el-radio__label {
     font-size: 17px;
