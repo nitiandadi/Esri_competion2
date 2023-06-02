@@ -24,7 +24,7 @@
         </el-row>
       </el-card>
     </transition>
-    <visitor-source v-show="switchList[0].value" :visiable="switchList[0].value" />
+    <!-- <visitor-source v-show="switchList[0].value" :visiable="switchList[0].value" /> -->
     <visitorInformation v-show="switchList[1].value" :visiable="switchList[1].value" />
   </div>
 </template>

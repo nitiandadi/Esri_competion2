@@ -8,10 +8,8 @@
 import { ref, onMounted, onUnmounted} from 'vue';
 import { useScreen } from '@/hooks/useScreen';
 import buildingInfro from "./components/buildingInfro.vue";
-
 const screenRef = ref<HTMLElement | null>(null);
 useScreen(screenRef);
-
 //@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 import Map from '@arcgis/core/Map';

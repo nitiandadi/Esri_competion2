@@ -24,20 +24,19 @@
 import { onMounted, reactive, ref, watch } from 'vue'
 import myTable from './table.vue'
 import { useViewStore } from '@/store/mapViewstore';
-import visitorLayer2 from '@/features/Layer/visitorLayers';
-import { usevisitor2Store } from '@/store/visitor/visitor2Store'
-import Point from '@arcgis/core/geometry/Point';
-import { polygonLayer, roadLayer } from '@/features/Layer/visitorLayers';
+import { polygonLayer, roadsLayer, pointsLayer } from '@/features/Layer/visitorLayers';
+import { usevisitor2Store } from '@/store/visitor/visitor2Store';
+import type Point from '@arcgis/core/geometry/Point';
+let visitor2Store = usevisitor2Store();
 let store = useViewStore();
-let visitorStore = usevisitor2Store();
 let beginAge = ref(0);
 let endAge = ref(100);
 let radio = ref(1);
 let attractions = ref('');
+let view = store.getView() as __esri.MapView;
 const radio_changed = () => {
     console.log(radio.value)
 }
-
 const props = defineProps({
     visiable: Boolean,
 })
@@ -45,15 +44,19 @@ const onSubmit = () => {
     console.log('submit!')
 }
 watch(props, () => {
-
     if (props.visiable) {
-        let view = store.getView() as __esri.MapView;
-        view.map.layers.add(polygonLayer);
-        view.map.layers.add(roadLayer);
-        polygonLayer.when(() => {
-            view.zoom = 16;
-            view.goTo(polygonLayer.fullExtent.center)
-        })
+        view.map.basemap.baseLayers.getItemAt(1).visible = false;
+        view.map.add(polygonLayer);
+        view.map.add(roadsLayer);
+        roadsLayer.when(async () => {
+            view.center = roadsLayer.fullExtent.center;
+            view.zoom = 15;
+            view.goTo(roadsLayer.fullExtent.center);
+            let points = await visitor2Store.generateVisitors(polygonLayer);
+            for (let i = 0; i < points.length; i++) {
+                view.graphics.add(points[i]);
+            }
+        });
     }
 })
 onMounted(() => {

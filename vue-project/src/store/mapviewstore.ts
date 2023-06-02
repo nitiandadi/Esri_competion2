@@ -3,6 +3,7 @@ import { toRaw } from 'vue'
 import SceneView from "@arcgis/core/views/SceneView.js";
 import WebMap from '@arcgis/core/WebMap';
 import MapView from '@arcgis/core/views/MapView';
+import Basemap from '@arcgis/core/Basemap';
 export const useViewStore = defineStore('view', () => {
     let myView: __esri.View | null = null;
     let myContainer: string | HTMLDivElement;
@@ -16,8 +17,8 @@ export const useViewStore = defineStore('view', () => {
     }
     //转换为可编辑的view供其他pinia使用
     function getView() {
-        if (myView ) {
-            return myView = toRaw(myView );
+        if (myView) {
+            return myView = toRaw(myView);
         }
         else {
             throw console.error('please create view first');
@@ -46,7 +47,7 @@ export const useViewStore = defineStore('view', () => {
         myView.map = webmap;
     }
 
-    async function CreateMapView() {
+    function CreateMapView() {
         webmap?.destroy();
         webmap = null;
         myView?.destroy();
@@ -62,6 +63,14 @@ export const useViewStore = defineStore('view', () => {
             center: [117, 36],
             zoom: 4
         });
+        let nightBasemap = Basemap.fromId("streets-night-vector");
+        myView.when(() => {
+            nightBasemap.load().then(() => {
+                let nightStreetLayer = nightBasemap.baseLayers.getItemAt(0);
+                myView!.map.basemap.baseLayers.add(nightStreetLayer, 0);
+            }
+            );
+        });
         myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
     }
     function destroyMapView() {
@@ -73,13 +82,13 @@ export const useViewStore = defineStore('view', () => {
     // 判断创建view实例为sceneView还是mapView
     function isViewType() {
         if (myView?.type == '2d') {
-           return;
+            return;
         }
         else if (myView?.type == '3d') {
             CreateMapView();
-        }else {
+        } else {
             throw console.error('please input mapView or sceneView');
         }
     }
-    return { setView, setContainer, getView, CreateSceneView, CreateMapView ,destroyMapView,isViewType}
+    return { setView, setContainer, getView, CreateSceneView, CreateMapView, destroyMapView, isViewType }
 })
