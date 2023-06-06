@@ -6,7 +6,6 @@ import MapView from '@arcgis/core/views/MapView';
 export const useViewStore = defineStore('view', () => {
     let myView: __esri.View | null = null;
     let myContainer: string | HTMLDivElement;
-    let webmap: __esri.WebMap | null = null;
     //获取自己创建的mapview实例
     function setView(view: __esri.View) {
         view = view
@@ -24,11 +23,9 @@ export const useViewStore = defineStore('view', () => {
         }
     };
     function CreateSceneView() {
-        webmap?.destroy();
-        webmap = null;
         myView?.destroy();
         myView = null;
-        webmap = new WebMap({
+        const webmap = new WebMap({
             portalItem: { // autocasts as new PortalItem()
                 id: "c8e3d51ec07246b58238eed8056c9000"
             },
@@ -46,12 +43,10 @@ export const useViewStore = defineStore('view', () => {
         myView.map = webmap;
     }
 
-    async function CreateMapView() {
-        webmap?.destroy();
-        webmap = null;
+    function CreateMapView() {
         myView?.destroy();
         myView = null;
-        webmap = new WebMap({
+        const webmap = new WebMap({
             portalItem: { // autocasts as new PortalItem()
                 id: "c8e3d51ec07246b58238eed8056c9000"
             },
@@ -64,9 +59,10 @@ export const useViewStore = defineStore('view', () => {
         });
         myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
     }
+
+    
+    
     function destroyMapView() {
-        webmap?.destroy();
-        webmap = null;
         myView?.destroy();
         myView = null;
     }

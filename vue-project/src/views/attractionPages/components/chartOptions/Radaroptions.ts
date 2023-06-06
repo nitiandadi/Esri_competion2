@@ -82,6 +82,7 @@ const radarOption: echarts.RadarComponentOption = Radaroptions.baseOption?.radar
 // 填充雷达图的配置项
 for (let date in dataMap) {
     let data = dataMap[date];
+    console.log(date);
     let item: echarts.EChartsOption = {
         series:{
             data: [{

@@ -13,7 +13,7 @@ function getFiveDays() {
     let nowTime = new Date(time.year.value, time.month.value - 1, time.day.value).getTime();
     let oneDayTime = 24 * 60 * 60 * 1000;
     for (let i = 0; i < 5; i++) {
-        let ShowTime = new Date(nowTime + (i - 2) * oneDayTime);
+        let ShowTime = new Date(nowTime + (i - 4) * oneDayTime);
         let month = ShowTime.getMonth() + 1;
         let day = ShowTime.getDate();
         let time = month + '-' + day;
