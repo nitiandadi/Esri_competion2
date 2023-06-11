@@ -19,6 +19,16 @@ const router = createRouter({
           component: ()=>import('../views/attractionPages/index.vue'),
         },
         {
+          path: 'deviceManage',
+          name: 'deviceManage',
+          component: ()=>import('../views/devicePages/index.vue'),
+        },
+        {
+          path: 'PopularizationManage',
+          name: 'PopularizationManage',
+          component: ()=>import('../views/popularizationPages/index.vue'),
+        },
+        {
           path: 'VisitorManage',
           name: 'VisitorManage',
           component: () => import('../views/visitorsPages/index.vue'),

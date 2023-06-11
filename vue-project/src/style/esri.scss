@@ -230,7 +230,12 @@ h3.esri-widget__heading, h4.esri-widget__heading, h5.esri-widget__heading, h6.es
   font-size: 1.3rem;
 }
 
-/* 控件高度修改 */
-.esri-ui-corner .esri-component{
+/* 控件修改 */
+[class^=esri-icon-]{
+  color: #92c3e4;
+}
+
+/* 文本标签修改 */
+.esri-text-overlay-item{
   height: auto;
 }

@@ -7,7 +7,6 @@ import Basemap from '@arcgis/core/Basemap';
 export const useViewStore = defineStore('view', () => {
     let myView: __esri.View | null = null;
     let myContainer: string | HTMLDivElement;
-    let webmap: __esri.WebMap | null = null;
     //获取自己创建的mapview实例
     function setView(view: __esri.View) {
         view = view
@@ -25,11 +24,9 @@ export const useViewStore = defineStore('view', () => {
         }
     };
     function CreateSceneView() {
-        webmap?.destroy();
-        webmap = null;
         myView?.destroy();
         myView = null;
-        webmap = new WebMap({
+        const webmap = new WebMap({
             portalItem: { // autocasts as new PortalItem()
                 id: "c8e3d51ec07246b58238eed8056c9000"
             },
@@ -48,11 +45,14 @@ export const useViewStore = defineStore('view', () => {
     }
 
     function CreateMapView() {
+<<<<<<< HEAD
         webmap?.destroy();
         webmap = null;
+=======
+>>>>>>> 24c4bd7e40adbe8b46feacbf8b49423b5d7c85f7
         myView?.destroy();
         myView = null;
-        webmap = new WebMap({
+        const webmap = new WebMap({
             portalItem: { // autocasts as new PortalItem()
                 id: "c8e3d51ec07246b58238eed8056c9000"
             },
@@ -73,9 +73,10 @@ export const useViewStore = defineStore('view', () => {
         });
         myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
     }
+
+    
+    
     function destroyMapView() {
-        webmap?.destroy();
-        webmap = null;
         myView?.destroy();
         myView = null;
     }

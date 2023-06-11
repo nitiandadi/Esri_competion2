@@ -15,11 +15,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:3000/',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
-      },
-    }
+        target: "https://api.map.baidu.com/traffic/v1/road?ak=IzCONMfUjk7k3lTCIwe5w9shHHyXm5R3", //跨域地址
+        changeOrigin: true, //支持跨域
+        rewrite: (path) => path.replace(/^\/api/, '/traffic/v1'),
+
+      }
+    },
 
   }
 })

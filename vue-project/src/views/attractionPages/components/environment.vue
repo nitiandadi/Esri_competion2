@@ -31,6 +31,7 @@ import 'echarts-liquidfill';
 import * as echarts from 'echarts';
 import { useHeatmapStore } from '@/store/environment/heatmapstore'
 import { useTimesliderStore } from '@/store/environment/timesliderstore'
+//@ts-ignore
 import { useOnlayerStore } from '@/store/environment/onLayerstore'
 import Lineoptions from "./chartOptions/Lineoptions";//引入折线图配置项
 import Baroptions from "./chartOptions/Baroptions";//引入柱状图配置项
