@@ -1,68 +1,39 @@
+import { SimpleRenderer } from '@arcgis/core/renderers';
 import visitorLayer2 from "@/features/Layer/visitorLayers";
 import { defineStore } from 'pinia';
 import type Polygon from "@arcgis/core/geometry/Polygon";
 import Point from "@arcgis/core/geometry/Point";
 import Graphic from "@arcgis/core/Graphic";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-// import Geometry from "@arcgis/core/geometry";
+import { faker } from '@faker-js/faker';
+interface Visitor {
+    name: string;
+    gender: string;
+    age: number;
+    province: string;
+}
+
+// 定义省份
+const provinces = ['甘肃', '陕西', '广东', '四川', '新疆', '山东', '江苏', '浙江', '河南', '河北', '山西', '辽宁', '吉林', '黑龙江', '安徽', '福建', '江西', '湖北', '湖南', '贵州', '云南', '重庆', '宁夏', '海南', '青海', '西藏', '香港', '澳门'];
+// 定义省份分布，根据实际情况进行适当调整
+const provinceDist = [0.07, 0.06, 0.08, 0.07, 0.05, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
+// 定义性别
+const genders = ['男', '女'];
+
 export const usevisitor2Store = defineStore('visitor2Store', () => {
-    let initializePoints: { lat: number; lon: number; }[] = [];
-    let objectIdCounter = 0;
-    let myfeatures: any[] = [];
-    function generateRandomNumber() {
-        // center coordinates
-        var center_lat = 36.48777;
-        var center_lon = 101.56599;
-        for (var i = 0; i < 100; i++) {
-            // generate random offsets
-            var d_lat = Math.random() * 0.02 - 0.01;
-            var d_lon = Math.random() * 0.02 - 0.01;
-            var point = {
-                lat: center_lat + d_lat,
-                lon: center_lon + d_lon
-            };
-            // add point to array
-            initializePoints.push(point);
-        }
-    }
-    function undateFeature() {
-        for (var i = 0; i < initializePoints.length; i++) {
-            var point = initializePoints[i];
-            // update point geometry
-            point.lat += Math.random() * 0.002 - 0.001;
-            point.lon += Math.random() * 0.002 - 0.001;
-            // create feature with updated point
-            var feature = {
-                attributes: {
-                    TRACKID: 1,
-                    OBJECTID: objectIdCounter++,
-                    STATUS: "red"
-                },
-                geometry: {
-                    x: point.lon,
-                    y: point.lat,
-                }
-            };
-            // add the feature
-            myfeatures.push(feature);
-        }
-        visitorLayer2.sendMessageToClient({
-            type: "features",
-            features: myfeatures
+    let myFeatuLayer: __esri.FeatureLayer | null = null;
+    let myArea: Polygon | null = null;
+    let myVisitors: __esri.Graphic[] = [];
+    async function setFeatureLayer(layer: __esri.FeatureLayer) {
+        myFeatuLayer = layer;
+        await layer.queryFeatures().then(function (results) {
+            var features = results.features;
+            myArea = features[0].geometry as Polygon;
         });
-    }
-    function begin() {
-        generateRandomNumber();
-        setInterval(() => {
-            undateFeature();
-            visitorLayer2.sendMessageToClient({
-                type: "features",
-                features: myfeatures
-            })
-        }, 100);
+        return myArea;
     }
     async function generateVisitors(layer: __esri.FeatureLayer): Promise<__esri.Graphic[]> {
-        let graphics: __esri.Graphic[] = [];
+        let visitors: __esri.Graphic[] = [];
         await layer.queryFeatures().then(function (results) {
             var features = results.features;
             var pointCount = 0;
@@ -75,21 +46,30 @@ export const usevisitor2Store = defineStore('visitor2Store', () => {
                     var randomPoint = getRandomPointInPolygon(polygon as Polygon);
                     var pointGraphic = new Graphic({
                         geometry: randomPoint,
+                        attributes: {
+                            ObjectID: pointCount,
+                            name: "Visitor " + pointCount,
+                            gender: faker.helpers.arrayElement(genders),
+                            age: getAge(),
+                            province: getProvince(),
+                        },
                         symbol: new SimpleMarkerSymbol({
                             size: 2,
-                            color: [226, 0, 0],
+                            color: [0, 0, 226],
                             outline: {
                                 color: [255, 255, 255],
-                                width: 1
+                                width: 0.1
                             }
-                        })
+                        }),
+
                     });
-                    graphics.push(pointGraphic);
+                    visitors.push(pointGraphic);
                     pointCount++;
                 });
             }
         });
-        return graphics;
+        myVisitors = visitors;
+        return visitors;
     }
 
     function getRandomPointInPolygon(polygon: Polygon) {
@@ -107,5 +87,37 @@ export const usevisitor2Store = defineStore('visitor2Store', () => {
 
         return point;
     }
-    return { begin, generateVisitors }
+    const getProvince = (): string => {
+        const rand = Math.random();
+        let sum = 0;
+        for (let i = 0; i < provinceDist.length; i++) {
+            sum += provinceDist[i];
+            if (rand < sum) {
+                return provinces[i];
+            }
+        }
+        return '青海';
+    };
+    const getAge = (): number => {
+        const rand = Math.random();
+        if (rand < 0.6) {
+            return faker.number.int({ min: 18, max: 30 });
+        } else if (rand < 0.85) {
+            return faker.number.int({ min: 31, max: 59 });
+        } else {
+            return faker.number.int({ min: 60, max: 80 });
+        }
+    };
+    function queryVisitors(minage: number, maxage: number, province: string, gender: string) {
+        console.log(myVisitors);
+        let a = myVisitors.filter((visitor) => {
+            // return (visitor.attributes.age >= minage && visitor.attributes.age <= maxage
+            //     && visitor.attributes.province === province && visitor.attributes.gender === gender);
+            return (visitor.attributes.age >= minage) && (visitor.attributes.age <= maxage)
+                && (visitor.attributes.province === province) && (visitor.attributes.gender === gender);
+        })
+        console.log(a);
+        return a;
+    }
+    return { generateVisitors, setFeatureLayer, queryVisitors }
 })

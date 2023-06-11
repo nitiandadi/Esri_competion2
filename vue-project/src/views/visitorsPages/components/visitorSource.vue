@@ -332,7 +332,6 @@ onUnmounted(() => {
     echartLayer = null;
     store.isViewType();
 })
-
 const style = document.createElement("style");
 style.setAttribute("lang", "scss");
 style.innerHTML = visitostyle;
@@ -347,7 +346,6 @@ document.head.appendChild(style);
         font-size: 15px;
     }
 }
-
 .container {
     position: absolute;
     background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);

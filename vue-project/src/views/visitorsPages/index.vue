@@ -17,7 +17,7 @@
               :active-icon="Check" :inactive-icon="Close" @change="checkSwitch(1)" />
           </el-col>
           <el-col>
-            <el-text>游客类型分类</el-text>
+            <el-text>游客综合分析</el-text>
             <el-switch v-model="switchList[2].value" size="large" class="mt-2" style="margin-left: 24px" inline-prompt
               :active-icon="Check" :inactive-icon="Close" @change="checkSwitch(2)" />
           </el-col>
@@ -25,7 +25,8 @@
       </el-card>
     </transition>
     <!-- <visitor-source v-show="switchList[0].value" :visiable="switchList[0].value" /> -->
-    <visitorInformation v-show="switchList[1].value" :visiable="switchList[1].value" />
+    <visitorInformation v-if="switchList[1].value" :visiable="switchList[1].value" />
+    <analysis v-if="switchList[2].value"  />
   </div>
 </template>
   
@@ -36,6 +37,7 @@ import { Check, Close } from '@element-plus/icons-vue'
 import visitorSource from './components/visitorSource.vue'
 import visitorInformation from './components/visitorInFormation.vue';
 import { useScreen } from '@/hooks/useScreen';
+import analysis from './components/analysis.vue';
 const value1 = ref(false)
 const value2 = ref(false)
 const value3 = ref(false)

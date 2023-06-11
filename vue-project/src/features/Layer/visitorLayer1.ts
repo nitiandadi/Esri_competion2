@@ -2,6 +2,7 @@ import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer"
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol"
 import Featurelayer from "@arcgis/core/layers/FeatureLayer"
 import PopupTemplate from "@arcgis/core/PopupTemplate"
+
 let classBreaksRenderer = new ClassBreaksRenderer({
     field: "number",
     classBreakInfos: [{

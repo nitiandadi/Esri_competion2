@@ -3,6 +3,8 @@ import StreamLayer from "@arcgis/core/layers/StreamLayer";
 import WebTileLayer from "@arcgis/core/layers/WebTileLayer";
 import esriConfig from "@arcgis/core/config";
 import vecTileLayer from "@arcgis/core/layers/VectorTileLayer";
+import { HeatmapRenderer } from "@arcgis/core/renderers"
+import Featurelayer from "@arcgis/core/layers/FeatureLayer"
 const visitorLayer2 = new StreamLayer({
     objectIdField: "OBJECTID",
     fields: [
@@ -32,7 +34,7 @@ const visitorLayer2 = new StreamLayer({
         content: "{TRACKID}, {this}"
     },
 });
-const polygonLayer = new FeatureLayer({
+const taershiLayer = new FeatureLayer({
     url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%A1%94%E5%B0%94%E5%AF%BA/FeatureServer",
     
 });
@@ -45,11 +47,12 @@ const tdtImgLayer = new WebTileLayer({
     copyright: "天地图"
 })
 const pointsLayer=new FeatureLayer({
-    url:"https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%A1%94%E5%B0%94%E5%AF%BA%E6%99%AF%E7%82%B91/FeatureServer"
+    url:"https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%A1%94%E5%B0%94%E5%AF%BA%E6%99%AF%E7%82%B9/FeatureServer"
 });
 esriConfig.apiKey = "AAPK38a95a31090f4db7af0665c5f4ad34996GXd4nU-HoOwfI68DHDryRWBagf1jRCFl-zOHFdrsipPV6sHAcJXfniZzD7HS8BB";
 const  streetLayer = new vecTileLayer({
     url: "https://basemaps-api.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer"
 });
-export { visitorLayer2, polygonLayer, roadsLayer, pointsLayer,streetLayer };
+
+export { visitorLayer2, taershiLayer , roadsLayer, pointsLayer,streetLayer};
 export default visitorLayer2;
