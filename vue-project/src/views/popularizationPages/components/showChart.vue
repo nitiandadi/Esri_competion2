@@ -1,6 +1,8 @@
 <template>
-	<!-- 年龄比例 -->
-	<div class="echarts" id="showChart"></div>
+	<div class="myEcharts">
+			<!-- 年龄比例 -->
+		<div class="echarts" id="showChart"></div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -124,7 +126,12 @@ defineExpose({
 });
 </script>
 <style lang="scss" scoped>
+.myEcharts {
+	width: 100%;
+	height: 100%;
+}
 .echarts {
+	position: relative;
 	width: 100%;
 	height: 100%;
 }

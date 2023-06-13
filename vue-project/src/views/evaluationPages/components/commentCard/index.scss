@@ -1,0 +1,95 @@
+.comment-card{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background: rgba(16,54,87,1);
+	border: 1px solid #345f92; 
+    &-header{
+        display: flex;
+        width: 100%;
+        height: auto;
+        background-color: rgba(250, 235, 215, 0);
+        &-button-lf{
+            margin-left: 20px;
+            margin-top: 10px;
+            width: 50%;
+            height: 100%;
+        }
+        &-button-ri{
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 20px;
+            margin-top: 10px;
+            width: 50%;
+            height: 100%;
+        }
+    }
+    &-clearfix{
+        height: 78%;
+        // border: 1px solid #ccc;
+        // border-radius: 10px;
+        padding: 20px;
+        margin-top: 10px;
+        overflow-y: auto;
+    }
+    &-clearfix::-webkit-scrollbar {
+        width: 6px; /* 设置滚动条宽度 */
+        height: 6px; /* 设置滚动条高度 */
+        
+    }
+    &-clearfix::-webkit-scrollbar-thumb {
+        border-radius: 3px; /* 设置滚动条圆角 */
+        background-image: linear-gradient(135deg, #14c0e3 0%, rgba(8, 196, 219, 0.5) 72%, rgba(0, 182, 234, 0.3) 100%);
+    }
+    &-clearfix dl{
+        margin: 0;
+        color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 0px 20px;
+        margin-bottom: 5px;
+    }
+    &-clearfix dt{
+        margin: 0;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    &-clearfix dd{
+        margin: 0;
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+    }
+    &-clearfix dd:last-child{
+        border-bottom: none;
+    }
+    &-clearfix .user{
+        font-weight: bold;
+        margin-right: 20px;
+        color: #fff;
+    }
+    &-clearfix .time{
+        font-size: 12px;
+        color: #999;
+    }
+    &-clearfix .comment{
+        text-align: right;
+    }
+    &-clearfix .comment_one{
+        margin-right: 10px;
+    }
+    &-pagination{
+        display: flex;
+        justify-content: center;
+        height: 10%;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+    }
+
+}
+
+  
+
+

@@ -14,13 +14,22 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': {
+      '/api/v1': {
         target: "https://api.map.baidu.com/traffic/v1/road?ak=IzCONMfUjk7k3lTCIwe5w9shHHyXm5R3", //跨域地址
         changeOrigin: true, //支持跨域
-        rewrite: (path) => path.replace(/^\/api/, '/traffic/v1'),
+        rewrite: (path) => path.replace(/^\/api/, ''),
 
+      },
+      '/api/v2': {
+        target: 'https://aip.baidubce.com',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api\/v2/, '/rpc/2.0/nlp/v2')
+      },
+      '/api/v3': {
+        target: 'https://nlp.tencentcloudapi.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       }
     },
-
   }
 })

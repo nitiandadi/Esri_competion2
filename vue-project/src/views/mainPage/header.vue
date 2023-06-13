@@ -15,7 +15,7 @@
 				</div>
 				<div class="header-rg">
 					<span class="header-download" v-on:click="router.push('/home/AttractionManage')">景点管理</span>
-					<span class="header-feedback">反馈管理</span>
+					<span class="header-feedback"  v-on:click="router.push('/home/evaluationManage')">反馈管理</span>
 					<span class="header-protection" v-on:click="router.push('/home/ProtectionManage')">景点保护</span>
 				</div>
 			</div>
