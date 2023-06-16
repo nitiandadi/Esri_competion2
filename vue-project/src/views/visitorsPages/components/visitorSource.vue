@@ -291,9 +291,6 @@ function radio_changed(val: number) {
         })
     }
 }
-watch(props, () => {
-    echartLayer?.setVisiable(props.visiable);
-})
 onMounted(() => {
     chinaLayer.load().then(async () => {
         const results = await chinaLayer.queryTopFeatures(query);
@@ -322,7 +319,7 @@ onMounted(() => {
             });
             view.zoom = 4;
             echartLayer = new EchartLayer(view, option2);
-            echartLayer?.setVisiable(false);
+            echartLayer?.setVisiable(true);
         })
     });
 

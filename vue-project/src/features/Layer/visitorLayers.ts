@@ -34,7 +34,7 @@ const visitorLayer2 = new StreamLayer({
         content: "{TRACKID}, {this}"
     },
 });
-const taershiLayer = new FeatureLayer({
+const taershiPolygon = new FeatureLayer({
     url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%A1%94%E5%B0%94%E5%AF%BA/FeatureServer",
     
 });
@@ -46,7 +46,7 @@ const tdtImgLayer = new WebTileLayer({
     subDomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],
     copyright: "天地图"
 })
-const pointsLayer=new FeatureLayer({
+const taershiPoint=new FeatureLayer({
     url:"https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%A1%94%E5%B0%94%E5%AF%BA%E6%99%AF%E7%82%B9/FeatureServer"
 });
 esriConfig.apiKey = "AAPK38a95a31090f4db7af0665c5f4ad34996GXd4nU-HoOwfI68DHDryRWBagf1jRCFl-zOHFdrsipPV6sHAcJXfniZzD7HS8BB";
@@ -54,5 +54,5 @@ const  streetLayer = new vecTileLayer({
     url: "https://basemaps-api.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer"
 });
 
-export { visitorLayer2, taershiLayer , roadsLayer, pointsLayer,streetLayer};
+export { visitorLayer2, taershiPolygon , roadsLayer, taershiPoint,streetLayer};
 export default visitorLayer2;

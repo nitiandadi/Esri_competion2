@@ -45,11 +45,6 @@ export const useViewStore = defineStore('view', () => {
     }
 
     function CreateMapView() {
-<<<<<<< HEAD
-        webmap?.destroy();
-        webmap = null;
-=======
->>>>>>> 24c4bd7e40adbe8b46feacbf8b49423b5d7c85f7
         myView?.destroy();
         myView = null;
         const webmap = new WebMap({

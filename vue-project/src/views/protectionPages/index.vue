@@ -12,16 +12,8 @@
 import { ref, onMounted, onUnmounted,provide} from 'vue';
 import { useScreen } from '@/hooks/useScreen';
 import buildingInfro from "./components/buildingInfro.vue";
-<<<<<<< HEAD
 const screenRef = ref<HTMLElement | null>(null);
 useScreen(screenRef);
-=======
-import videoInfro from "./components/videoInfro.vue";
-import areaInfro from "./components/areaInfro.vue";
-const screen3dRef = ref<HTMLElement | null>(null);
-useScreen(screen3dRef);
-
->>>>>>> 24c4bd7e40adbe8b46feacbf8b49423b5d7c85f7
 //@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 import Map from '@arcgis/core/Map';
@@ -122,6 +114,8 @@ onMounted(() => {
                 container: navigationRef.value!,
                 iconClass: "screen3d-icon-pan2"
             });
+            view.ui.add(navigationToggle);
+            
         })
   }, 100);
 

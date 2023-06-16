@@ -19,13 +19,13 @@
                     <el-radio label="女" size="large">女</el-radio>
                 </el-radio-group>
                 <el-select v-model="attractions" placeholder="选择景点" @change="select_Changed">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item" />
+                    <el-option v-for="item in spotOptions" :key="item.value" :label="item.label" :value="item" />
                 </el-select>
                 <el-select v-model="attractions1" placeholder="选择省份">
-                    <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item" />
+                    <el-option v-for="item in provinceOption" :key="item.value" :label="item.label" :value="item" />
                 </el-select>
                 <el-button type="primary" @click="onSubmit" :disabled="isDisabled">查询</el-button>
-                <el-button type="primary" @click="move" class="realtime">{{buttontext}}</el-button>
+                <el-button type="primary" @click="move" class="realtime">{{ buttontext }}</el-button>
             </el-form-item>
         </el-form>
         <myTable ref="table"></myTable>
@@ -35,16 +35,13 @@
 import { computed, markRaw, onMounted, onUnmounted, reactive, ref, toRaw, watch } from 'vue'
 import myTable from './table.vue'
 import { useViewStore } from '@/store/mapViewstore';
-import { taershiLayer, roadsLayer, pointsLayer } from '@/features/Layer/visitorLayers';
-import { usevisitor2Store } from '@/store/visitor/visitor2Store';
+import VisitorHandler from '@/store/visitor/visitor2Store';
 import type { tableData } from '@/type/table';
 //@ts-ignore
 import Point from '@arcgis/core/geometry/Point';
 import visitostyle2 from '@/style/visitorhead.scss?inline'
-import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
-import type Polygon from '@arcgis/core/geometry/Polygon';
-let visitor2Store = usevisitor2Store();
+import { spotOptions, provinceOption } from '../option';
 let store = useViewStore();
 let beginAge = ref(20);
 let endAge = ref(80);
@@ -56,110 +53,18 @@ let internal: number | undefined;
 let attractions1 = ref();
 let isDisabled = ref(true);
 let visitors: __esri.Graphic[] = [];
-let spots: __esri.FeatureSet;
-let myPolygon: __esri.Polygon;
 let isPlaying = ref(false);
+let visitorHandler: VisitorHandler;
 function move() {
     if (isPlaying.value) {
-        clearInterval(internal);
+        visitorHandler.stopRealtime();
         isPlaying.value = false;
     }
     else {
         isPlaying.value = true;
-        internal = setInterval(() => {
-        // 创建一个新的点对象，基于旧的点对象，但是更改了经纬度
-        for (let i = 0; i < visitors.length; i++) {
-            let newPoint = new Point({
-                latitude: (visitors[i].geometry as Point).latitude + Math.random() * 0.0001 - 0.00005,
-                longitude: (visitors[i].geometry as Point).longitude + Math.random() * 0.0001 - 0.00005,
-            });
-            if (myPolygon!.contains(newPoint)) {
-                visitors[i].geometry = newPoint;
-            }
-            else {
-                visitors[i].geometry = spots.features[Math.floor(Math.random() * spots.features.length / 4)].geometry;
-            }
-        }
-    }, 500);
+        visitorHandler.enableRealtime();
     }
-   
-
 }
-const options = [
-    {
-        value: '塔尔寺',
-        label: '塔尔寺',
-        layer: markRaw(taershiLayer),
-    },
-    {
-        value: '青海湖',
-        label: '青海湖',
-    },
-    {
-        value: '鄂陵湖湿地',
-        label: '鄂陵湖湿地',
-    },
-    {
-        value: '盘道',
-        label: '盘道',
-    },
-    {
-        value: '扎陵湖湿地',
-        label: '扎陵湖湿地',
-    },
-]
-const options1 = [
-    {
-        value: '广东',
-        label: '广东'
-
-    },
-    {
-        value: '江苏',
-        label: '江苏'
-    },
-    {
-        value: '浙江',
-        label: '浙江'
-    },
-    {
-        value: '青海',
-        label: '青海',
-    },
-    {
-        value: '甘肃',
-        label: '甘肃',
-    },
-    {
-        value: '新疆',
-        label: '新疆',
-    },
-    {
-        value: '西藏',
-        label: '西藏',
-    },
-    {
-        value: '四川',
-        label: '四川',
-    },
-    {
-        value: '云南',
-        label: '云南',
-    },
-    {
-        value: '内蒙',
-        label: '内蒙',
-    },
-    {
-        value: '宁夏',
-        label: '宁夏',
-    },
-    {
-        value: '陕西',
-        label: '陕西',
-    },
-
-]
 const radio_changed = () => {
 }
 const props = defineProps({
@@ -167,8 +72,7 @@ const props = defineProps({
 })
 const onSubmit = () => {
     let province = attractions1.value.value;
-    console.log(province, radio.value);
-    let queryedVisitors = visitor2Store.queryVisitors(beginAge.value, endAge.value, province, radio.value,);
+    let queryedVisitors = visitorHandler.queryVisitors(beginAge.value, endAge.value, province, radio.value,);
     visitors = queryedVisitors;
     console.log(queryedVisitors);
     setDataforTable(queryedVisitors)
@@ -213,11 +117,13 @@ function setDataforTable(visitorGraphics: __esri.Graphic[]) {
 }
 async function select_Changed(val: any) {
     view.map.layers.removeAll();
-    view.map.add(val.layer);
-    await val.layer.when();
-    view.center = val.layer.fullExtent.center;
-    view.extent = val.layer.fullExtent;
-    visitors = await visitor2Store.generateVisitors(val.layer);
+    view.map.add(val.polygonLayer);
+    await val.polygonLayer.when();
+    view.center = val.polygonLayer.fullExtent.center;
+    view.extent = val.polygonLayer.fullExtent;
+    visitorHandler = new VisitorHandler(val);
+    await visitorHandler.ininit();
+    visitors = visitorHandler.visitors;
     for (let i = 0; i < visitors.length; i++) {
         let latitude = (visitors[i].geometry as Point).latitude.toFixed(4)
         let longitude = (visitors[i].geometry as Point).longitude.toFixed(4)
@@ -234,13 +140,9 @@ async function select_Changed(val: any) {
     table.value?.setTableData(data);
     view.graphics.addMany(visitors);
     isDisabled.value = false;
-
 }
-onMounted(async () => {
+onMounted(() => {
     view.map.basemap.baseLayers.getItemAt(1).visible = false;
-    spots = await pointsLayer.queryFeatures();
-    let result = await taershiLayer.queryFeatures();
-    myPolygon = result.features[0].geometry as Polygon;
 })
 onUnmounted(() => {
     clearInterval(internal);
