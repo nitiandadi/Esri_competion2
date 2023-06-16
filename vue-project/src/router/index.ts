@@ -29,6 +29,11 @@ const router = createRouter({
           component: ()=>import('../views/popularizationPages/index.vue'),
         },
         {
+          path: 'evaluationManage',
+          name: 'evaluationManage',
+          component: ()=>import('../views/evaluationPages/index.vue'),
+        },
+        {
           path: 'VisitorManage',
           name: 'VisitorManage',
           component: () => import('../views/visitorsPages/index.vue'),

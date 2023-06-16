@@ -28,7 +28,7 @@ export const useroadconditionStore = defineStore('roadcondition',() => {
     const roadDataList: RoadData[] = [];
     
     async function fetchCongestionEvaluationData() {
-      const url = '/api/traffic/v1/road?';
+      const url = '/api/v1/traffic/v1/road?';
       const akey = 'IzCONMfUjk7k3lTCIwe5w9shHHyXm5R3';
       const roadName = '金塔路';
       const mycity = '西宁';

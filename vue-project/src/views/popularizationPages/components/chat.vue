@@ -33,15 +33,15 @@ const textarea = ref('')
 .card {
     display: flex;
     flex-direction: column;
-    background: rgba(6, 128, 165, 0.5);
+    background: rgba(9, 166, 214, 0.5);
     border: 1px solid #345f92;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     margin-top: 10px;
-    margin-left: 27px;
+    margin-left: 45px;
     padding: 20px;
     overflow: hidden;
-    width: 85%;
+    width: 90%;
     height: 70%;
     &-chat{
         position: relative;

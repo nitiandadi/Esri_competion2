@@ -43,6 +43,12 @@
                         </dd>
                     </dl>
                 </div>
+                <div class="panel-side esri-widget">
+                    <h3>景点列表</h3>
+                    <ul id="nyc_graphics">
+                    <li>Loading&hellip;</li>
+                    </ul>
+                </div>
             </div>
             <div class="screen2d-ct-top-rg">
                 <div class="screen2d-ct-rg-top">
@@ -100,7 +106,6 @@ import { ref, onMounted, onUnmounted} from 'vue';
 import { useScreen } from '@/hooks/useScreen';
 import { ElButton,ElTag,ElIcon } from 'element-plus';
 import { ChatLineSquare, Edit, Clock } from '@element-plus/icons-vue'
-import { useEcharts } from "@/hooks/useEcharts";
 import 'echarts-liquidfill';
 import  type { ECharts } from "echarts";
 // 获取子组件的ref
@@ -116,6 +121,7 @@ useScreen(screen2dRef);
 //@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 import WebMap from '@arcgis/core/WebMap';
+import { createPointslayer,AQIfeatures,ageData } from '@/features';
 import MapView from '@arcgis/core/views/MapView';
 import introduction from './components/introduction.vue';
 import chat from './components/chat.vue';
@@ -123,6 +129,8 @@ import chatContent from './components/chatContent.vue';
 import titleTag from './components/titleTag.vue';
 import styles from '@/style/popularization.scss?inline';
 import showchart from './components/showChart.vue';
+import PopupTemplate from '@arcgis/core/PopupTemplate';
+
 /**
  * @description: 初始化地图
  * @param {HTMLDivElement} container
@@ -136,49 +144,55 @@ function initMapView( container: HTMLDivElement,myView:__esri.MapView) {
             id: "c8e3d51ec07246b58238eed8056c9000"
         },
     });
+    const pointslayer =  createPointslayer();
     myView = new MapView({
         map: webmap,  // The WebMap instance created above
         container: container,
         center: [117, 36],
         zoom: 4
     });
-    myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
+    myView.map.add(pointslayer);
+     //设置pointslayer弹窗模板
+     const popupTemplate = new PopupTemplate({
+        // title: "<span class='esri-popup__header-title'>{{layer.title}}</span>", // 添加一个带有标题文本的 span 元素
+        title: "{名称}",
+        content: [{
+            type: "fields",
+            fieldInfos: [
+                {
+                    fieldName: "名称",
+                    label: "名称"
+                },
+                {
+                    fieldName: "类型名称",
+                    label: "类型名称"
+                },
+                {
+                    fieldName: "longitude",
+                    label: "经度"
+                },
+                {
+                    fieldName: "latitude",
+                    label: "纬度"
+                },
+                {
+                    fieldName: "高程",
+                    label: "高程"
+                }
+            ]
+        }],
+    });
+    pointslayer.popupTemplate = popupTemplate;
+    myView.popup.dockEnabled = false;
+    myView.popup.collapsed = true;
+    myView.popup.dockOptions = {
+        buttonEnabled: false,
+        breakpoint: false,
+        position: "bottom-right"
+    };
+    myView.ui.remove(['attribution', 'zoom', ]);
     return myView;
 }
-/** 创建图表实例 */
-// 初始化 charts参数
-let ageData = [
-	{
-		value: 200,
-		name: "10岁以下",
-		percentage: "16%"
-	},
-	{
-		value: 110,
-		name: "10 - 18岁",
-		percentage: "8%"
-	},
-	{
-		value: 150,
-		name: "18 - 30岁",
-		percentage: "12%"
-	},
-	{
-		value: 310,
-		name: "30 - 40岁",
-		percentage: "24%"
-	},
-	{
-		value: 250,
-		name: "40 - 60岁",
-		percentage: "20%"
-	},
-	{
-		value: 260,
-		name: "60岁以上",
-		percentage: "20%"
-	}
-];
 // 声明echarts实例
 interface ChartProps {
 	[key: string]: ECharts | null;
@@ -192,10 +206,12 @@ const initCharts = (): void => {
     // @ts-ignore
     dataScreen.chart.currentIndex = -1;
 };
-/**创建标签云 */
-
+// 创建手柄
+let handle: __esri.Handle | null = null;
 
 onMounted(() => {
+    
+    // 初始化图表
     initCharts();
     // 鼠标悬停时暂停定时器
     dataScreen.chart?.on('mouseover', function () {
@@ -205,9 +221,10 @@ onMounted(() => {
     dataScreen.chart?.on('mouseout', function () {
         timer();
     });
-    setTimeout(() => {
+    setTimeout( async() => {
         const myView = useViewStore().getView() as __esri.MapView;
         const view =  initMapView(MapchartRef.value!,myView);
+        
         //@ts-ignore
         view.center = [96.178, 36.623];
         view.zoom = 6;
@@ -216,24 +233,98 @@ onMounted(() => {
             // viewDiv.style.background = 'url("../src/views/images/loginBg.jpg") no-repeat center center';
             viewDiv.style.backgroundImage = 'linear-gradient(to left top, #0f6ba1 5%, #4c4c4c 90%)';
         }
+        const listNode = document.getElementById("nyc_graphics");
+        let graphics: any[];
+        const pointslayer = view.map.layers.find((layer) => {return layer.id === 'points';}) as __esri.FeatureLayer;
+        const query = pointslayer.createQuery();
+      
+        view.whenLayerView(pointslayer).then(async (layerView) => {
+            layerView.watch("updating",function (value) {
+                if (!value) {
+                    //等待层视图完成更新查询所有可用于绘图的特征。
+                    layerView.queryFeatures({
+                        geometry: view.extent,
+                        returnGeometry: true,
+                        orderByFields: ["FID"]
+                    }).then(function (results) {
+                        graphics = results.features;
+                        const fragment = document.createDocumentFragment();
+                        graphics.forEach(function (result, index) {
+                            const FID = result.attributes.FID;
+                            const name = AQIfeatures[FID-1].name;
+                            // Create a list zip codes in NY
+                            const li = document.createElement("li");
+                            li.classList.add("panel-result");
+                            li.tabIndex = 0;
+                            li.setAttribute("data-result-id", index.toString());
+                            li.textContent = name;
+
+                            fragment.appendChild(li);                
+                        });
+                            //清空当前列表
+                            listNode!.innerHTML = "";
+                            listNode!.appendChild(fragment);
+                    })
+                    .catch(function (error) {
+                        console.error("query failed: ", error);
+                    });
+                }
+            });
+            const pointslayerView = view.allLayerViews.find((layerView) => {return layerView.layer.id === 'points';}) as __esri.FeatureLayerView;
+            query.where = "FID = 1";
+            pointslayer.queryFeatures(query).then(async function (results: __esri.FeatureSet) {
+                // 选中要素
+                handle = pointslayerView.highlight(results.features[0]);
+                // 跟踪到要素
+                view.goTo(results.features);
+            }); 
+        });
+        // listen to click event on the zip code list
+        listNode!.addEventListener("click", onListClickHandler);
+
+        function onListClickHandler(event: { target: any; }) {
+            const pointslayerView = view.allLayerViews.find((layerView) => {return layerView.layer.id === 'points';}) as __esri.FeatureLayerView;
+            const target = event.target;
+            const resultId = target.getAttribute("data-result-id");
+            query.where = "FID = " + (parseInt(resultId, 10) + 1);
+            pointslayer.queryFeatures(query).then(function (results) {
+                 // 取消选中要素
+                if (handle) handle.remove();
+                const result = results.features[0];
+                // 选中要素
+                handle = pointslayerView.highlight(result);
+                // 跟踪到要素
+                view.goTo(results.features).then(function () {
+                    view.popup.open({
+                        features: [result],
+                        location: result.geometry
+                    });
+                })
+                .catch(function (error) {
+                    if (error.name != "AbortError") {
+                        console.error(error);
+                    }
+                });
+            });
+        }
     }, 100);
 });
 // 定义定时器 ID 和计数器变量
 let intervalId: number | undefined;
 const timer = ( ()=> {
     intervalId = setInterval(function () {
-    var dataLen = ageData.length;
-    // 取消之前高亮的图形
-    dataScreen.chart?.dispatchAction({
-        type: 'downplay',
-        dataIndex: (dataScreen.chart as any).currentIndex,
-    });
-    (dataScreen.chart as any).currentIndex = ((dataScreen.chart as any).currentIndex + 1) % dataLen;
-    // 高亮当前图形
-    dataScreen.chart?.dispatchAction({
-        type: 'highlight',
-        dataIndex: (dataScreen.chart as any).currentIndex,
-    });
+        var dataLen = ageData.length;
+        // 取消之前高亮的图形
+        dataScreen.chart?.dispatchAction({
+            type: 'downplay',
+            dataIndex: (dataScreen.chart as any).currentIndex,
+        });
+        (dataScreen.chart as any).currentIndex = ((dataScreen.chart as any).currentIndex + 1) % dataLen;
+        // 高亮当前图形
+        dataScreen.chart?.dispatchAction({
+            type: 'highlight',
+            dataIndex: (dataScreen.chart as any).currentIndex,
+        });
     }, 1000);
 });
 timer();
