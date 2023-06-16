@@ -9,7 +9,7 @@
                     <el-menu-item index="2-2" @click="pointsBuffer">路网缓冲区分析</el-menu-item>
                 </el-sub-menu>
                 <el-menu-item index="3" @click="julei">游客热度分析</el-menu-item>
-                <el-menu-item index="4">游客分级</el-menu-item>
+                <!-- <el-menu-item index="4">游客分级</el-menu-item> -->
             </el-menu>
             <el-select v-model="attractions" placeholder="选择景点" @change="ininitSpots">
                 <el-option v-for="item in spotOptions" :key="item.value" :label="item.label" :value="item" />
@@ -43,7 +43,6 @@ import Sketch from "@arcgis/core/widgets/Sketch.js";
 import { spotOptions } from '../option';
 let store = useViewStore();
 let view = store.getView() as __esri.MapView;
-let spots: __esri.FeatureSet;
 let optionStore = useoptionStore();
 let option1 = optionStore.getbarOption();
 let visitorHandler: VisitorHandler;
@@ -85,22 +84,22 @@ async function ininitSpots(val: any) {
     await visitorHandler.ininit();
 }
 function ininitSketch() {
-    if (sketch) {
-        sketch.destroy();
-        sketch = null;
-    }
-    else {
-        sketch = new Sketch({
-            view: view,
-            layer: graphicsLayer,
-            container: "sketch"  // replace with your <div> element's ID
-        });
-        sketch.on("create", function (event) {
-            if (event.state === "complete") {
-                boundary = event.graphic.geometry as __esri.Polygon
-            }
-        });
-    }
+    // if (sketch) {
+    //     sketch.destroy();
+    //     sketch = null;
+    // }
+    // else {
+    sketch = new Sketch({
+        view: view,
+        layer: graphicsLayer,
+        container: "sketch"  // replace with your <div> element's ID
+    });
+    sketch.on("create", function (event) {
+        if (event.state === "complete") {
+            boundary = event.graphic.geometry as __esri.Polygon
+        }
+    });
+    // }
 }
 function showFencetools() {
     show1.value = true;
@@ -108,6 +107,7 @@ function showFencetools() {
 async function handleSelect(index: string) {
     graphicsLayer.removeAll();
     view.graphics.removeAll();
+    await visitorHandler.ininit();
     show1.value = false;
     show2.value = true;
     if (index === '2-1') {
@@ -117,12 +117,14 @@ async function handleSelect(index: string) {
         buffertype = 'spots';
     }
     else {
+        view.map.layers.removeAll();
+        view.map.add(visitorHandler.spotAreaLayer);
         let roadsLayer = visitorHandler.roadsLayer;
         view.map.add(roadsLayer);
         await roadsLayer.when();
         buffertype = 'roads';
     }
-    graphicsLayer.graphics.addMany(visitorHandler.visitors);
+    view.graphics.addMany(visitorHandler.visitors);
 }
 function drawBuffer() {
     view.graphics.removeMany(buffers);
@@ -174,12 +176,17 @@ function julei() {
         visitorHandler.spotAreaLayer.visible = false;
         heatlayer.renderer = response.renderer; // 将创建的热力图渲染器应用到图层
         view.graphics.removeMany(buffers);
-        view.zoom = view.zoom +0.5;
+        view.zoom = view.zoom;
         view.map.add(heatlayer);
     });
 }
-onUpdated(() => {
-    ininitSketch();
+// onUpdated(() => {
+//     ininitSketch();
+// })
+watch(show1, (val) => {
+    if (val) {
+        ininitSketch();
+    }
 })
 onMounted(async () => {
     view.map.basemap.baseLayers.getItemAt(1).visible = false;
@@ -188,6 +195,7 @@ onMounted(async () => {
     graphicsLayer.graphics.addMany(visitorHandler.visitors);
     view.map.add(graphicsLayer);
     attractions.value = spotOptions[0].value;
+    ininitSketch();
 })
 onUnmounted(() => {
     view.graphics.removeAll();
