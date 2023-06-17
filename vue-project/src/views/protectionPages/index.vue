@@ -4,7 +4,7 @@
         <widget3d />
         <buildingInfro v-if="buildvisual" />
         <!-- <videoInfro v-if="videovisual" />
-    <areaInfro v-if="areavisual" /> -->
+         <areaInfro v-if="areavisual" /> -->
     </div>
 </template>
 
