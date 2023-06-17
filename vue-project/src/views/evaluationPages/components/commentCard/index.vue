@@ -46,12 +46,20 @@
 
 <script setup lang='ts'>
 import Pagination from "./Pagination.vue";
-import {  Printer,  Refresh } from "@element-plus/icons-vue";
-import { ref,onMounted, onBeforeMount, computed ,watch,inject, toRaw} from "vue";
-import { commentsList,selectFilterData } from "@/features";
+import {   Refresh } from "@element-plus/icons-vue";
+import { ref,onMounted, onBeforeMount, computed ,watch,inject, toRaw, Ref} from "vue";
+import { commentsList,selectFilterData,ageData } from "@/features";
 import {analyzeComments} from "@/hooks/useAnalysisComents";
-import { valueEquals } from "element-plus";
+import  type { ECharts } from "echarts";
 const score = inject("score") as any;
+const chart = inject("chart") as any;
+// 图标组件
+interface ChartProps {
+	[key: string]: ECharts | null;
+}
+const dataScreen: Ref<ChartProps> = ref({
+	chart: null,
+});
 // 评价列表
 const commentList = ref<any[]>([]);
 onBeforeMount(async () => {
@@ -59,12 +67,6 @@ onBeforeMount(async () => {
     //@ts-ignore
     commentList.value = await commentsList[props.initParam.departmentId];
     pageable.value.total = commentList.value.length;
-    let num = 0;
-    commentList.value.forEach((item:any) => {
-      num += item.score;
-    });
-    // 将num / changeList.length进行四舍五入
-    score.value = num / commentList.value.length;
   }
 });
 // 接收父组件参数并设置默认值
@@ -92,6 +94,8 @@ async function getTableList() {
         //@ts-ignore
         selectFilterData.value[1].options.push({label: '全部', value: ''});
         pageable.value.total = commentList.value.length;
+        changetreeAgeData();
+        chart.value.initChart(ageData.value)
       }//@ts-ignore
       else if(props.initParam.userStatus === 2) {
         changeList.forEach((item:any) => {
@@ -100,7 +104,7 @@ async function getTableList() {
           }
         });
         await analyzeComments(commentList.value).then((results:any) => {
-          console.log(results);
+          console.log();
           selectFilterData.value[1].options = [];
             //@ts-ignore
           selectFilterData.value[1].options.push({label: '全部', value: ''});
@@ -108,6 +112,8 @@ async function getTableList() {
             //@ts-ignore
             selectFilterData.value[1].options.push({label: results[result].attribute, value: results[result].content.id});
           }
+          changeselectAgeData(results);
+          dataScreen.value.chart = chart.value.initChart(ageData.value) as  ECharts;
         });
         pageable.value.total = commentList.value.length;
       }//@ts-ignore
@@ -118,7 +124,6 @@ async function getTableList() {
           }
         });
         await analyzeComments(commentList.value).then((results:any) => {
-          debugger
           console.log(results);
           selectFilterData.value[1].options = [];
             //@ts-ignore
@@ -127,6 +132,8 @@ async function getTableList() {
             //@ts-ignore
             selectFilterData.value[1].options.push({label: results[result].attribute, value: results[result].content.id});
           }
+          changeselectAgeData(results);
+          dataScreen.value.chart = chart.value.initChart(ageData.value) as  ECharts;
         });
         pageable.value.total = commentList.value.length;
       }//@ts-ignore
@@ -145,12 +152,27 @@ async function getTableList() {
             //@ts-ignore
             selectFilterData.value[1].options.push({label: results[result].attribute, value: results[result].content.id});
           }
+          changeselectAgeData(results);
+          dataScreen.value.chart = chart.value.initChart(ageData.value) as  ECharts;
         });
         pageable.value.total = commentList.value.length;
       }
     }else{
+      var dataLen = ageData.value.length;
+        // 取消之前高亮的图形
+        for(let i=0;i<dataLen;i++){
+          dataScreen.value.chart?.dispatchAction({
+              type: 'downplay',
+              dataIndex: i,
+          });
+      }
       //@ts-ignore
       props.initParam.userRole.forEach((role:any) => {
+        // 高亮当前图形
+        dataScreen.value.chart?.dispatchAction({
+            type: 'highlight',
+            dataIndex: role % dataLen,
+        });
         changeList.forEach((item:any) => {
           if(item.id === role) {
             commentList.value.push(item);
@@ -194,6 +216,67 @@ const pageable = ref({
 const handleCurrentChange = (val: number) => {
   pageable.value.pageNum = val;
 };
+
+/**
+ * @description 树选择器改变相应ageData
+ * @return void
+ * */
+const changetreeAgeData = () => {
+  ageData.value = [];
+  let num = 0;
+  let numbers = [0,0,0];
+  let evaluations = ['好评','中评','差评'];
+  commentList.value.forEach((item:any) => {
+    num += item.score;
+    if(item.score >= 4) {
+      numbers[0]++;
+    }else if(item.score === 3) {
+      numbers[1]++;
+    }else if(item.score <= 2) {
+      numbers[2]++;
+    }
+  });
+  // 将num / changeList.length进行四舍五入
+  score.value = num / commentList.value.length;
+  for(let index = 0; index < 3; index++) {
+    let item:{
+      name: string,
+      value: number,
+      percentage: string
+    } = {
+      name: '',
+      value: 0,
+      percentage: ''
+    };
+    item.value = numbers[index];
+    item.name = evaluations[index];
+    item.percentage = (numbers[index] / commentList.value.length * 100).toPrecision(3) + "%";
+    ageData.value.push(item);
+  }
+}
+
+/**
+ * @description 单属性选择器改变相应ageData
+ * @return void
+ * */
+const changeselectAgeData = (results:any) => {
+  ageData.value = [];
+  for(let result in results){
+    let item:{
+      name: string,
+      value: number,
+      percentage: string
+    } = {
+      name: '',
+      value: 0,
+      percentage: ''
+    };
+    item.value = 1;
+    item.name = results[result].attribute;
+    item.percentage = (item.value / commentList.value.length * 100).toPrecision(3) + "%";
+    ageData.value.push(item);
+  }
+}
 // 计算当前页码需要显示的评论数据
 const displayedComments = computed(() => {
   const start = (pageable.value.pageNum - 1) * pageable.value.pageSize;

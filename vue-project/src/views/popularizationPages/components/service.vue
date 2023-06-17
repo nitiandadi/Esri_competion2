@@ -25,8 +25,9 @@
 <script setup lang='ts'>
 import { ElInput,ElButton,ElTooltip } from 'element-plus'
 import { Promotion } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref ,} from 'vue'
 const textarea = ref('')
+
 </script>
 
 <style lang='scss' scoped>

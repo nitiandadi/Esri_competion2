@@ -9,7 +9,9 @@ import treedata from './evaluation/treedata';
 import selectFilterData from './evaluation/selectdata';
 import commentsList from './evaluation/commentsList';
 import ageData from './evaluation/chartdata';
+import points from './popularity/points';
 export {
+    points,
     ageData,
     commentsList,
     selectFilterData,
