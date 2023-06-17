@@ -7,19 +7,45 @@
         </template>
       </el-image>
     <dl class="lf-top-dl">
-        <dt>景点名称</dt>
+        <dt>{{pointsList.title}}</dt>
         <dd>
-            <p>景点地点:</p>
-            <p>景点简介:</p>
-            <span>内容</span>
+            <p>{{pointsList.location}}</p>
+            <p style="color: aqua;">景点简介:</p>
+            <span>{{pointsList.content}}</span>
         </dd>
     </dl>
 </template>
 
 <script setup lang='ts'>
+import { onBeforeMount,ref,watch} from 'vue';
 import { ElImage,ElIcon } from 'element-plus';
 import { Picture as IconPicture } from '@element-plus/icons-vue'
-
+// 接收父组件参数并设置默认值
+interface CommentcardProps  {
+    initParam: {
+        title: string;
+        location: string;
+        content: string;
+        img: string;
+    }, // 初始化参数 ==> 必传
+}
+// 接受父组件参数，配置默认值
+const props = withDefaults(defineProps<CommentcardProps>(), {
+});
+// 评价列表
+const pointsList = ref<any>({});
+onBeforeMount(async () => {
+  if(props.initParam) {
+    pointsList.value = await props.initParam;
+  }
+});
+function getpointsList() {
+    if(props.initParam) {
+        pointsList.value = props.initParam;
+    }
+}
+// 监听页面 initParam 改化，重新获取表格数据
+watch(() => props.initParam, getpointsList, { deep: true });
 </script>
 
 <style lang='scss' scoped>

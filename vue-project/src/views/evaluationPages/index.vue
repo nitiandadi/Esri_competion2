@@ -64,16 +64,8 @@ interface ChartExpose {
 	initChart: (params: any) => ECharts;
 }
 const chartRef = ref<ChartExpose>();
-    interface ChartProps {
-	[key: string]: ECharts | null;
-}
-const dataScreen: ChartProps = {
-	chart: null,
-};
 const initCharts = (): void => {
-    dataScreen.chart = chartRef.value?.initChart(ageData) as ECharts;
-    // @ts-ignore
-    dataScreen.chart.currentIndex = -1;
+     chartRef.value?.initChart(ageData.value);
 };
 // 默认 footer 参数
 const footertitle = ref("羌塘组湖积地层");
@@ -116,6 +108,7 @@ onUnmounted(() => {
     useViewStore().CreateMapView();
 });
 provide('score', score);
+provide('chart', chartRef);
 /**修改样式*/
 const style = document.createElement("style");
 style.setAttribute("lang", "scss");

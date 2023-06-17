@@ -93,21 +93,21 @@ const initChart = (data: any): ECharts => {
 				radius: [50, 90],
 				center: ["35%", "50%"],
 				startAngle: 60,
-        silent: true,
-        label: {
-          show: true,
-          formatter: function (params: any) {
-            return params.data.name + "\n" + params.data.value + "人";
-          },
-          rich: {
-            a: {
-              align: "center",
-              color: "rgb(98,137,169)",
-              fontSize: 13,
-            }
-          },
-          position: "center"
-        },
+				silent: true,
+				label: {
+				show: true,
+				formatter: function (params: any) {
+					return params.data.name + "\n" + params.data.percentage;
+				},
+				rich: {
+					a: {
+					align: "center",
+					color: "rgb(98,137,169)",
+					fontSize: 13,
+					}
+				},
+				position: "center"
+				},
 				data: data.map((val: ChartProp) => {
 					return {
 						value: val.value,

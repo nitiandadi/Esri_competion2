@@ -298,3 +298,16 @@
   color: orange;
   background-color: rgba(17, 103, 146, 0.6);
 }
+
+/*********************** 地理服务 ***********************/
+.el-message-box{
+  height: auto;
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  &__title{
+      color: #e2f1fb
+  }
+}
+.el-message{
+  height: auto;
+}
+  
