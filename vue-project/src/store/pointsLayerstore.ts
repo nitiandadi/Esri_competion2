@@ -20,18 +20,10 @@ export const usepointslayerStore = defineStore('pointslayer', () => {
         //设置pointslayer弹窗模板
         const popupTemplate = new PopupTemplate({
             // title: "<span class='esri-popup__header-title'>{{layer.title}}</span>", // 添加一个带有标题文本的 span 元素
-            title: "{名称}",
+            title: "{name}",
             content: [{
                 type: "fields",
                 fieldInfos: [
-                    {
-                        fieldName: "名称",
-                        label: "名称"
-                    },
-                    {
-                        fieldName: "类型名称",
-                        label: "类型名称"
-                    },
                     {
                         fieldName: "longitude",
                         label: "经度"
@@ -41,9 +33,13 @@ export const usepointslayerStore = defineStore('pointslayer', () => {
                         label: "纬度"
                     },
                     {
-                        fieldName: "高程",
-                        label: "高程"
-                    }
+                        fieldName: "city",
+                        label: "城市"
+                    },
+                    {
+                        fieldName: "typeName",
+                        label: "景点类型"
+                    },
                 ]
             }],
         });

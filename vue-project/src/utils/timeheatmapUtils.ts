@@ -1,4 +1,5 @@
 
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { HeatmapRenderer } from '@arcgis/core/renderers';
 
 /**
@@ -13,7 +14,7 @@ let heatmapRenderer: __esri.Renderer | null;
 
 
 /**定义一个热力层 */
-export function initHeatmap(timefeatureLayer: __esri.FeatureLayer,field: string){
+export function initHeatmap(timefeatureLayer: __esri.GraphicsLayer,field: string,date: Date){
   heatmapRenderer = new HeatmapRenderer({
     field: field,
     colorStops: [
@@ -28,10 +29,55 @@ export function initHeatmap(timefeatureLayer: __esri.FeatureLayer,field: string)
     minDensity: 0,
     
   });
-      
+  // debugger
   //填充时间热力层
-  timefeatureLayer.renderer = heatmapRenderer;
+  const heatMapLayer = new FeatureLayer({
+    source: timefeatureLayer.graphics,
+    fields: [
+      {
+        name: "OBJECTID",
+        alias: "ObjectID",
+        type: "oid"
+      },
+      {
+        name: "name",
+        alias: "Name",
+        type: "string"
+      },
+      {
+        name: "city",
+        alias: "City",
+        type: "string"
+      },
+      {
+        name: "aqi",
+        alias: "AQI",
+        type: "double"
+      },
+      {
+        name: "date",
+        alias: "Date",
+        type: "date"
+      }
+    ],
+    objectIdField: "OBJECTID",
+    geometryType: "point",
+    renderer:heatmapRenderer,
+    id: timefeatureLayer.id,
+    popupTemplate: {  
+      title: "{name}",
+      // content: "{AQI} mg/m³, {日期}"
+      content: "AQI: {aqi} mg/m³, 日期: {date}"
+    },
+    timeInfo: {
+      startField: "date",
+      fullTimeExtent: {
+        start: date,
+        end: date
+      }
+    },
+  });
   //设置时间热力层的不可见
-  timefeatureLayer.visible = false;
-  return  timefeatureLayer;
+  heatMapLayer.visible = false;
+  return  heatMapLayer;
 }

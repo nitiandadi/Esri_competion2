@@ -28,8 +28,8 @@ function getFiveDays() {
         let year = ShowTime.getFullYear();
         let month = ShowTime.getMonth() + 1;
         let day = ShowTime.getDate();
-        let time = year + '-' + month + '-' + day;
-        time = ""
+        let time = year + '/' + month + '/' + day;
+        time = "";
         fiveDays.push(time);
     }
     return fiveDays;
@@ -68,9 +68,12 @@ export async function useGetdata(results: __esri.FeatureSet, name: string , Char
         const message = qualityname[city];
         let areaCode = '';
         name = '';
-        for(let index in message){
-            areaCode = message[index].行政区划;
-            name = index;
+        // 随机获取一个站点
+        if(message){
+            const siteNames = Object.keys(message);
+            const randomIndex = Math.floor(Math.random() * siteNames.length);
+            name = siteNames[randomIndex];
+            areaCode = message[name].行政区划;
         }
         // 配置数据 
         const fiveDays: string[] = getFiveDays();

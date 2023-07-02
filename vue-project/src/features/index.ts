@@ -6,19 +6,19 @@ import visitorLayer from './Layer/visitorLayer';
 import buildData from './build/build';
 import treedata from './evaluation/treedata';
 import selectFilterData from './evaluation/selectdata';
-import commentsList from './evaluation/commentsList';
 import ageData from './evaluation/chartdata';
-import points from './popularity/points';
+import getpoints from './popularity/points';
+import city from './environment/city';
 export {
-    points,
+    city,
     ageData,
-    commentsList,
     selectFilterData,
-    treedata,
     buildData,
     visitorLayer,
     AQIfeatures,
     qualityname,
+    treedata,
+    getpoints,
     createPointslayer,
     createtimePointslayer,
 };

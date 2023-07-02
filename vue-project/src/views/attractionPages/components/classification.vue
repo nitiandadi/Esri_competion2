@@ -169,7 +169,6 @@ const handleSelectChange = (row: TableData) => {
     row.sliderValue = sliderValue;
     selectName = row.name;
   }
-  classifyAnalysis(sliderValue,selectName );
   watchV2.value = false;
 };
 
@@ -222,7 +221,6 @@ function handleSliderChange(item: TableData, value: Arrayable<number>) {
     sliderValue.name = item.name;
     sliderValue.Value = value ;
     console.log(sliderValue);
-    classifyAnalysis(sliderValue,selectName );
     watchV2.value = false;
 }
 

@@ -6,7 +6,7 @@
 				<slot name="cardHeader"></slot>
 			</div>
 			<div class="comment-card-header-button-ri" >
-				<el-button :icon="Refresh" circle > </el-button>
+        <slot name="cardHeaderRight"></slot>
 			</div>
 		</div>
     <!-- 表格内容 -->
@@ -17,7 +17,7 @@
       >
         <dt class="clearfix">
           <div class="fl user">
-            <p>{{comment.user}}</p><p class="time">{{comment.time}}</p>
+            <p>{{comment.id}}</p><p class="time">{{comment.datetime}}</p>
           </div>
           <div class="fr comment">
             <el-rate
@@ -28,7 +28,7 @@
           />
           </div>
         </dt>
-        <dd class="clearfix">{{comment.content}}</dd>
+        <dd class="clearfix">{{comment.comment}}</dd>
       </dl>
     </div>
     <!-- 分页组件 -->
@@ -46,13 +46,13 @@
 
 <script setup lang='ts'>
 import Pagination from "./Pagination.vue";
-import {   Refresh } from "@element-plus/icons-vue";
+import axios from "axios";
 import { ref,onMounted, onBeforeMount, computed ,watch,inject, toRaw, Ref} from "vue";
-import { commentsList,selectFilterData,ageData } from "@/features";
-import {analyzeComments} from "@/hooks/useAnalysisComents";
+import { selectFilterData,ageData } from "@/features";
 import  type { ECharts } from "echarts";
 const score = inject("score") as any;
 const chart = inject("chart") as any;
+const textFlag = inject("textFlag") as any;
 // 图标组件
 interface ChartProps {
 	[key: string]: ECharts | null;
@@ -64,11 +64,11 @@ const dataScreen: Ref<ChartProps> = ref({
 const commentList = ref<any[]>([]);
 onBeforeMount(async () => {
   if(props.initParam) {
-    //@ts-ignore
-    commentList.value = await commentsList[props.initParam.departmentId];
-    pageable.value.total = commentList.value.length;
+    getTableList() 
   }
 });
+// text列表
+const textList = ref<any[]>([]);
 // 接收父组件参数并设置默认值
 interface CommentcardProps  {
   initParam: {}, // 初始化参数 ==> 必传
@@ -79,119 +79,125 @@ interface CommentcardProps  {
 const props = withDefaults(defineProps<CommentcardProps>(), {
 	pagination: true,
 });
-// 更新表格数据
+/*************************** 获取表格列表 ********************************* */
 async function getTableList() {
   try {
     commentList.value = [];
+    textList.value = [];
+    let numberList:any = [];//数字核对列表
     //@ts-ignore
-    let changeList = commentsList[props.initParam.departmentId];
-    //@ts-ignore
-    if(props.initParam.userRole[0] === "") {
+    await axios.post('http://81.70.22.42:9000/attraction/comment', {
+      // @ts-ignore
+      poiID: parseInt(props.initParam.departmentId),
+    }).then(async (res:any) => {
+      let changeList = res.data;
+      getCommentFeature();
       //@ts-ignore
       if(props.initParam.userStatus === 0) {
         commentList.value = changeList;
-        selectFilterData.value[1].options = [];
-        //@ts-ignore
-        selectFilterData.value[1].options.push({label: '全部', value: ''});
+        changeList.forEach((item:any,index:number) => {
+          numberList.push(index);
+        });
         pageable.value.total = commentList.value.length;
-        changetreeAgeData();
-        chart.value.initChart(ageData.value)
+        if(!textFlag.value) {
+          changetreeAgeData();
+          chart.value.initChart(ageData.value);
+        }
       }//@ts-ignore
       else if(props.initParam.userStatus === 2) {
-        changeList.forEach((item:any) => {
+        changeList.forEach((item:any,index:number) => {
           if(item.score <= 2) {
             commentList.value.push(item);
+            numberList.push(index);
           }
-        });
-        await analyzeComments(commentList.value).then((results:any) => {
-          console.log();
-          selectFilterData.value[1].options = [];
-            //@ts-ignore
-          selectFilterData.value[1].options.push({label: '全部', value: ''});
-          for(let result in results) {
-            //@ts-ignore
-            selectFilterData.value[1].options.push({label: results[result].attribute, value: results[result].content.id});
-          }
-          changeselectAgeData(results);
-          dataScreen.value.chart = chart.value.initChart(ageData.value) as  ECharts;
         });
         pageable.value.total = commentList.value.length;
       }//@ts-ignore
       else if(props.initParam.userStatus === 3) {
-        changeList.forEach((item:any) => {
+        changeList.forEach((item:any,index:number) => {
           if(item.score === 3) {
             commentList.value.push(item);
+            numberList.push(index);
           }
-        });
-        await analyzeComments(commentList.value).then((results:any) => {
-          console.log(results);
-          selectFilterData.value[1].options = [];
-            //@ts-ignore
-          selectFilterData.value[1].options.push({label: '全部', value: ''});
-          for(let result in results) {
-            //@ts-ignore
-            selectFilterData.value[1].options.push({label: results[result].attribute, value: results[result].content.id});
-          }
-          changeselectAgeData(results);
-          dataScreen.value.chart = chart.value.initChart(ageData.value) as  ECharts;
         });
         pageable.value.total = commentList.value.length;
       }//@ts-ignore
       else if(props.initParam.userStatus === 4) {
-        changeList.forEach((item:any) => {
+        changeList.forEach((item:any,index:number) => {
           if(item.score >= 4) {
             commentList.value.push(item);
+            numberList.push(index);
           }
-        });
-        await analyzeComments(commentList.value).then((results:any) => {
-          console.log(results);
-          selectFilterData.value[1].options = [];
-            //@ts-ignore
-          selectFilterData.value[1].options.push({label: '全部', value: ''});
-          for(let result in results) {
-            //@ts-ignore
-            selectFilterData.value[1].options.push({label: results[result].attribute, value: results[result].content.id});
-          }
-          changeselectAgeData(results);
-          dataScreen.value.chart = chart.value.initChart(ageData.value) as  ECharts;
         });
         pageable.value.total = commentList.value.length;
       }
-    }else{
-      var dataLen = ageData.value.length;
+      //@ts-ignore
+      if(props.initParam.userRole[0] === "" || numberList.length === 0) {
+        return;
+      }else{
+        commentList.value = [];
+        var dataLen = ageData.value.length;
         // 取消之前高亮的图形
         for(let i=0;i<dataLen;i++){
           dataScreen.value.chart?.dispatchAction({
               type: 'downplay',
               dataIndex: i,
           });
-      }
-      //@ts-ignore
-      props.initParam.userRole.forEach((role:any) => {
-        // 高亮当前图形
-        dataScreen.value.chart?.dispatchAction({
-            type: 'highlight',
-            dataIndex: role % dataLen,
+        }
+        const arrs:any = [];
+        const firstArr:any = [];
+        //@ts-ignore
+        props.initParam.userRole.forEach((role:any) => {
+          const arr = role.split(',').map(Number);
+          firstArr.push(arr[0]);
+          arrs.push(...arr.slice(1));
         });
-        changeList.forEach((item:any) => {
-          if(item.id === role) {
-            commentList.value.push(item);
+        // 将数组合并并去重
+        const merged = Array.from(new Set(arrs)) as number[];
+        console.log(firstArr,merged);
+        merged.forEach((item:any) => {
+          //与数字核对列表进行比对，如果存在则添加到commentList中
+          if(numberList.includes(item-1)) {
+            if(item-1>=0){
+              commentList.value.push(changeList[item-1]);
+            }
           }
+          pageable.value.total = commentList.value.length;
         });
+        if(textFlag.value && firstArr.length > 0) {
+          firstArr.forEach((item:any) => {
+            // 高亮当前图形
+            dataScreen.value.chart?.dispatchAction({
+                type: 'highlight',
+                dataIndex: item % dataLen,
+            });
+          });
+        }
+      }
+      let num = 0;
+      changeList.forEach((item:any) => {
+        num += item.score;
       });
-    }
-    let num = 0;
-    changeList.forEach((item:any) => {
-      num += item.score;
+      // 将num / changeList.length进行四舍五入
+      score.value = (num / changeList.length).toFixed(2);
     });
-    // 将num / changeList.length进行四舍五入
-    score.value = num / changeList.length;
   } catch (error) {
     console.log(error);
   }
 }
 // 监听页面 initParam 改化，重新获取表格数据
 watch(() => props.initParam, getTableList, { deep: true });
+// 监听textFlag变化，执行相应操作
+watch(() => textFlag.value, () => {
+  if(textFlag.value === true) {
+    changeselectAgeData(textList.value);
+    dataScreen.value.chart = chart.value.initChart(ageData.value) as  ECharts;
+  }else{
+    changetreeAgeData();
+    chart.value.initChart(ageData.value);
+  }
+});
+
 // 分页数据
 const pageable = ref({
   pageNum: 1,
@@ -237,7 +243,7 @@ const changetreeAgeData = () => {
     }
   });
   // 将num / changeList.length进行四舍五入
-  score.value = num / commentList.value.length;
+  score.value = (num / commentList.value.length).toFixed(2);
   for(let index = 0; index < 3; index++) {
     let item:{
       name: string,
@@ -261,7 +267,12 @@ const changetreeAgeData = () => {
  * */
 const changeselectAgeData = (results:any) => {
   ageData.value = [];
-  for(let result in results){
+  //计算results中每个属性的数量的总和
+  let num = 0;
+  results.forEach((result:any) => {
+    num += result.value;
+  });
+  results.forEach((result:any) => {
     let item:{
       name: string,
       value: number,
@@ -271,11 +282,52 @@ const changeselectAgeData = (results:any) => {
       value: 0,
       percentage: ''
     };
-    item.value = 1;
-    item.name = results[result].attribute;
-    item.percentage = (item.value / commentList.value.length * 100).toPrecision(3) + "%";
+    item.value = result.value;
+    item.name = result.name;
+    item.percentage = (item.value / num * 100).toPrecision(3) + "%";
     ageData.value.push(item);
-  }
+  });
+}
+/**
+ * @description 获取评论特征
+ */
+async function getCommentFeature() {
+  await axios.post("http://81.70.22.42:9000/attraction/fenci", {
+      // @ts-ignore
+      poiID: parseInt(props.initParam.departmentId),
+  }).then((res:any) => {
+    selectFilterData.value[1].options = [];
+    //@ts-ignore
+    selectFilterData.value[1].options.push({label: '全部', value: ''});
+    //进行关键词筛选,获取关键词对应的评论索引和数量
+    const keywors = res.data[0].keywords;
+    keywors.forEach((key:string,index:number) => {
+      let indexs: number[] = [];
+      let value = index + ',';
+      let count = 0;
+      res.data.forEach((item:any,index:number) => {
+        if (index === 0) return;
+        item.keyword.forEach((keyword:string) => {
+
+          if(keyword === key) {
+            count++;
+            indexs.push(index);
+            return;
+          }
+        })
+      })
+      indexs.forEach((index:number) => {
+        value += index + ',';
+      })
+      //填充筛选数据
+      //@ts-ignore
+      selectFilterData.value[1].options.push({label: key, value: value});
+      console.log(selectFilterData.value[1].options);
+      //填充text列表
+      textList.value.push({name: key, value: count});
+    });  
+    
+  });
 }
 // 计算当前页码需要显示的评论数据
 const displayedComments = computed(() => {

@@ -3,7 +3,7 @@ import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol.js";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer.js";
 function createPointslayer() {
     const myFeature = new FeatureLayer({
-        url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/point/FeatureServer",
+        url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/attraction2/FeatureServer",
         id: "points",
     });
     // 创建一个新的符号
