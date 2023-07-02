@@ -24,13 +24,13 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { h,ref, onMounted, render} from "vue";
-import { ElMessageBox, ElSwitch,ElResult,ElIcon } from 'element-plus'
+import { h, ref, onMounted, render, onUnmounted } from "vue";
+import { ElMessageBox, ElSwitch, ElResult, ElIcon } from 'element-plus'
 import { useEcharts } from "@/hooks/useEcharts";
 import 'echarts-liquidfill';
 import * as echarts from 'echarts';
-import { usewidget3dStore} from '@/store/widget3d/widget3dstore'
-import BuildOptions  from "./chartOptions/Buildoptions";//引入设施配置项
+import { usewidget3dStore } from '@/store/widget3d/widget3dstore'
+import BuildOptions from "./chartOptions/Buildoptions";//引入设施配置项
 import visitorOptions from "./chartOptions/Visitoroptions";//引入客流量配置项
 import environmentOptions from "./chartOptions/Environmentoptions";//引入环境配置项
 
@@ -50,10 +50,9 @@ onMounted(() => {
     }
     // 创建客流量评估图表
     let ChartVisitor: echarts.ECharts | null = null;
-        // console.log(isDisabled.value);
     if (chartVisitorRef.value) {
         ChartVisitor = echarts.init(chartVisitorRef.value);
-        ( visitorOptions.toolbox as echarts.ToolboxComponentOption).feature = {
+        (visitorOptions.toolbox as echarts.ToolboxComponentOption).feature = {
             myTool1: {
                 show: true,
                 title: '限流评估',
@@ -64,44 +63,44 @@ onMounted(() => {
                         title: '限流评估参数',
                         // Should pass a function if VNode contains dynamic props
                         message: () =>
-                        h('div', { style: { display: 'flex', flexDirection: 'column' } }, [
-                            h('div', { style: { display: 'flex', flexDirection: 'row' ,justifyContent: 'space-evenly',} }, [
-                                h('div', { style: {} }, [
-                                    h('label', { for: 'switch1',style:{color: '#fff'} }, '设施：'),
-                                    h(ElSwitch, {
+                            h('div', { style: { display: 'flex', flexDirection: 'column' } }, [
+                                h('div', { style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', } }, [
+                                    h('div', { style: {} }, [
+                                        h('label', { for: 'switch1', style: { color: '#fff' } }, '设施：'),
+                                        h(ElSwitch, {
                                             id: 'switch1',
                                             modelValue: widget3dStore.checked1,
                                             'onUpdate:modelValue': (val) => (widget3dStore.checked1 = val),
-                                    }),
-                                ]),
-                                h('div', { style: {} }, [
-                                    h('label', { for: 'switch2',style:{color: '#fff'} }, '客流量：'),
-                                    h(ElSwitch, {
+                                        }),
+                                    ]),
+                                    h('div', { style: {} }, [
+                                        h('label', { for: 'switch2', style: { color: '#fff' } }, '客流量：'),
+                                        h(ElSwitch, {
                                             id: 'switch2',
                                             disabled: true,
                                             modelValue: widget3dStore.checked2,
                                             'onUpdate:modelValue': (val) => (widget3dStore.checked2 = val),
-                                    }),
-                                ]),
-                                h('div', {}, [
-                                    h('label', { for: 'switch3',style:{color: '#fff'} }, '环境：'),
-                                    h(ElSwitch, {
+                                        }),
+                                    ]),
+                                    h('div', {}, [
+                                        h('label', { for: 'switch3', style: { color: '#fff' } }, '环境：'),
+                                        h(ElSwitch, {
                                             id: 'switch3',
                                             modelValue: widget3dStore.checked3,
                                             'onUpdate:modelValue': (val) => (widget3dStore.checked3 = val),
-                                    }),
+                                        }),
+                                    ]),
                                 ]),
+                                //@ts-ignore
+                                widget3dStore.showResult ? h(ElResult, {
+                                    icon: widget3dStore.resultArr[widget3dStore.result],
+                                    //@ts-ignore
+                                    title: widget3dStore.resultTitle[widget3dStore.resultArr[widget3dStore.result]].title,
+                                    //@ts-ignore
+                                    subTitle: widget3dStore.resultTitle[widget3dStore.resultArr[widget3dStore.result]].subTitle,
+                                    style: { color: '#fff' },
+                                }) : null,
                             ]),
-                            //@ts-ignore
-                            widget3dStore.showResult?h(ElResult, {
-                                icon: widget3dStore.resultArr[widget3dStore.result],
-                                //@ts-ignore
-                                title: widget3dStore.resultTitle[widget3dStore.resultArr[widget3dStore.result]].title,
-                                //@ts-ignore
-                                subTitle: widget3dStore.resultTitle[widget3dStore.resultArr[widget3dStore.result]].subTitle,
-                                style: { color: '#fff' },
-                            }):null,
-                        ]),
                         confirmButtonText: '执行分析',
                         closeOnClickModal: false,
                         beforeClose: (action, instance, done) => {
@@ -127,8 +126,8 @@ onMounted(() => {
                 }
             },
         },
-        // 使用useEcharts钩子，实现响应式
-        useEcharts(ChartVisitor as echarts.ECharts, visitorOptions);
+            // 使用useEcharts钩子，实现响应式
+            useEcharts(ChartVisitor as echarts.ECharts, visitorOptions);
     }
     // 创建环境评估图表
     let ChartEnvironment: echarts.ECharts | null = null;
@@ -137,6 +136,9 @@ onMounted(() => {
         // 使用useEcharts钩子，实现响应式
         useEcharts(ChartEnvironment as echarts.ECharts, environmentOptions);
     }
+    // onUnmounted(() => {
+    //     stop = true;
+    // })
 })
 
 </script>

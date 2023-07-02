@@ -65,7 +65,7 @@ const query = new TopFeaturesQuery({
     where: `year = '${yearValue.value}'`,
     outFields: ["*"],
     topFilter: new TopFilter({
-        topCount: 7,
+        topCount: 30,
         groupByFields: ["GeometryType"],
         orderByFields: ["number DESC"]
     })
@@ -73,33 +73,60 @@ const query = new TopFeaturesQuery({
 let xData: string[] = [];
 let seriesData: string[] = []
 let myChart: echarts.ECharts | null = null;
+//存储的是起点和终点的经纬度，终点的经纬度定死了的
 let flightData: { coords: number[][] }[] = [];
 let echartLayer: EchartLayer | null = null;
+let startIndex = 0;
+let endIndex = 10;
 let option1: echarts.EChartsOption = {
     xAxis: {
         type: 'category',
         data: xData,
         axisLabel: {
-            fontSize: 15,
             color: '#4c9bfd',
-            interval: 0,
         }
     },
     yAxis: {
+        name: '数量(万人)',
         type: 'value',
         axisLabel: {
             color: '#4c9bfd',
             fontSize: 15,
-        }
+        },
+        nameTextStyle: {
+            color: '#4c9bfd',
+            fontSize: 14,
+        },
 
     },
     grid: {
         left: '1%',
         right: '1%',
-        bottom: '3%',
-        top: '3%',
+        bottom: '11%',
+        top: '8%',
         width: '90%',
         containLabel: true
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {  // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow' // 显示为直线，对于柱状图，可以设置为 'shadow'，表示显示阴影
+        },
+        backgroundColor: '#115687',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: [5, 10],
+        textStyle: {
+            color: '#000',
+            fontSize: 14
+        },
+        extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);max-width: 200px; max-height: 80px;',
+        formatter: function (params: any) {
+            var dataIndex = params[0].dataIndex; // 获取当前柱子的索引
+            var value = params[0].value; // 获取当前柱子的值
+            var xAxisValue = params[0].axisValue;
+            return '省份排名：' + dataIndex + '<br>省份名称：' + xAxisValue + '<br>省份游客：' + value;
+        }
     },
     series: [
         {
@@ -107,8 +134,19 @@ let option1: echarts.EChartsOption = {
             type: 'bar',
             barWidth: '70%',
             color: 'red',
+            // itemStyle: {
+            //         //@ts-ignore
+            //         normal: {
+            //             barBorderRadius: [10, 10, 0, 0] // 设置柱状图的圆角大小，单位为像素
+            //         }
+            //     }
         }
-    ]
+    ],
+    dataZoom: [{
+        type: 'slider', // 使用滑动条型的数据缩放组件
+        start: 0, // 数据窗口范围的起始百分比
+        end: 20, // 数据窗口范围的结束百分比
+    }],
 };
 let option2: echarts.EChartsOption = {
     series: [{
@@ -139,11 +177,9 @@ let option2: echarts.EChartsOption = {
             brushType: 'stroke'
         },
         symbolSize: function (val) {
-            console.log(val[2]);
             return val[2] / 30;
         },
         data: flightData.map(function (dataItem, index) {
-            console.log(seriesData[index]);
             dataItem.coords[0].push(seriesData[index] as unknown as number);
             return {
                 value: dataItem.coords[0],
@@ -163,7 +199,16 @@ function reRender(type: '2d' | '3d') {
             {
                 data: seriesData,
             }
-        ]
+        ],
+        dataZoom: type === '2d' ? [{
+            type: 'slider', // 使用滑动条型的数据缩放组件
+            start: 0, // 数据窗口范围的起始百分比
+            end: 20, // 数据窗口范围的结束百分比
+        }] : [{
+            type: 'slider', // 使用滑动条型的数据缩放组件
+            start: 0, // 数据窗口范围的起始百分比
+            end: 80, // 数据窗口范围的结束百分比
+        }],
     });
     echartLayer?.Redraw({
         series: [
@@ -175,8 +220,6 @@ function reRender(type: '2d' | '3d') {
                 type: 'effectScatter',
                 data: flightData.map(function (dataItem, index) {
                     dataItem.coords[0].push(seriesData[index] as unknown as number);
-                    console.log(seriesData[index]);
-
                     return {
                         value: dataItem.coords[0],
                     }
@@ -186,7 +229,7 @@ function reRender(type: '2d' | '3d') {
                         return val[2] / 30;
                     }
                     else {
-                        return val[2] / 60;
+                        return val[2] / 160;
                     }
                 }
             },]
@@ -214,13 +257,16 @@ async function select_Changed(val: string) {
         )
         reRender('3d');
     }
+    startIndex=0;
+    endIndex=10;
+    showflighData();
 }
 async function queryFromLayer(queryLayer: FeatureLayer) {
     let results: __esri.FeatureSet | null = null;
     await queryLayer.load();
-    console.log(yearValue.value);
     queryLayer.definitionExpression = `year = '${yearValue.value}'`;
     query.where = `year = '${yearValue.value}'`;
+    query.topFilter.topCount = 10;
     results = await queryLayer.queryTopFeatures(query);
     return results;
 }
@@ -268,13 +314,17 @@ function radio_changed(val: number) {
         let view = store.getView() as __esri.SceneView;
         view.when(async () => {
             let results = await queryFromLayer(worldLayer);
+            xData = [];
+            seriesData = [];
+            flightData = [];
             results.features.forEach((grahphic, index) => {
                 seriesData[index] = grahphic.attributes.number;
                 xData[index] = grahphic.attributes.ChinaName;
+                flightData[index] = { coords: [[0, 0], [101.75, 36.56667]] };
                 flightData[index].coords[0][0] = grahphic.attributes.Longitude;
                 flightData[index].coords[0][1] = grahphic.attributes.Latitude;
-            }
-            )
+            })
+
             //@ts-ignore
             option2.series[1].symbolSize = function (val: number[]) {
                 return val[2] / 60;
@@ -286,10 +336,42 @@ function radio_changed(val: number) {
                     value: dataItem.coords[0],
                 }
             });
+            //@ts-ignore
+            option1.dataZoom[0].end = 80;
             echartLayer = new EchartLayer(view, option2);
             reRender('3d');
         })
     }
+    showflighData();
+}
+function showflighData() {
+    let newData = flightData.filter((element, index) => index >= startIndex && index <= endIndex);
+    //@ts-ignore
+    option2.series[1].data = newData.map(function (dataItem, index) {
+        dataItem.coords[0].push(seriesData[index] as unknown as number);
+        return {
+            value: dataItem.coords[0],
+        }
+    });
+    echartLayer?.Redraw({
+        series: [
+            {
+                type: 'lines',
+                data: newData,
+            },
+            {
+                type: 'effectScatter',
+                data: newData.map(function (dataItem, index) {
+                    dataItem.coords[0].push(seriesData[index] as unknown as number);
+                    return {
+                        value: dataItem.coords[0],
+                    }
+                }),
+                symbolSize: function (val: number[]) {
+                    return radio.value===1?val[2] / 30:val[2] / 160;
+                }
+            },]
+    });
 }
 onMounted(() => {
     chinaLayer.load().then(async () => {
@@ -310,6 +392,7 @@ onMounted(() => {
             option2.series[1].symbolSize = function (val: number[]) {
                 return val[2] / 30;
             }
+            //在经纬度后面加上人数数据
             //@ts-ignore
             option2.series[1].data = flightData.map(function (dataItem, index) {
                 dataItem.coords[0].push(seriesData[index] as unknown as number);
@@ -319,7 +402,16 @@ onMounted(() => {
             });
             view.zoom = 4;
             echartLayer = new EchartLayer(view, option2);
+            showflighData();
             echartLayer?.setVisiable(true);
+            myChart!.on('datazoom', function (params: any) {
+                let option = myChart!.getOption();
+                //@ts-ignore
+                startIndex = Math.round(params.start / 100 * (option.xAxis[0].data.length - 1));
+                //@ts-ignore
+                endIndex = Math.round(params.end / 100 * (option.xAxis[0].data.length - 1));
+                showflighData();
+            });
         })
     });
 
@@ -338,11 +430,12 @@ document.head.appendChild(style);
 <style lang="scss" scoped>
 .el {
     &-select {
-        margin-left: 2%;
+        margin-left: 0%;
         width: 30%;
         font-size: 15px;
     }
 }
+
 .container {
     position: absolute;
     background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
@@ -350,7 +443,7 @@ document.head.appendChild(style);
     right: 0%;
     border-radius: 6px;
     width: 500px;
-    height: 400px;
+    height: 500px;
     pointer-events: auto;
     border: 0px solid var(--el-card-border-color);
     display: flex;
@@ -362,7 +455,7 @@ document.head.appendChild(style);
         top: 4px;
         left: 5px;
         width: 100%;
-        height: 8%;
+        height: 30px;
         border-radius: 3px;
         flex-direction: row;
 
@@ -382,7 +475,7 @@ document.head.appendChild(style);
         top: 10%;
         right: 2px;
         width: 500px;
-        height: 350px;
+        height: 450px;
         margin: 1px;
     }
 }

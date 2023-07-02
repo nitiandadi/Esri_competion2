@@ -1,82 +1,120 @@
+$top-height: 35px;
+$border:1px solid #fff;
 .container {
     position: absolute;
     top: 12%;
-    left: 70.2%;
+    left: 68.2%;
     width: 600px;
-    height: 620px;
-    pointer-events: auto;
-    padding: 0px;
+    height: 600px;
     display: flex;
     flex-direction: column;
-    background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
-
+    padding: 0px;
+    pointer-events: auto;
+    // background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
+    
     .top{
         display: flex;
         flex-direction: row;
         height: 50px;
-
        .el-menu{
-            width: 450px;
+             width: 472px;
             height: 50px;
+            // background-color: #729aea;
+            background-color: aliceblue;
+            color: #000;
+            font-size: large;
+            border-right: 1px solid black;
         }
         .el-select{
-            width: 120px;
+            width: 107px;
             height: 48px;
+            color: #000;
+            border: 0px;
+             .el-input__wrapper {
+                cursor: pointer;
+                background: #729aea;
+            }
         }
     }
-    .middle{
-
-            height: 450px;
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            .sketch{
-                width: 490px;
-                height: 32px;
-            }
-            .el-button{
-                width: 80px;
-                height: 32px;
-            }
-            .input{
-                width:100%;
-                .el-textarea__inner {
-                height: 536px;
-                background-color: #115687;
-                color: #000;
-                }
-            }
-    }
+    // .middle{
+    //         height: 450px;
+    //         width: 100%;
+    //         display: flex;
+    //         flex-direction: row;
+    //         flex-wrap: wrap;
+    //         .sketch{
+    //             width: 450px;
+    //             height: 32px;
+    //             background-color: #ffffff;
+    //             line-height: 32px; /* 这需要和 height 相同 */
+    //             padding-left: 10px;
+    //         }
+    //         .el-button{
+    //             width: 64px;
+    //             height: 32px;
+    //             margin-left: 0px;
+    //             border-radius: 0px;
+    //             border: 1px solid #fff;
+    //             border-right: 0px;
+    //         }
+    //         .input{
+    //             width:100%;
+    //             .el-textarea__inner {
+    //             height: 536px;
+    //             background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
+    //             color: #000;
+    //             font-size: 1.3rem;
+    //             /* 改变标题字体大小 */
+    //             font-weight: bold;
+    //             /* 加粗字体 */
+    //             color: #92c3e4;
+    //             }
+    //         }
+    // }
     .buffer{
-        width: 100%;
+        width: 600px;
         height: 100%;
         background-color: #115687;
         color: #000;
+        position: relative;
         .top{
             display: flex;
             flex-direction: row;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
             height: 50px;
+            border-bottom: 1px solid #92c3e4;
+            border-top: 1px solid #92c3e4;
             .text{
-                width: 60px;
-                display: flex;
-                align-items: center;
-                height: 32px;
-                margin-left: -26px;
-                font-size: 19px;
-                
+                width: 100px;
+                height: $top-height;
+                font-size: 16px;
+                text-align: center;
+                line-height: $top-height;
+                border: $border;
+                margin-left: 2px;
+                border-right: 1px solid #eff1f2;
+                margin-top: 5px;
+                color:#fff
             }
             .el-slider{
-                width: 420px;
-                height: 32px;
-                margin-left: -25px;
-                margin-right: 18px;
+                height: $top-height;
+                border: $border;
+                border-left: 0px;
+                // margin-left: 10px;
+                width: 368px;
+                margin-top: 5px;
+                background-color: #115687;
             }
             .el-button{
-                width: 80px;
-                height: 32px;
+                width: 125px;
+                height: 37px;
+                border: $border;
+                margin-top: 5px;
+                margin-left: 0px;
+                border-radius: 0px;
+                border-left: 0px;
+                background-color: #115687;
+                
             }
         }
         .chart{

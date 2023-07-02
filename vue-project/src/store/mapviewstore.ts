@@ -4,6 +4,7 @@ import SceneView from "@arcgis/core/views/SceneView.js";
 import WebMap from '@arcgis/core/WebMap';
 import MapView from '@arcgis/core/views/MapView';
 import Basemap from '@arcgis/core/Basemap';
+import { log } from 'console';
 export const useViewStore = defineStore('view', () => {
     let myView: __esri.View | null = null;
     let myContainer: string | HTMLDivElement;
@@ -63,14 +64,13 @@ export const useViewStore = defineStore('view', () => {
             nightBasemap.load().then(() => {
                 let nightStreetLayer = nightBasemap.baseLayers.getItemAt(0);
                 myView!.map.basemap.baseLayers.add(nightStreetLayer, 0);
-            }
-            );
+            });
         });
         myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
     }
 
-    
-    
+
+
     function destroyMapView() {
         myView?.destroy();
         myView = null;

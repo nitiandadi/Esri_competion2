@@ -1,0 +1,32 @@
+.el-date-editor.el-input, .el-date-editor.el-input__wrapper {
+    /* width: var(--el-date-editor-width); */
+    height: var(--el-input-height,var(--el-component-size));
+    width: 200px;
+}
+.el-input__inner {
+    font-size: 17px;
+}
+.el-button>span {
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
+}
+.el-table td.el-table__cell div {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.el-time-panel {
+    width: 143px;
+}
+.el-textarea__inner{
+    height: 300px;
+}
+.container .top .el-select .el-input__wrapper {
+    cursor: pointer;
+    background: #fff;
+}
+.el-select .el-input__inner {
+    font-size: 18px;
+    width: 100px;
+    height: 50px;
+  }

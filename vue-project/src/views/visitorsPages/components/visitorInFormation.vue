@@ -36,7 +36,7 @@ import { computed, markRaw, onMounted, onUnmounted, reactive, ref, toRaw, watch 
 import myTable from './table.vue'
 import { useViewStore } from '@/store/mapViewstore';
 import VisitorHandler from '@/store/visitor/visitor2Store';
-import type { tableData } from '@/type/table';
+import type { tableData1 } from '@/type/table';
 //@ts-ignore
 import Point from '@arcgis/core/geometry/Point';
 import visitostyle2 from '@/style/visitorhead.scss?inline'
@@ -67,9 +67,6 @@ function move() {
 }
 const radio_changed = () => {
 }
-const props = defineProps({
-    visiable: Boolean,
-})
 const onSubmit = () => {
     let province = attractions1.value.value;
     let queryedVisitors = visitorHandler.queryVisitors(beginAge.value, endAge.value, province, radio.value,);
@@ -83,15 +80,15 @@ const style = document.createElement("style");
 style.setAttribute("lang", "scss");
 style.innerHTML = visitostyle2;
 document.head.appendChild(style);
-let data: tableData[] = Array<tableData>(10);
+let data: tableData1[] = Array<tableData1>(10);
 const buttontext = computed(() => {
     return isPlaying.value ? '暂停' : '实时'
 })
 interface tableExpose {
-    setTableData: (data: tableData[]) => void;
+    setTableData: (data: tableData1[]) => void;
 }
 function setDataforTable(visitorGraphics: __esri.Graphic[]) {
-    data = Array<tableData>(0);
+    data = Array<tableData1>(0);
     for (let i = 0; i < visitorGraphics.length; i++) {
         let latitude = (visitorGraphics[i].geometry as Point).latitude.toFixed(4)
         let longitude = (visitorGraphics[i].geometry as Point).longitude.toFixed(4)
@@ -142,7 +139,16 @@ async function select_Changed(val: any) {
     isDisabled.value = false;
 }
 onMounted(() => {
-    view.map.basemap.baseLayers.getItemAt(1).visible = false;
+    view = store.getView() as __esri.MapView;
+    view.when(() => {
+        view.map.basemap.loadAll().then(() => {
+            view.map.basemap.baseLayers.getItemAt(1).visible = false;
+            view.goTo({
+                center: [101.546145,  36.619484],
+                zoom: 10
+            })
+        })
+    })
 })
 onUnmounted(() => {
     clearInterval(internal);

@@ -13,7 +13,6 @@ export const useEcharts = (myChart: echarts.ECharts, options: echarts.EChartsCor
 		myChart.setOption(options);
 	}
 	const echartsResize = useDebounceFn(() => {
-		console.log("echartsResize");
 		myChart && myChart.resize();
 	}, 100);
 

@@ -3,8 +3,8 @@
         <div class="screen3d-navigation" ref="navigationRef"></div>
         <widget3d />
         <buildingInfro v-if="buildvisual" />
-        <!-- <videoInfro v-if="videovisual" />
-         <areaInfro v-if="areavisual" /> -->
+        <videoInfro v-if="videovisual" />
+         <areaInfro v-if="areavisual" />
     </div>
 </template>
 
@@ -23,6 +23,8 @@ import { SimpleRenderer } from "@arcgis/core/renderers";
 import PolygonSymbol3D from "@arcgis/core/symbols/PolygonSymbol3D.js";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
 import NavigationToggle from "@arcgis/core/widgets/NavigationToggle.js";
+import videoInfro from './components/videoInfro.vue';
+import areaInfro from './components/areaInfro.vue';
 import widget3d from "./components/widget3d.vue";
 import esriConfig from "@arcgis/core/config.js";
 const navigationRef = ref<HTMLElement | null>(null);
@@ -115,7 +117,7 @@ onMounted(() => {
                 container: navigationRef.value!,
                 iconClass: "screen3d-icon-pan2"
             });
-            view.ui.add(navigationToggle);
+            // view.ui.add(navigationToggle);
 
         })
     }, 1000);

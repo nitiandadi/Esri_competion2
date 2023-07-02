@@ -10,6 +10,7 @@ import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { HeatmapRenderer } from "@arcgis/core/renderers";
 import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
 import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
+import { log } from "console";
 interface visitor {
     name: string;
     gender: string;
@@ -69,29 +70,29 @@ let symbol2 = new SimpleMarkerSymbol({
     }
 });
 const smallPopulationSymbol = new SimpleMarkerSymbol({
-    color: "orange",
-    size: "5px",
+    size: 10,
+    color: "#69dcff",
     outline: {
-        color: [255, 255, 255],
-        width: 1
+        color: "rgba(0, 139, 174, 0.5)",
+        width: 5
     }
 });
 
 const mediumPopulationSymbol = new SimpleMarkerSymbol({
-    color: "orange",
-    size: "20px",
+    size: 20,
+    color: "#69dcff",
     outline: {
-        color: [255, 255, 255],
-        width: 1
+        color: "rgba(0, 139, 174, 0.5)",
+        width: 5
     }
 });
 
 const largePopulationSymbol = new SimpleMarkerSymbol({
-    color: "orange",
-    size: "35px",
+    size: 30,
+    color: "#69dcff",
     outline: {
-        color: [255, 255, 255],
-        width: 1
+        color: "rgba(0, 139, 174, 0.5)",
+        width: 5
     }
 });
 
@@ -103,7 +104,7 @@ export default class VisitorHandler {
     private _myVisitors: __esri.Graphic[] = [];
     private _myPolygon: Polygon | null = null;
     private _myPoints: __esri.Point[] = [];
-    private internalTimer: number | null = null;
+    private internalTimer: NodeJS.Timer | null = null;
     private _spotPointsLayer: __esri.FeatureLayer;
     private _areaFeatureSet!: __esri.FeatureSet;
     private _pointsFeatureset!: __esri.FeatureSet;
@@ -211,7 +212,7 @@ export default class VisitorHandler {
     /**
      * 开启实时游客展示和地理围栏功能
      */
-    public enableRealtime(boundary?: Polygon, inputText?: Ref<string>) {
+    public enableRealtime(boundarys?: Polygon[], inputText?: Ref<string>) {
         this.internalTimer = setInterval(() => {
             // 创建一个新的点对象，基于旧的点对象，但是更改了经纬度
             for (let i = 0; i < this.visitors.length; i++) {
@@ -225,25 +226,31 @@ export default class VisitorHandler {
                 else {
                     this.visitors[i].geometry = this._myPoints[5];
                 }
-                if (boundary) {
-                    if (boundary.contains(this.visitors[i].geometry as Point)) {
-                        if (this.visitors[i].symbol === symbol1) {
-                            this.visitors[i].symbol = symbol2;
-                            inputText!.value += this.visitors[i].attributes.name + "进入了景区,来自于" +
-                                this.visitors[i].attributes.province + "年龄为" + this.visitors[i].attributes.age + "性别为"
-                                + this.visitors[i].attributes.gender + '\n';
+                if (boundarys) {
+                    for (let index = 0; index < boundarys!.length; index++) {
+                        if (boundarys![index].contains(this.visitors[i].geometry as Point)) {
+                            if (this.visitors[i].symbol === symbol1) {
+                                this.visitors[i].symbol = symbol2;
+                                inputText!.value += this.visitors[i].attributes.name + "进入了围栏"+(index+1)+",来自于" +
+                                    this.visitors[i].attributes.province + "年龄为" + this.visitors[i].attributes.age + "性别为"
+                                    + this.visitors[i].attributes.gender + '\n';
+                            }
+                            break;
                         }
-                    }
-                    else {
-                        if (this.visitors[i].symbol === symbol2) {
-                            inputText!.value += this.visitors[i].attributes.name + "离开了景区,逗留时间20分钟\n";
-                            this.visitors[i].symbol = symbol1;
+                        else {
+                            if (this.visitors[i].symbol === symbol2) {
+                                inputText!.value += this.visitors[i].attributes.name + "离开了围栏"+(index+1)+",逗留时间20分钟\n";
+                                this.visitors[i].symbol = symbol1;
+                            }
                         }
                     }
                 }
 
+
+
+
             }
-        }, 500);
+        }, 800);
     }
     /**
      * 停止实时展示
@@ -262,7 +269,7 @@ export default class VisitorHandler {
                 var bufferGraphic = new Graphic({
                     geometry: buffer,
                     symbol: new SimpleFillSymbol({
-                        color: [100, 149, 237, 0.8],
+                        // color: [100, 149, 237, 0.8],
                         style: "solid",
                         outline: {
                             color: [255, 255, 255],
@@ -279,7 +286,7 @@ export default class VisitorHandler {
                 var bufferGraphic = new Graphic({
                     geometry: buffer,
                     symbol: new SimpleFillSymbol({
-                        color: [100, 149, 237, 0.8],
+                        // color: [100, 149, 237, 0.8],
                         style: "solid",
                         outline: {
                             color: [255, 255, 255],
@@ -317,10 +324,10 @@ export default class VisitorHandler {
     /**
      * 产生热力图图层
      */
-    public async generateHeatmapLayer(type: 'spots' | 'roads') {
+    public async generateLayer(type: 'spots' | 'roads') {
         let heatmapLayer = new FeatureLayer({
             source: type === 'spots' ? this._pointsFeatureset.features :
-             this.roadsFeatureset!.features,
+                this.roadsFeatureset!.features,
             objectIdField: "ObjectID",
             fields: [{
                 name: "ObjectID",
@@ -343,6 +350,8 @@ export default class VisitorHandler {
         query.where = "1=1"; // 查询所有特征
         let results = await heatmapLayer.queryFeatures(query);
         let features = results.features;
+        const colors = ["#ff8080", "#ff6060", "#ff4040", "#ff2020", "#ff0000"];
+        let linewidth = 3;
         let updatedFeatures = features.map(function (feature, index) {
             feature.attributes.peoNumber = peoNumbers[index];
             return feature;
@@ -373,24 +382,24 @@ export default class VisitorHandler {
                     minValue: 0,
                     maxValue: 10,
                     symbol: new SimpleLineSymbol({
-                        color: "#FFC0C0",
-                        width: 1,
+                        color: colors[0],
+                        width: linewidth,
                         style: "solid"
                     })
                 }, {
                     minValue: 10,
                     maxValue: 20,
                     symbol: new SimpleLineSymbol({
-                        color: "#FF8080",
-                        width: 1,
+                        color: colors[1],
+                        width: linewidth,
                         style: "solid"
                     })
                 }, {
                     minValue: 20,
                     maxValue: 30,
                     symbol: new SimpleLineSymbol({
-                        color: "#FF4040",
-                        width: 1,
+                        color: colors[2],
+                        width: linewidth,
                         style: "solid"
                     })
                 },
@@ -398,8 +407,8 @@ export default class VisitorHandler {
                     minValue: 30,
                     maxValue: 40,
                     symbol: new SimpleLineSymbol({
-                        color: "#FF0000",
-                        width: 1,
+                        color: colors[3],
+                        width: linewidth,
                         style: "solid"
                     })
                 },
@@ -407,8 +416,8 @@ export default class VisitorHandler {
                     minValue: 40,
                     maxValue: 50,
                     symbol: new SimpleLineSymbol({
-                        color: "#E60000",
-                        width: 1,
+                        color: colors[4],
+                        width: linewidth,
                         style: "solid"
                     })
                 }, {
@@ -416,7 +425,7 @@ export default class VisitorHandler {
                     maxValue: 60,
                     symbol: new SimpleLineSymbol({
                         color: "#CC0000",
-                        width: 1,
+                        width: linewidth,
                         style: "solid"
                     })
                 },
@@ -425,12 +434,11 @@ export default class VisitorHandler {
                     maxValue: 600,
                     symbol: new SimpleLineSymbol({
                         color: "#B20000",
-                        width: 1,
+                        width: linewidth,
                         style: "solid"
                     })
                 }]
             });
-            console.log(heatmapLayer);
         }
         return heatmapLayer;
     }
@@ -440,6 +448,11 @@ export default class VisitorHandler {
             objectIdField: "ObjectID",
         })
         return featureLayer;
+    }
+    public recover() {
+        this._myVisitors.forEach((visitor) => {
+            visitor.symbol = symbol1;
+        })
     }
 }
 

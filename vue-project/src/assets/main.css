@@ -14,3 +14,6 @@ html,body,div{
   left: 0;
   visibility: hidden;
 }
+.el-popper.is-pure {
+  width: 200px;
+}

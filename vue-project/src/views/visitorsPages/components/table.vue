@@ -15,8 +15,8 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
-import type { tableData } from '@/type/table';
-let tableData = ref<tableData[]>([]);
+import type { tableData1 } from '@/type/table';
+let tableData = ref<tableData1[]>([]);
 let currentPage = ref(2);
 let pageSize = ref(10);
 const style = document.createElement("style");
@@ -34,7 +34,7 @@ function handleSizeChange(val: number) {
 function handleCurrentChange(val: number) {
     currentPage.value = val;
 }
-function setTableData(data: tableData[]) {
+function setTableData(data: tableData1[]) {
     tableData.value = data;
 }
 defineExpose({

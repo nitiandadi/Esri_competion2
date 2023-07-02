@@ -25,19 +25,6 @@
     padding: 0px; 
     margin: 0px; 
 }
-// .el-slider__button-wrapper {
-//     background-color: red;
-//     &:hover {
-//         background-color: red;
-//         height: 20px;
-//       }
-//       .dragging{
-//         height: 20px;
-//       }
-// }
-// .el-slider__button{
-//     &:hover {
-//         background-color: red;
-//         height: 20px;
-//       }
-// }
+.el-select .el-input__inner{
+    width: 80px;
+}

@@ -31,8 +31,20 @@ export const useTime = () => {
 			new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(date.getSeconds());
 		nowTime.value = `${year.value}年${month.value}月${day.value}日`;
 	};
-
 	updateTime();
-
-	return { year, month, day, hour, minute, second, week, nowTime };
+	function getTimeGap(date: Date) {
+		let gapHour = date.getHours() - (hour.value as number);
+		let gapMinute = date.getMinutes() - (minute.value as number);
+		let gapSecond = date.getSeconds() - (second.value as number);
+		if (gapSecond < 0) {
+			gapSecond += 60;
+			// gapMinute--;
+		}
+		if(gapMinute < 0) {
+			gapMinute += 1;
+		}
+		return (gapHour + "")?.padStart(2, "0") + ':' + (gapMinute + "")?.padStart(2, "0") + ':' + (gapSecond + "")?.padStart(2, "0");
+	}
+	return { year, month, day, hour, minute, second, week, nowTime, getTimeGap };
 };
+// let time= useTime();
