@@ -103,7 +103,7 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
         //设置pointslayer弹窗模板
         const popupTemplate = new PopupTemplate({
             // title: "<span class='esri-popup__header-title'>{{layer.title}}</span>", // 添加一个带有标题文本的 span 元素
-            title: "{名称}",
+            title: "{name}",
             content: [{
                 type: "fields",
                 fieldInfos: [
@@ -171,9 +171,12 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                     const message = qualityname[city];
                     let areaCode = '';
                     let name = '';
-                    for(let index in message){
-                        areaCode = message[index].行政区划;
-                        name = index;
+                    // 随机获取一个站点
+                    if(message){
+                        const siteNames = Object.keys(message);
+                        const randomIndex = Math.floor(Math.random() * siteNames.length);
+                        name = siteNames[randomIndex];
+                        areaCode = message[name].行政区划;
                     }
                     //转换为json格式
                     const waterdata = {
@@ -183,18 +186,12 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                     }
                     //使用axios发送请求，获得feature的数据
                     await axios.post('http://81.70.22.42:9000/quality/water',waterdata).then((res) => {
+                        let attributeUpdates = {} as any;
+                        let where =  `name='${feature.attributes['name']}'`;
                     //为图层提供数据
                         for(let index in res.data){
                             if(index === 'ph' || index === 'dissolvedoxygen' || index === 'permanganateindex' || index === 'totalnitrogen'){
-                                const where = `名称='${feature.attributes['名称']}'`;
-                                let attributeUpdates = { [index.toLocaleLowerCase()] : res.data[index] };
-                                if(index === 'permanganateindex') attributeUpdates = { ['permanganate'] : res.data[index] } ;                        
-                                const queryOpts = {
-                                    where: where,
-                                    attributeUpdates: attributeUpdates
-                                };
-                                //提供数据
-                                useUpdate(pointslayer, queryOpts);
+                                attributeUpdates[index.toLowerCase()] = res.data[index].toString();                       
                                 i++
                                 // 每次请求的进度和状态
                                 percentage.value = Math.floor((i / (features.length * 8)) * 100)
@@ -205,25 +202,24 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                                 }
                             }
                         }
+                        const queryOpts = {
+                            where: where,
+                            attributeUpdates: attributeUpdates
+                        };
+                        //提供数据
+                        useUpdate(pointslayer, queryOpts);
                     });
-                    //使用axios发送请求，获得feature的数据
+                    // //使用axios发送请求，获得feature的数据
                     await axios.post('http://81.70.22.42:9000/quality/now',nowdata).then((res) => {
+                        let attributeUpdates = {} as any;
+                        let where = `name='${feature.attributes['name']}'`;
                         //为图层提供数据
                         for(let index in res.data){
-                            if(index === 'date' || index === 'tempMax' || index === 'aqi' || index === 'humidity'){
-                                const where = `名称='${feature.attributes['名称']}'`;
-                                let attributeUpdates = { [index.toLocaleLowerCase()] : res.data[index] };
-                                if(index === 'tempMax') attributeUpdates = { ['maxtemp'] : res.data[index] } ;
-                                if(index === 'date'){
-                                    const date = new Date(res.data[index]);
-                                    attributeUpdates = { ['pointstime'] : date.getTime() };
-                                } 
-                                const queryOpts = {
-                                    where: where,
-                                    attributeUpdates: attributeUpdates
-                                };
-                                //提供数据
-                                useUpdate(pointslayer, queryOpts);
+                            if(index === 'tempMax' || index === 'aqi' || index === 'humidity'||index === "date"){
+                                
+                                attributeUpdates[index.toLocaleLowerCase()] = res.data[index].toString();
+                                if(index === 'tempMax') attributeUpdates['maxtemp']=res.data[index].toString();
+                                if(index === 'date') attributeUpdates['pointstime']=res.data[index];
                                 i++
                                 // 每次请求的进度和状态
                                 percentage.value = Math.floor((i / (features.length * 8)) * 100)
@@ -234,6 +230,12 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                                 }
                             }
                         }
+                        const queryOpts = {
+                            where: where,
+                            attributeUpdates: attributeUpdates
+                        };
+                        //提供数据
+                        useUpdate(pointslayer, queryOpts);
                     });
                 });
             });
@@ -298,8 +300,8 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                     }
                 }
                 //将count的值赋给feature的属性
-                console.log(feature.attributes['名称'],count);
-                const where = `名称='${feature.attributes['名称']}'`;
+                console.log(feature.attributes['name'],count);
+                const where = `name='${feature.attributes['name']}'`;
                 const attributeUpdates = { class : evaluation[count] };
                 const queryOpts = {
                     where: where,

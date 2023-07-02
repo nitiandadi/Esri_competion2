@@ -260,17 +260,25 @@
   padding: 2px;
   box-sizing: border-box;
   width: 30%;
-  height: auto;
+  height: 85%;
   position: absolute;
   top: 10%;
   left: 0;
   color: #21c2ef;
   background-color: rgba(17, 103, 146, 0.6);
-  overflow: auto;
+  overflow-y: auto;
   z-index: 60;
   pointer-events: auto;
 }
-
+.panel-side::-webkit-scrollbar {
+  width: 6px; /* 设置滚动条宽度 */
+  height: 6px; /* 设置滚动条高度 */
+  
+}
+.panel-side::-webkit-scrollbar-thumb {
+  border-radius: 3px; /* 设置滚动条圆角 */
+  background-image: linear-gradient(135deg, #14c0e3 0%, rgba(8, 196, 219, 0.5) 72%, rgba(0, 182, 234, 0.3) 100%);
+}
 .panel-side h3 {
   padding: 0 20px;
   margin: 20px 0;
@@ -309,5 +317,11 @@
 }
 .el-message{
   height: auto;
+}
+.el-input__wrapper {
+  background-color: #14c6e503;
+}
+.el-input__inner {
+  color: #21c2ef;
 }
   

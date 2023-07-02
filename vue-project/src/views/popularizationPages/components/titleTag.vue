@@ -11,7 +11,7 @@ import TagCloud from 'TagCloud';
 const myCanvasRef = ref<HTMLElement | null>(null);
 // 接收父组件参数并设置默认值
 interface CommentcardProps  {
-    initText: [], // 初始化参数 ==> 必传
+    initText: string[], // 初始化参数 ==> 必传
 }
 // 接受父组件参数，配置默认值
 const props = withDefaults(defineProps<CommentcardProps>(), {

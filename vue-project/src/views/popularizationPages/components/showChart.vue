@@ -1,6 +1,5 @@
 <template>
 	<div class="myEcharts">
-			<!-- 年龄比例 -->
 		<div class="echarts" id="showChart"></div>
 	</div>
 </template>

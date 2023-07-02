@@ -21,8 +21,8 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
                 {
                     // Autocasts to new FieldElement
                     type: "field",
-                    fieldName: "名称",
-                    label: "名称",
+                    fieldName: "name",
+                    label: "景点名称",
                     editableExpression: "return false" 
                 },
                 {
@@ -33,7 +33,7 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
                 },
                 {
                     type: "field",
-                    fieldName: "类型名称",
+                    fieldName: "typeName",
                     label: "类型名称",
                     editableExpression: "return false"
                 },
@@ -92,9 +92,9 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
     let featureForm: __esri.FeatureForm;
 
     //选择要素,并显示要素表单
-    async function selectFeature(FID: number,featureLayer: __esri.FeatureLayer,form: __esri.FeatureForm) {
+    async function selectFeature(OBJECTID: number,featureLayer: __esri.FeatureLayer,form: __esri.FeatureForm) {
         //从要素图层中查询要素
-        await featureLayer.queryFeatures({objectIds: [FID],outFields: ["*"],returnGeometry: true}).then((results) => {
+        await featureLayer.queryFeatures({objectIds: [OBJECTID],outFields: ["*"],returnGeometry: true}).then((results) => {
             if (results.features.length > 0) {
                 editFeature = results.features[0];
                 //显示要素表单
@@ -137,7 +137,7 @@ export const useCorrectFeatureStore = defineStore('correctFeature',() => {
               if(response.results.length === 0) return;
               const result = response.results[0]  as __esri.GraphicHit;
               if (result.graphic &&result.graphic.layer === pointsLayer) {
-                selectFeature(result.graphic.attributes['FID'],pointsLayer,featureForm);
+                selectFeature(result.graphic.attributes['ObjectId'],pointsLayer,featureForm);
               }
             });
         });

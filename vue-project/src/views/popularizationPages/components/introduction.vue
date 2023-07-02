@@ -1,5 +1,5 @@
 <template>
-    <el-image class="lf-top-img">
+    <el-image class="lf-top-img" :src="url">
         <template #error>
           <div class="image-slot">
             <el-icon><icon-picture /></el-icon>
@@ -11,7 +11,7 @@
         <dd>
             <p>{{pointsList.location}}</p>
             <p style="color: aqua;">景点简介:</p>
-            <span>{{pointsList.content}}</span>
+            <span class="span" style="display: flex;  height: 95px; overflow: auto;">{{pointsList.content}}</span>
         </dd>
     </dl>
 </template>
@@ -32,16 +32,20 @@ interface CommentcardProps  {
 // 接受父组件参数，配置默认值
 const props = withDefaults(defineProps<CommentcardProps>(), {
 });
+// 图片地址
+const url = ref<string>('');
 // 评价列表
 const pointsList = ref<any>({});
 onBeforeMount(async () => {
   if(props.initParam) {
     pointsList.value = await props.initParam;
+    url.value = pointsList.value.img;
   }
 });
 function getpointsList() {
     if(props.initParam) {
         pointsList.value = props.initParam;
+        url.value = pointsList.value.img;
     }
 }
 // 监听页面 initParam 改化，重新获取表格数据
@@ -52,9 +56,9 @@ watch(() => props.initParam, getpointsList, { deep: true });
 .lf-top {
     &-img {
         margin-top: 50px;
-        margin-left: 55px;
-        width: 30%;
-        height: 50%;
+        margin-left: 40px;
+        width: 38%;
+        height: 60%;
     }
     &-dl {
         width: 70%;
@@ -75,5 +79,15 @@ watch(() => props.initParam, getpointsList, { deep: true });
 }
 .image-slot .el-icon {
     font-size: 30px;
+}
+
+.span::-webkit-scrollbar {
+  width: 6px; /* 设置滚动条宽度 */
+  height: 6px; /* 设置滚动条高度 */
+  
+}
+.span::-webkit-scrollbar-thumb {
+  border-radius: 3px; /* 设置滚动条圆角 */
+  background-image: linear-gradient(135deg, #14c0e3 0%, rgba(8, 196, 219, 0.5) 72%, rgba(0, 182, 234, 0.3) 100%);
 }
 </style>

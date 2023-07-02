@@ -89,7 +89,49 @@
     color: #21c2ef;
     background-color: rgb(17, 103, 146);
 }
-
+.el-message-box{
+    height: auto;
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    &__title{
+        color: #e2f1fb
+    }
+}
+.el-dialog{
+    height: auto;
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    &__title{
+        color: #e2f1fb
+    }
+}
+.el-dialog__body{
+    height: auto;
+}
+.el-form-item__label{
+    color: #21c2ef;
+}
+.el-upload__tip{
+    color: #e2f1fb;
+}
+.el-upload-dragger{
+    height: auto;
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+}
+.el-upload-dragger .el-upload__text{
+    color: #e2f1fb;
+}
+.el-message-box__status+.el-message-box__message {
+    color: #e2f1fb;
+}
+.el-notification.right{
+    height: auto;
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+}
+.el-notification__title{
+    color: #fff;
+}
+.el-notification__content{
+    color:  #21c2ef
+}
 /****************** 分类 ******************/
 .el-pagination{
     height: auto;

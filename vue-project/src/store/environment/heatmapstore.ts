@@ -2,14 +2,17 @@ import { defineStore } from 'pinia'
 //@ts-ignore
 import { useViewStore } from '@/store/mapViewstore'
 import { initHeatmap } from '@/utils/timeheatmapUtils'
-import { createtimePointslayer, AQIfeatures } from '@/features'
+import { createtimePointslayer, AQIfeatures,city } from '@/features'
 import { useUpdate } from '@/hooks/useUpdata';
 import { useTime } from '@/hooks/useTime';
 import Legend from "@arcgis/core/widgets/Legend.js";
 import axios from 'axios';
+//@ts-ignore
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 // @ts-ignore
 import { Ref, ref } from 'vue';
+import Graphic from '@arcgis/core/Graphic';
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 
 export const useHeatmapStore = defineStore('heatmap', () => {
     //图例
@@ -39,95 +42,85 @@ export const useHeatmapStore = defineStore('heatmap', () => {
             date = new Date(year.value, month.value - 1, day.value + i);
             dates.push(date);
         }
-        await reactiveUtils.whenOnce(() => view.ready).then(() => {
+        await reactiveUtils.whenOnce(() => view.ready).then(async () => {
             isActive.value = true
             percentage.value = 0
-            let i = 0
-            // 对timepointslaers的每个图层进行遍历，渲染为热力图
-            timepointslaers.forEach(async (timelayer, index) => {
-                if(index === 0 || index === 6) return;
-                //为图层提供AQI数据
-                for (const feature of AQIfeatures) {
-                    const query = timelayer.createQuery();
-                    query.where = `名称='${feature.name}'`;
-                    await timelayer.queryFeatures(query).then( async (results: __esri.FeatureSet) => {
-                        //获得feature的坐标
-                        const geometry = results.features[0].geometry;
-                        const point = geometry as __esri.Point;
-                        //将坐标转换为json格式
-                        const data = {
-                            "location": `${point.longitude},${point.latitude}`
+            let i = 0;
+            try {
+                //获取城市的aqi
+                const cityAQI:[{city: string,AQIs: number[];}] = [] as any;
+                for (const feature of city) {
+                    for (const coordinate of feature.coordinates) {
+                            //将坐标转换为json格式
+                            const data = {
+                            "location": coordinate,
                         };
-                        //获得feature的AQI值
-                        await axios.post("http://81.70.22.42:9000/quality/airLast5d",data).then(async (res) => {
-                            //为图层提供数据  
-                            const where = `名称='${feature.name}'`;                     
-                            const attributeUpdates = { AQI: res.data.aqi[index-1] };
-                            const queryOpts: {
-                                where: string;
-                                attributeUpdates: {
-                                    [key: string]: any;
-                                }
-                            } = {
-                                where: where,
-                                attributeUpdates: attributeUpdates
-                            };
-                            //提供数据
-                            useUpdate(timelayer, queryOpts);
-                            i++
-                            // 每次请求的进度和状态
-                            percentage.value = Math.floor((i / ( AQIfeatures.length * 10)) * 100)
-                            if (i === ( AQIfeatures.length * 10)) {
-                                setTimeout(() => {
-                                    isActive.value = false
-                                }, 600);
-                            }
-                            console.log(percentage.value)
-                        });
-                    });
-                };
-                //为图层提供时间数据
-                for (const feature of AQIfeatures) {
-                    const where = `名称='${feature.name}'`;
-                    const attributeUpdates = { time: dates[index-1].getTime() };
-                    const queryOpts: {
-                        where: string;
-                        attributeUpdates: {
-                            [key: string]: any;
+                        try {
+                            await axios.post("http://81.70.22.42:9000/quality/airLast5d",data).then(async (res) => {
+                                i++
+                                percentage.value = Math.floor((i / (city.length*3 + AQIfeatures.length*5)) * 100);
+                                console.log(percentage.value);
+                                cityAQI.push({city: feature.name, AQIs: res.data.aqi});
+                            });
+                        } catch (error) {
+                            console.log(error);
                         }
-                    } = {
-                        where: where,
-                        attributeUpdates: attributeUpdates
                     };
-                    //提供数据
-                    useUpdate(timelayer, queryOpts);
-                    i++
-                    // 每次请求的进度和状态
-                    percentage.value = Math.floor((i / ( AQIfeatures.length * 10)) * 100)
-                    if (i === ( AQIfeatures.length * 10)) {
-                        setTimeout(() => {
-                            isActive.value = false
-                        }, 600);
+                }
+                // 创建 GraphicsLayers
+                const graphicsLayers = [];
+                for(let j = 0; j < 5; j++){
+                    const graphicsLayer = new GraphicsLayer({
+                        id: `AQI${j}`
+                    });
+                    graphicsLayers.push(graphicsLayer);
+                }   
+                // //为图层提供AQI数据
+                for (const feature of AQIfeatures) {
+                    const query = timepointslaers[0].createQuery();
+                    query.where = `name='${feature.name}'`;
+                    const results = await timepointslaers[0].queryFeatures(query);
+                    if (results.features.length > 0) {
+                        const city = results.features[0].attributes.city;
+                        //随机获得该城市的一个AQI序列
+                        const AQIs = cityAQI.filter((item) => item.city === city).map((item) => item.AQIs);
+                        const randomAQIs = AQIs[Math.floor(Math.random() * AQIs.length)];
+                        console.log(city,randomAQIs);
+                        // 创建 Graphic 对象
+                        for (let j = 0; j < timepointslaers.length; j++) {
+                            const graphic = new Graphic({
+                                geometry: results.features[0].geometry,
+                                attributes: {
+                                    name: results.features[0].attributes.name,
+                                    city: results.features[0].attributes.city,
+                                    aqi: randomAQIs[j],
+                                    date: dates[j].getTime(),
+                                }
+                            });
+                            // 添加或更新 Graphic 对象
+                            const graphicsLayer = graphicsLayers[j];
+                            graphicsLayer.add(graphic);
+                            i++;
+                            percentage.value = Math.floor((i /  (city.length*3 + AQIfeatures.length*5)) * 100);
+                            if (i ===  (city.length*3 + AQIfeatures.length*5)) {
+                                setTimeout(() => { isActive.value = false; }, 600);
+                            }
+                            console.log(percentage.value);
+                        }
                     }
-                    console.log(percentage.value)
                 };
-
-
-                initHeatmap(timelayer as __esri.FeatureLayer, 'AQI') as __esri.FeatureLayer;
-
-            });
+                // 进行热力图渲染
+                for (const [index,graphicsLayer] of graphicsLayers.entries()) {
+                    const heatMapLayer = await initHeatmap(graphicsLayer as __esri.GraphicsLayer, 'AQI',dates[index]) as __esri.FeatureLayer;
+                    view.map.add(heatMapLayer);
+                }
+            } catch (error) {
+                // 在这里处理请求失败的情况，例如输出错误日志或者给出一个提示
+                console.error(error);
+            }
         });
     }
 
-    //带有时间属性的热力图加入地图
-    function addTimeHeatmap() {
-        //获取mapview实例
-        const view = useViewStore().getView() as __esri.MapView;
-        // 将mapview.map中第三图层之后的热力图层加入
-        for (let i = 0; i < 7; i++) {
-            view.map.add(timepointslaers[i], i + 2);
-        }
-    }
 
     //删除带有时间属性的热力图
     function cancelTimeHeatmap() {
@@ -139,9 +132,8 @@ export const useHeatmapStore = defineStore('heatmap', () => {
         // 销毁图例
         view.ui.remove(legend as __esri.Legend);
         // 将mapview.map中第三图层之后的热力图层移除
-        for (let i = 0; i < 7; i++) {
-            timepointslaers[i].visible = false;
-            view.map.remove(view.map.findLayerById(`AQI${i}`));                   
+        for (let i = 0; i < 5; i++) {
+            view.map.findLayerById(`AQI${i}`).visible = false;                 
         }
         view.map.allLayers.getItemAt(1).visible = true
     }
@@ -173,8 +165,8 @@ export const useHeatmapStore = defineStore('heatmap', () => {
             zoom: 6,
         });
         // 该mapview.map中第三图层之后的热力图层可见性取反
-        for (let i = 2; i < view.map.allLayers.length; i++) {
-            view.map.allLayers.getItemAt(i).visible = !view.map.allLayers.getItemAt(i).visible;
+        for (let i = 0; i < 5; i++) {
+            view.map.findLayerById(`AQI${i}`).visible = !view.map.findLayerById(`AQI${i}`).visible;                
         }
         // 该mapview.map中第二图层的可见性取反
         view.map.allLayers.getItemAt(1).visible = !view.map.allLayers.getItemAt(1).visible;
@@ -192,5 +184,5 @@ export const useHeatmapStore = defineStore('heatmap', () => {
         }
         return true;
     }
-    return { createTimeHeatmap, cancelTimeHeatmap, toggleHeatmap, isHeatmapLoaded, addTimeHeatmap}
+    return { createTimeHeatmap, cancelTimeHeatmap, toggleHeatmap, isHeatmapLoaded}
 })

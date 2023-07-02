@@ -51,6 +51,7 @@
 //@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D.js";
+//@ts-ignore
 import * as promiseUtils from "@arcgis/core/core/promiseUtils.js";
 import styles from "@/style/areaInfro.scss?inline"
 import { ref, reactive,onUnmounted} from 'vue';

@@ -22,7 +22,7 @@
           </div>
           <div class="points-show clearfix" v-show="selectedIndex === index">
             <div class="img-box fl">
-              <img src="" alt="">
+              <img :src="points.img" alt="">
             </div>
             <div class="content fl">
               <p>
@@ -31,7 +31,7 @@
               </p>
               <p>
                 <span>景点简介：</span>
-                <span class="isbn">{{ points.content }}</span>                    
+                <span class="isbn" style="display: flex; height: 100px; overflow-y: auto;" >{{ points.content }}</span>                    
               </p>                 
             </div>
           </div>
@@ -52,6 +52,8 @@
 <script setup lang='ts'>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { onUnmounted, ref,onMounted, watch,inject } from 'vue'
+import { useRelationStore } from '@/store/mapservice/relationstore';
+import { useBufferStore } from '@/store/mapservice/bufferstore';
 const selectedIndex = ref(0); // 默认选中第一个 li 元素
 // 点击 li 元素的事件处理方法
 function handleItemClick(index: number) {
@@ -59,20 +61,24 @@ function handleItemClick(index: number) {
 }
 // 接收父组件参数并设置默认值
 interface CommentcardProps  {
-    initList: [], // 初始化参数 ==> 必传
+    initList: any[], // 初始化参数 ==> 必传
 }
 // 接受父组件参数，配置默认值
 const props = withDefaults(defineProps<CommentcardProps>(), {
 });
+
+// 获取列表数据
 const pointsList = ref<any[]>([]);
 // 获取服务开关
 const isService = inject('isService') as any;
 // 获取服务操作
 const createRenderer = inject('createRenderer') as any;
 const resetRenderer = inject('resetRenderer') as any;
-const ispointsList = inject('ispointsList') as any;
 onMounted(() => {
   pointsList.value = props.initList;
+  setTimeout(() => {
+    getList();
+  }, 1000);
 });
 
 const timer = setInterval(() => {
@@ -108,16 +114,16 @@ const service = () => {
     .then(() => {
       isService.value = false;
       createRenderer();
-      ispointsList.value = false;
       ElMessage({
         type: 'success',
         message: '开启成功',
       })
     })
-    .catch(() => {
+    .catch(async () => {
       isService.value = true;
-      ispointsList.value = true;
       resetRenderer();
+      (await useRelationStore()).reset();
+      useBufferStore().clearBuffer();
       ElMessage({
         type: 'info',
         message: '取消开启',
@@ -225,7 +231,7 @@ watch(() => props.initList, getList, { deep: true });
 }
 
 .con > li .points-show .img-box {
-  width: 250px;
+  width: 1200px;
   height: 160px;
   overflow: hidden;
   border-radius: 4px;
@@ -256,5 +262,15 @@ watch(() => props.initList, getList, { deep: true });
   font-weight: bold;
   color: #fff;
   margin-right: 10px;
+}
+
+.isbn::-webkit-scrollbar {
+  width: 6px; /* 设置滚动条宽度 */
+  height: 6px; /* 设置滚动条高度 */
+  
+}
+.isbn::-webkit-scrollbar-thumb {
+  border-radius: 3px; /* 设置滚动条圆角 */
+  background-image: linear-gradient(135deg, #14c0e3 0%, rgba(8, 196, 219, 0.5) 72%, rgba(0, 182, 234, 0.3) 100%);
 }
 </style>

@@ -48,8 +48,6 @@ const chartLineRef = ref<HTMLElement | null>(null);
 const chartRadarRef = ref<HTMLElement | null>(null);
 const chartBarRef = ref<HTMLElement | null>(null);
 
-// 热力图
-HeatmapStore.addTimeHeatmap();
 // 时间滑块
 const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
 // 创建图层点击事件

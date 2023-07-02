@@ -42,10 +42,10 @@ export const useOnlayerStore = defineStore('onlayer', () => {
         const pointslayerView = view.layerViews.find(layerView => layerView.layer.id === "points") as __esri.FeatureLayerView;
 
         // 将view缩小级别
-        view.zoom = 6;
+        view.zoom = 10;
         // 查找要素图层中objectid为1的要素，选中该要素
         const query = pointslayer.createQuery();
-        query.where = "FID = 1";
+        query.where = "OBJECTID = 1";
         await pointslayer.queryFeatures(query).then(async function (results: __esri.FeatureSet) {
             // 选中要素
             handle = pointslayerView.highlight(results.features[0]);
@@ -65,10 +65,11 @@ export const useOnlayerStore = defineStore('onlayer', () => {
             view.hitTest(event).then(async function(response: __esri.HitTestResult){
                 if (response.results.length === 1) {
                     view.goTo((response.results[0]as __esri.GraphicHit).graphic);
+                    view.zoom = 10;
                     // 获取查询到的要素的唯一值id
-                    IdRef.value = (response.results[0] as __esri.GraphicHit).graphic.attributes["FID"];
+                    IdRef.value = (response.results[0] as __esri.GraphicHit).graphic.attributes["ObjectId"];
                     // 查找要素图层中FID的要素,为图表添加新的数据
-                    query.where = `FID = ${IdRef.value}`;
+                    query.where = `OBJECTID = ${IdRef.value}`;
                     await pointslayer.queryFeatures(query).then(async function(results: __esri.FeatureSet){
                         await useGetdata(results, "tempMax" , ChartLine , ChartRadar , ChartBar);
                     });  
