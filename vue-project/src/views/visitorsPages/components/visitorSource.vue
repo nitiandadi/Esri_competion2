@@ -27,6 +27,7 @@ import { worldLayer } from '@/features/Layer/visitorLayer1';
 import { useViewStore } from '../../../store/mapViewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';
 import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import { ECharts, EChartsOption, init,graphic } from "echarts";
 import visitostyle from '@/style/visitor.scss?inline'
 const body = ref<HTMLElement | null>(null);
 const store = useViewStore();
@@ -134,12 +135,22 @@ let option1: echarts.EChartsOption = {
             type: 'bar',
             barWidth: '70%',
             color: 'red',
-            // itemStyle: {
-            //         //@ts-ignore
-            //         normal: {
-            //             barBorderRadius: [10, 10, 0, 0] // 设置柱状图的圆角大小，单位为像素
-            //         }
-            //     }
+            itemStyle: {
+                color: new graphic.LinearGradient(0, 0, 0, 1, [
+                    { offset: 0, color: '#83bff6' },
+                    { offset: 0.5, color: '#188df0' },
+                    { offset: 1, color: '#188df0' }
+                ])
+            },
+            emphasis: {
+                itemStyle: {
+                    color: new graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#2378f7' },
+                        { offset: 0.7, color: '#2378f7' },
+                        { offset: 1, color: '#83bff6' }
+                    ])
+                }
+            },
         }
     ],
     dataZoom: [{
@@ -257,8 +268,8 @@ async function select_Changed(val: string) {
         )
         reRender('3d');
     }
-    startIndex=0;
-    endIndex=10;
+    startIndex = 0;
+    endIndex = 10;
     showflighData();
 }
 async function queryFromLayer(queryLayer: FeatureLayer) {
@@ -368,7 +379,7 @@ function showflighData() {
                     }
                 }),
                 symbolSize: function (val: number[]) {
-                    return radio.value===1?val[2] / 30:val[2] / 160;
+                    return radio.value === 1 ? val[2] / 30 : val[2] / 160;
                 }
             },]
     });

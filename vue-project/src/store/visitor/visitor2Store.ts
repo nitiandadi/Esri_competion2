@@ -7,16 +7,8 @@ import type { Raw, Ref } from 'vue';
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine.js";
 import SimpleFillSymbol from '@arcgis/core/symbols/SimpleFillSymbol';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import { HeatmapRenderer } from "@arcgis/core/renderers";
 import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
 import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
-import { log } from "console";
-interface visitor {
-    name: string;
-    gender: string;
-    age: number;
-    province: string;
-}
 // 定义省份
 const provinces = ['甘肃', '陕西', '广东', '四川', '新疆', '山东', '江苏', '浙江', '河南', '河北', '山西', '辽宁', '吉林', '黑龙江', '安徽', '福建', '江西', '湖北', '湖南', '贵州', '云南', '重庆', '宁夏', '海南', '青海', '西藏', '香港', '澳门'];
 // 定义省份分布，根据实际情况进行适当调整
@@ -55,10 +47,10 @@ const getAge = (): number => {
 };
 let symbol1 = new SimpleMarkerSymbol({
     size: 2,
-    color: [0, 0, 226],
+    color: "#69dcff",
     outline: {
-        color: [255, 255, 255],
-        width: 0.1
+        color: "rgba(0, 139, 174, 0.5)",
+        width: 1
     }
 });
 let symbol2 = new SimpleMarkerSymbol({
@@ -166,11 +158,13 @@ export default class VisitorHandler {
         this._myPoints = this._pointsFeatureset.features.map((feature) => {
             return feature.geometry as Point;
         });
-        this.roadsFeatureset = await this._roadsLayer.queryFeatures();
-        this._myRodas = this.roadsFeatureset.features.map((feature) => {
-            return feature.geometry as __esri.Polyline;
-        });
-        await this.roadsLayer.load();
+        if (this._roadsLayer) {
+            this.roadsFeatureset = await this._roadsLayer.queryFeatures();
+            this._myRodas = this.roadsFeatureset.features.map((feature) => {
+                return feature.geometry as __esri.Polyline;
+            });
+            await this.roadsLayer.load();
+        }
         let pointCount = 0;
         while (pointCount < 1000) {
             if (pointCount >= 1000) {
@@ -231,7 +225,7 @@ export default class VisitorHandler {
                         if (boundarys![index].contains(this.visitors[i].geometry as Point)) {
                             if (this.visitors[i].symbol === symbol1) {
                                 this.visitors[i].symbol = symbol2;
-                                inputText!.value += this.visitors[i].attributes.name + "进入了围栏"+(index+1)+",来自于" +
+                                inputText!.value += this.visitors[i].attributes.name + "进入了围栏" + (index + 1) + ",来自于" +
                                     this.visitors[i].attributes.province + "年龄为" + this.visitors[i].attributes.age + "性别为"
                                     + this.visitors[i].attributes.gender + '\n';
                             }
@@ -239,7 +233,7 @@ export default class VisitorHandler {
                         }
                         else {
                             if (this.visitors[i].symbol === symbol2) {
-                                inputText!.value += this.visitors[i].attributes.name + "离开了围栏"+(index+1)+",逗留时间20分钟\n";
+                                inputText!.value += this.visitors[i].attributes.name + "离开了围栏" + (index + 1) + ",逗留时间20分钟\n";
                                 this.visitors[i].symbol = symbol1;
                             }
                         }

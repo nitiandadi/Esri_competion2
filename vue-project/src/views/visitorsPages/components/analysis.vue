@@ -9,7 +9,6 @@
                     <el-menu-item index="2-2">路网缓冲区分析</el-menu-item>
                 </el-sub-menu>
                 <el-menu-item index="3" @click="julei">游客热度分析</el-menu-item>
-                <!-- <el-menu-item index="4">游客分级</el-menu-item> -->
             </el-menu>
             <el-select v-model="attractions" placeholder="选择景点" @change="ininitSpots">
                 <el-option v-for="item in spotOptions" :key="item.value" :label="item.label" :value="item" />
@@ -22,13 +21,13 @@
                 <el-slider v-model="radius" @change="drawBuffer" />
                 <el-button @click="analyse" type="primary" :disabled="disable">开始分析</el-button>
             </div>
-            <div class="chart" id="chart"></div>
+            <div class="chart" id="chart" v-if="show3"></div>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
 import { useViewStore } from '@/store/mapViewstore';
-import { onMounted, reactive, ref, watch, onUnmounted, computed, onUpdated, provide } from 'vue'
+import { onMounted, reactive, ref, onUnmounted, nextTick, provide } from 'vue'
 import * as echarts from 'echarts';
 import { useoptionStore } from '@/store/visitor/optionStore';
 import * as heatmapRendererCreator from "@arcgis/core/smartMapping/renderers/heatmap.js";
@@ -51,6 +50,7 @@ let buffers: __esri.Graphic[] = [];
 let buffertype: 'roads' | 'spots' = 'spots';
 let center: __esri.Point;
 let extent: __esri.Extent;
+let show3 = ref(false);
 const style = document.createElement("style");
 style.setAttribute("lang", "scss");
 style.innerHTML = visitostyle2;
@@ -66,7 +66,7 @@ async function ininitSpots(val: any) {
     visitorHandler = new VisitorHandler(val);
     a.handler = visitorHandler;
     await visitorHandler.ininit();
-
+    view.graphics.addMany(visitorHandler.visitors);
 }
 function showFencetools() {
     show1.value = true;
@@ -101,6 +101,8 @@ function drawBuffer() {
     view.graphics.addMany(buffers);
 }
 async function analyse() {
+    show3.value=true;
+    await nextTick();
     visitorHandler.getVisitorsinPolygons(buffers);
     let chartDom = document.getElementById('chart');
     let myChart = echarts.init(chartDom as HTMLDivElement);
@@ -146,7 +148,6 @@ function julei() {
     });
 }
 onMounted(async () => {
-    view.map.basemap.baseLayers.getItemAt(1).visible = false;
     await ininitSpots(spotOptions[0]);
     graphicsLayer = new GraphicsLayer();
     graphicsLayer.graphics.addMany(visitorHandler.visitors);
@@ -156,7 +157,6 @@ onMounted(async () => {
 onUnmounted(() => {
     view.graphics.removeAll();
     view.map.layers.removeAll();
-    view.map.basemap.baseLayers.getItemAt(1).visible = true;
 })
 
 </script>

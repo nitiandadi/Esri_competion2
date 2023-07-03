@@ -40,6 +40,7 @@ import { useEcharts } from '@/hooks/useEcharts';
 import { useViewStore } from '@/store/mapViewstore';
 import { ElMessage, ElMessageBox, ElResult } from 'element-plus';
 import { usewidget3dStore } from '@/store/widget3d/widget3dstore'
+import { useTime } from '@/hooks/useTime';
 const canvas = ref<HTMLCanvasElement | null>(null);
 const video = ref<HTMLVideoElement | null>(null);
 const canvas1 = ref<HTMLCanvasElement | null>(null);
@@ -49,6 +50,9 @@ const widget3dStore = usewidget3dStore();
 let show2 = ref(false);
 let stop = false;
 let prompt: string | undefined;
+let timer: NodeJS.Timeout | undefined;
+let visitorChart = {} as echarts.ECharts;
+let adujust = ref(false);
 function initPrompt() {
   if (widget3dStore.result === 0) {
     prompt = widget3dStore.resultTitle.success.subTitle;
@@ -56,7 +60,7 @@ function initPrompt() {
   else if (widget3dStore.result === 1) {
     prompt = widget3dStore.resultTitle.warning.subTitle;
   }
-  else{
+  else {
     prompt = widget3dStore.resultTitle.error.subTitle;
   }
 }
@@ -84,7 +88,6 @@ async function onPlay(videoEl: HTMLVideoElement, canvasEl: HTMLCanvasElement) {
 }
 const buildvisual = inject("buildvisual") as Ref<boolean>;
 onMounted(async () => {
-
   await faceapi.nets.tinyFaceDetector.loadFromUri('/models')
   initPrompt();
   ElMessageBox.alert('点击建筑可以使用该功能', '提示', {
@@ -102,6 +105,7 @@ onMounted(async () => {
         title: '限流评估',
         icon: 'image://	https://cdn-icons-png.flaticon.com/512/998/998382.png',
         onclick: function () {
+          adujust.value = true;
           ElMessageBox.prompt((prompt as string), '当前人数173人', {
             confirmButtonText: 'OK',
             cancelButtonText: 'Cancel',
@@ -121,7 +125,7 @@ onMounted(async () => {
       },
     };
     if (chartVisitorRef.value) {
-      let visitorChart = echarts.init(chartVisitorRef.value);
+      visitorChart = echarts.init(chartVisitorRef.value);
       useEcharts(visitorChart as echarts.ECharts, realTimeVisitorOptions);
     }
     let myVideo = video.value as HTMLVideoElement;
@@ -131,10 +135,38 @@ onMounted(async () => {
     onPlay(myVideo, myCanvas);
     onPlay(myVideo1, myCanvas1);
   });
-
+  timer = setInterval(() => {
+    let now = new Date();
+    let newTime: Date = new Date(now.getTime());
+    let timeHander = useTime();
+    let newdata1 = Math.random() * 20 + 160;
+    let newdata2 = Math.random() * 50 + 10;
+    let newdata3 = Math.random() * 50 + 10;
+    realTimeVisitorOptions.dataset.source[0].shift();
+    realTimeVisitorOptions.dataset.source[0].push(timeHander.formatTime(newTime));
+    realTimeVisitorOptions.dataset.source[1].shift();
+    realTimeVisitorOptions.dataset.source[1].push(newdata1);
+    realTimeVisitorOptions.dataset.source[2].shift();
+    realTimeVisitorOptions.dataset.source[2].push(newdata2);
+    realTimeVisitorOptions.dataset.source[3].shift();
+    realTimeVisitorOptions.dataset.source[3].push(newdata3);
+    useEcharts(visitorChart as echarts.ECharts, realTimeVisitorOptions);
+    if (newdata1 >= 178 && !adujust.value) {
+      ElMessageBox({
+        title: 'Message',
+        message:   //@ts-ignore
+          h(ElResult, {
+            icon: 'warning',
+            title: '当前人数超过限流人数',
+            subTitle: '建议上调游客人数限制',
+          })
+      })
+    }
+  }, 1000);
 })
 onUnmounted(() => {
   stop = true;
+  clearInterval(timer as NodeJS.Timeout);
 })
 
 </script>

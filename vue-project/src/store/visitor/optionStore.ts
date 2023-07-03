@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { ECharts, EChartsOption, init,graphic } from "echarts";
 export const useoptionStore = defineStore('optionStore', () => {
     let barOption: echarts.EChartsOption = {
         xAxis: {
@@ -41,11 +42,22 @@ export const useoptionStore = defineStore('optionStore', () => {
                 barWidth: '70%',
                 color: 'red',
                 itemStyle: {
-                    //@ts-ignore
-                    normal: {
-                        barBorderRadius: [5, 5, 0, 0] // 设置柱状图的圆角大小，单位为像素
+                    color: new graphic.LinearGradient(0, 0, 0, 1, [
+                    { offset: 0, color: '#83bff6' },
+                    { offset: 0.5, color: '#188df0' },
+                    { offset: 1, color: '#188df0' }
+                    ])
+                },
+                emphasis: {
+                    itemStyle: {
+                    color: new graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#2378f7' },
+                        { offset: 0.7, color: '#2378f7' },
+                        { offset: 1, color: '#83bff6' }
+                    ])
                     }
-                }
+                },
+
             }
         ],
         tooltip: {

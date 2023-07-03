@@ -23,7 +23,7 @@
                 <el-button type="primary" @click="enableRealtime">{{ buttonText }}</el-button>
             </div>
         </div>
-        <el-input type="textarea" v-model="inputText"></el-input>
+        <el-input type="textarea" v-model="inputText" v-show="showinput"></el-input>
     </div>
 </template>
 <script setup lang="ts">
@@ -42,11 +42,12 @@ let a = inject('visitorHandler') as any;
 let inputText = ref('');
 let visitorHandler = a.handler as VisitorHandler;
 let isRealtime = ref(false);
-let tableDatas=inject('tableDatas') as any;
+let tableDatas = inject('tableDatas') as any;
 const style = document.createElement("style");
 style.setAttribute("lang", "scss");
 style.innerHTML = visitostyle3;
 document.head.appendChild(style);
+let showinput = ref(false);
 let tableData = reactive<tableData2>({
     name: '',
     type: '',
@@ -81,6 +82,7 @@ const buttonText = computed(() => {
     }
 })
 const enableRealtime = () => {
+    showinput.value = true;
     if (isRealtime.value) {
         visitorHandler.stopRealtime();
         isRealtime.value = false;
@@ -98,6 +100,7 @@ const clear = () => {
     visitorHandler.recover();
     tableDatas.value = [];
     inputText.value = '';
+    showinput.value = false;
 }
 let options = ref([
     {
@@ -143,7 +146,7 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 200px;
+    height: auto;
     background-color: aliceblue;
 
     .top {

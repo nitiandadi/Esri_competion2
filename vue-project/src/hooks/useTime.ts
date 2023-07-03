@@ -40,11 +40,22 @@ export const useTime = () => {
 			gapSecond += 60;
 			// gapMinute--;
 		}
-		if(gapMinute < 0) {
+		if (gapMinute < 0) {
 			gapMinute += 1;
 		}
 		return (gapHour + "")?.padStart(2, "0") + ':' + (gapMinute + "")?.padStart(2, "0") + ':' + (gapSecond + "")?.padStart(2, "0");
 	}
-	return { year, month, day, hour, minute, second, week, nowTime, getTimeGap };
+	function formatTime(dateObj: Date) {
+		let h: string | number = dateObj.getHours();
+		let m: string | number = dateObj.getMinutes();
+		let s: string | number = dateObj.getSeconds();
+
+		// 如果小时、分钟或秒小于10，则在前面添加一个'0'
+		h = h < 10 ? '0' + h : h;
+		m = m < 10 ? '0' + m : m;
+		s = s < 10 ? '0' + s : s;
+
+		return h + ':' + m + ':' + s;
+	}
+	return { year, month, day, hour, minute, second, week, nowTime, getTimeGap, formatTime };
 };
-// let time= useTime();

@@ -1,4 +1,4 @@
-import { taershiPolygon,taershiPoint,roadsLayer } from '@/features/Layer/visitorLayers';
+import { taershiPolygon,taershiPoint,roadsLayer,riyusanPoints,riyusanPolygon, laoyasanPolygon, laoyasanPoints, donguanPolygon, donguanPoints, annimalPolygon, annimalPoints } from '@/features/Layer/visitorLayers';
 import { markRaw } from 'vue';
 const spotOptions = [
     {
@@ -9,20 +9,28 @@ const spotOptions = [
         roadsLayer:markRaw(roadsLayer)
     },
     {
-        value: '青海湖',
-        label: '青海湖',
+        value: '日月山',
+        label: '日月山',
+        polygonLayer: markRaw(riyusanPolygon),
+        pointsLayer: markRaw(riyusanPoints),
     },
     {
-        value: '鄂陵湖湿地',
-        label: '鄂陵湖湿地',
+        value: '老爷山',
+        label: '老爷山',
+        polygonLayer: markRaw(laoyasanPolygon),
+        pointsLayer: markRaw(laoyasanPoints),
     },
     {
-        value: '盘道',
-        label: '盘道',
+        value: '西宁动物园',
+        label: '西宁动物园',
+        polygonLayer: markRaw(annimalPolygon),
+        pointsLayer: markRaw(annimalPoints),
     },
     {
-        value: '扎陵湖湿地',
-        label: '扎陵湖湿地',
+        value: '东关清真寺',
+        label: '东关清真寺',
+        polygonLayer: markRaw(donguanPolygon),
+        pointsLayer: markRaw(donguanPoints),
     },
 ]
 const provinceOption = [

@@ -85,7 +85,6 @@ export default defineComponent({
             localStorage.setItem("Authorization", 'Bearer ' + res[0])
             // console.log(res.data.token);
             // 跳转页面
-            console.log('登录成功');
             router.push('/')
           })
         } else {

@@ -59,13 +59,6 @@ export const useViewStore = defineStore('view', () => {
             center: [117, 36],
             zoom: 4
         });
-        let nightBasemap = Basemap.fromId("streets-night-vector");
-        myView.when(() => {
-            nightBasemap.load().then(() => {
-                let nightStreetLayer = nightBasemap.baseLayers.getItemAt(0);
-                myView!.map.basemap.baseLayers.add(nightStreetLayer, 0);
-            });
-        });
         myView.ui.remove(['attribution', 'zoom', 'navigation-toggle', 'compass']);
     }
 

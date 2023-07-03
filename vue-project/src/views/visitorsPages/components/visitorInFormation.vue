@@ -142,7 +142,6 @@ onMounted(() => {
     view = store.getView() as __esri.MapView;
     view.when(() => {
         view.map.basemap.loadAll().then(() => {
-            view.map.basemap.baseLayers.getItemAt(1).visible = false;
             view.goTo({
                 center: [101.546145,  36.619484],
                 zoom: 10
@@ -154,7 +153,6 @@ onUnmounted(() => {
     clearInterval(internal);
     view.graphics.removeAll();
     view.map.layers.removeAll();
-    view.map.basemap.baseLayers.getItemAt(1).visible = true;
 })
 </script>
 <style lang="scss" scoped>

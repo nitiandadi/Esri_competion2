@@ -53,7 +53,7 @@ defineExpose({
     top: 0;
     left: 0;
     width: 100%;
-    height: 400px;
+    height: auto;
     pointer-events: auto;
     .el-pagination {
         position: relative;

@@ -55,82 +55,9 @@ onMounted(() => {
 <style scoped lang="scss">
 .container {
     width: 100%;
-    height: 500px;
+    height: auto;
     position: relative;
     top: 0;
     left: 0;
-    // background-color: #3070bb;
-
-    .top {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        height: 30%;
-
-        .type {
-            width: 35%;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-
-            .el-select {
-                height: 70%;
-            }
-        }
-
-        .time {
-            width: 40%;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-
-            .input {
-                height: 40%;
-            }
-        }
-    }
-
-    .middle {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        height: 30%;
-        width: 80%;
-        border-top: 1px solid #fff;
-        // border-bottom: 5px solid #2b7ed0;
-        margin-bottom: 5px;
-        margin-top: 5px;
-
-        .left {
-            width: 30%;
-            height: 28px;
-            margin-left: 30px;
-        }
-
-        .right {
-            width: 30%;
-            height: 28px;
-            margin-right: 41px;
-        }
-    }
-
-    .el-textarea {
-        width: 100%;
-
-        .__inner {
-            height: 484px;
-            // background-image: linear-gradient(-90deg, #182940 0%, #115687 100%);
-            color: #000;
-            font-size: 1.3rem;
-            /* 改变标题字体大小 */
-            font-weight: bold;
-            /* 加粗字体 */
-            color: #92c3e4;
-        }
-    }
 }
 </style>

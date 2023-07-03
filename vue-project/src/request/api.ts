@@ -3,7 +3,6 @@ import type { ILoginData } from "@/type/login";
 console.log(service);
 // 登录接口
 export function login(data: ILoginData) {
-    console.log(data);
     return service({
         url: "/users/login",
         method: "POST",
