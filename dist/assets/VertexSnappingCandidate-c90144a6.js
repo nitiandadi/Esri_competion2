@@ -1,0 +1,1 @@
+import{n as r,Z as n,d as s}from"./SnappingOperation-24685952.js";class o extends r{constructor(t){super({...t,constraint:new n(t.targetPoint)})}get hints(){return[new s(this.targetPoint,this.isDraped,this.domain)]}}export{o as r};

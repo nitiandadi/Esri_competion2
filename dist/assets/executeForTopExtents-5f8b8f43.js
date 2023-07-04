@@ -1,0 +1,1 @@
+import{aI as n,bQ as m,ei as p}from"./MapView-d4248bee.js";import{p as s}from"./queryTopFeatures-a49411eb.js";import"./index-9ba3f23e.js";async function u(o,a,e){const r=n(o),t=await s(r,m.from(a),{...e});return{count:t.data.count,extent:p.fromJSON(t.data.extent)}}export{u as executeForTopExtents};

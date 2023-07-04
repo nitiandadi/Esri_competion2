@@ -1,0 +1,241 @@
+/* popup样式修改 */
+.esri-popup {
+    width: 380px;
+    height: auto;
+    z-index: 2;
+    background-color: #444343;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #040627 ;
+    position: relative;
+    top: 50%;
+    .esri-feature-element-info{
+      height: 0px;
+    }
+    &--is-docked-top-left,
+    &--is-docked-top-right,
+    &--is-docked-bottom-left,
+    &--is-docked-bottom-right {
+      .esri-popup__main-container {
+        max-height: 100%;
+      }
+    }
+    &__header {
+      height: 40px;
+      line-height: 50px;
+      font-size: 20px;
+      color: #ffffff;
+      &-buttons {
+        height: 30px;
+        position: relative;
+      }
+    }
+    &__header-title {
+      margin-block: 3px;
+      overflow: visible;  /* 让标题文字在 title 区域外也可以显示 */
+      white-space: normal; /* 让标题文字换行，避免过长的标题被截断 */
+      height: 32px; /* 设置 title 高度 */
+      width: 100%; /* 让 title 宽度自适应 */
+      font-size: 1.5em; /* 改变标题字体大小 */
+      font-weight: bold; /* 加粗字体 */
+      font-style: italic; /* 斜体字 */
+
+    }
+    &__content {
+      // background-color: #0f0;
+      margin: 0;
+      p {
+        font-family: "Microsoft YaHei", sans-serif;
+      }
+      height: auto;   
+    }
+    .esri-feature__content-node{
+      overflow: hidden;
+    }
+    &__footer {
+      // background-color: #00f;
+      height: 30px;
+    }
+    &__main-container {
+      max-width: 380px;
+      background-color: hwb(222 25% 52%); 
+      border-radius: 6px; /* 添加边角弧度 */
+      background-image: linear-gradient(-90deg, #182940 0%, #115687 100%); /* 添加渐变 */
+    }
+    &__navigation{
+      background-image: linear-gradient(-90deg, #182940 0%, #1d415a 100%);
+      border-radius: 6px; /* 添加边角弧度 */
+    }
+    &__header-container--button:hover,
+    &__button:hover{
+      border-radius: 6px; /* 添加边角弧度 */
+      background-color: #5e6b86; /* 鼠标悬浮时的背景颜色 */
+      border-color: #244f86; /* 鼠标悬浮时的边框颜色 */
+      transition: background-color 0.3s ease-in-out; /* 添加过渡效果 */
+    }
+    &__pointer-direction{
+      background-color: #244f86;
+      border-color: #244f86;
+      transition: background-color 0.3s ease-in-out; /* 添加过渡效果 */
+    }
+}
+h2.esri-widget__heading{
+  color: white;
+}
+.esri-feature__content-element:last-child{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+}
+.esri-widget table tr td, .esri-widget table tr th{
+  color: #92c3e4;
+}
+
+.esri-view-width-less-than-medium 
+.esri-popup__main-container{
+  width: 100%;
+}
+
+.esri-view-width-medium 
+.esri-popup__main-container{
+  width: 100%;
+}
+
+.esri-feature-content{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  color: #92c3e4;
+}
+
+/* 地图样式修改 */
+.esri-view .esri-view-root{
+  position: absolute;
+  flex: 1 1 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.esri-view-user-storage{
+  background-color: rgba(255, 255, 255, 0); /* 透明背景 */
+  z-index: 2;
+  pointer-events: none;
+  width: 100%;
+}
+
+/* 时间滑块样式修改 */
+.esri-time-slider{
+  &__layout--compact &__row:nth-child(1), &__layout--compact &__row:nth-child(3){
+    height: 20%;
+  }
+  &__layout--compact &__row:nth-child(2){
+    height: 60%;
+  }
+  &__row{
+    height: 100%;
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    color: #92c3e4;
+  }
+  &__slider{
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  }
+  &__time-extent-group {
+    color: #ffffff;
+  }
+  &__previous-button,
+  &__animation-button,
+  &__next-button
+  {
+    background-color:  #92c3e4 ;
+  }
+  &__previous,
+  &__animation,
+  &__next
+  {
+    height: 25px;
+  }
+}
+.esri-slider{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  &__tick-label{
+    color: #92c3e4;
+  }
+  &__ticks{
+    max-height: 0;
+  }
+}
+
+
+/* 图例修改 */
+.esri-legend{
+  background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+  color: #92c3e4;
+  border-radius: 6px; /* 添加边角弧度 */
+  max-height: auto;
+  width: auto;
+  overflow: hidden;
+  /* 卡片样式 */
+  &--card{
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    &__message{
+      font-size: 1.3rem;
+    }
+    &__section{
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 12px 12px 50px 12px;
+    }
+    &__layer-row{
+      height: auto;
+    }
+    &__interval-separators-container{
+      display: none;
+    }
+    &__carousel-title{
+      color: #ffffff;
+      //字体倾斜
+      font-style: italic;
+      margin: 0px 0px 10px 0px;
+    }
+    //将图例中的文字放在中间
+    &__layer-caption{
+      text-align: center; 
+      color: #92c3e4;
+    }
+  }
+  &--stacked{
+    // 取消flex-direction: column;
+    flex-direction: row;
+    justify-content: center
+  }
+  //* 原型样式 */
+  &__service-label{
+    color: #ffffff;
+    line-height: 50px;
+    font-size: 20px;
+  }
+  &__service{
+    padding: 0px 15px;
+  }
+  &__layer{
+    overflow: hidden;
+  }
+  &__layer-row,
+  &__layer-table--size-ramp {
+    // 使display失去作用
+    display: contents;
+  }
+}
+
+.esri-legend--stacked .esri-legend--card__section{
+  overflow: hidden;
+}
+h3.esri-widget__heading, h4.esri-widget__heading, h5.esri-widget__heading, h6.esri-widget__heading{
+  font-size: 1.3rem;
+}
+
+/* 控件修改 */
+[class^=esri-icon-]{
+  color: #92c3e4;
+}
+
+/* 文本标签修改 */
+.esri-text-overlay-item{
+  height: auto;
+}

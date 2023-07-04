@@ -1,0 +1,345 @@
+.hotel{
+    display: flex;
+    flex-direction: column; /* 设置子元素竖直排列（默认为 row） */
+    justify-content: space-between; /* 设置子元素垂直居中 */
+    position: fixed;
+    right: 0%;
+    top: 10%;
+    width: 25%;
+    height: 82%;
+    border-radius: 6px; /* 添加边角弧度 */
+    // background: linear-gradient(to right, rgba(30, 70, 94, 0.7) 0%,rgba(19, 104, 147, 0.5) 50%);/* 添加渐变半透明背景 */
+    background-image: linear-gradient(-90deg, #182940 0%, #115687 100%); /* 添加 */
+    pointer-events: auto;
+    border: 0px solid var(--el-card-border-color);
+    &-panel{
+      display: flex;
+      flex-direction: column; /* 设置子元素竖直排列（默认为 row） */
+      position: relative;
+      height: 32.5%; /*  将height设置为3分之一，即可实现三等分 */
+      width: 100%;
+      background-color: rgba(19, 104, 147, 0);
+      border: 1px solid rgba(25,186,139,0.17);
+      box-sizing: border-box;
+      &-title{
+        position: relative;
+        width: 100%;
+        height: 15%;
+        line-height: 32px;
+        color: #92c3e4;
+        text-align: center;
+        font-size: 13px;
+        font-style: italic; /* 斜体字 */
+        background-image: url('../views/images/dataScreen-header-warn-bg.png');
+        background-size: 100% 100%;
+        &::before{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 10px;
+          height: 10px;
+          border-left: 2px solid #17e3f5;
+          border-top: 2px solid #17e3f5;
+          content: "";
+        }
+        &::after{
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 10px;
+          height: 10px;
+          border-right: 2px solid #17e3f5;
+          border-top: 2px solid #17e3f5;
+          content: "";
+        }
+        &:hover{
+          color: white;
+          font-size: 14px;
+        }
+      }
+      &-chart{
+        width: 100%;
+        height: 100%;
+      }
+      &-footer{
+        position: relative;
+        width: 100%;
+        height: 5%;
+        &::before{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 10px;
+          height: 10px;
+          border-left: 2px solid #17e3f5;
+          border-bottom: 2px solid #17e3f5;
+          content: "";
+        }
+        &::after{
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 10px;
+          height: 10px;
+          border-right: 2px solid #17e3f5;
+          border-bottom: 2px solid #17e3f5;
+          content: "";
+        }
+      }
+    }
+  //   .esri-ui-top-left {
+  //     top: 0;
+  //     left: 0;
+  //     height: 50px;
+  // }
+}
+.buffer-analysis-module {
+
+}
+.buffer-analysis-module label{
+  //margin-bottom:5px;
+  text-align: center;
+  color: white;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 5px;
+ 
+}
+.buffer-analysis-module button{
+  text-align: center;
+  margin-top: 0px;
+  margin-left: 80px;
+}
+.input-section {
+  margin-top: 5px;
+  height: 25%;
+  margin-left: 5px;
+}
+
+.input-section label {
+  display: inline-block;
+  width: 80px;
+  margin-top: 0px;
+  color: white;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.input-section input {
+  width: 200px;
+}
+.disabled {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+.label {
+  color: white;
+  margin-left:20px; 
+ // text-align: center;/* 调整文字和按钮之间的间距 */
+}
+.label input{
+    //vertical-align: middle; /* 垂直居中选择框 */
+    //margin-right: 20px;
+  }
+  .details {
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    height: 450px;
+    width: 800px;
+    background-color: #115687;
+    /* 其他样式属性... */
+    color: white;
+    overflow: auto;
+    padding: 10px; /* 添加内边距，使内容与容器边缘有一定距离 */
+    pointer-events: auto;
+}
+.details::-webkit-scrollbar {
+    width: 8px; /* 设置滚动条的宽度 */
+    background-color:transparent; /* 设置滚动条的背景色 */
+  }
+
+  .details::-webkit-scrollbar-thumb {
+    background-color: #c0c0c0; /* 设置滚动条手柄的颜色 */
+  }
+.hoteldetails {
+    width: 750px;
+    height: 450px;
+    //background-color: #115687;
+    border-collapse: collapse;
+   // border-radius: 10px;
+    
+    //overflow: auto;
+}
+.hoteldetails thead{
+  height: 50px;
+  width: 100%;
+}
+.hoteldetails th {
+    background-color: transparent;
+    text-align: center;
+    
+    padding: 8px; /* 添加内边距，增加单元格与内容之间的间距 */
+    width: 33.3%;
+    height: 10%;
+    font-size: 20px;
+    font-family: FZKai-Z03, sans-serif;
+    border-bottom: 1px solid white;
+    font-style: italic;
+    line-height: 32px;
+    color: #92c3e4;
+}
+.hoteldetails tbody {
+    height: 400px;
+    width: 750px;
+}
+.hoteldetails tbody tr {
+    background-color: transparent;
+    text-align: center;
+    color: white;
+    width: 400px;
+    height: 50px;
+    //display: flex;
+    
+}
+
+.hoteldetails tbody tr td {
+    background-color: transparent;
+    text-align: center;
+    color: white;
+    padding: 2px; /* 添加内边距，增加单元格与内容之间的间距 */
+    text-decoration: cyan;
+    
+}
+.table {
+  width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  border-radius: 10px;
+}
+.table-container {
+  height:85%; /* 设置容器的固定高度 */
+  overflow: auto; /* 添加滚动样式 */
+}
+.table-container::-webkit-scrollbar {
+    width: 8px; /* 设置滚动条的宽度 */
+    background-color:transparent; /* 设置滚动条的背景色 */
+  }
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #3b70e2; /* 设置滚动条手柄的颜色 */
+    color: #115687;
+  }
+.table th,
+.table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  background-color: transparent;
+  text-align: center;
+  color:white
+}
+
+.table th {
+  background-color:transparent;
+  text-align: center;
+  color:white
+}
+.sort-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+.custom-button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.button-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.button-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+.slider-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.slider-container input[type="range"] {
+  width: 200px;
+}
+
+.field-text {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.container {
+  height: 100%;
+  //margin-bottom: 10px;
+  margin-left: 20px;
+  
+  //overflow: hidden;
+}
+
+
+.arrow-button {
+  position: absolute;
+  right:0.5%;
+  top: 10%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  width: 30px;
+  height: 60px;
+  cursor: pointer;
+  
+}
+
+.arrow-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border: solid rgb(255, 255, 255);
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  //transition: transform 0.3s ease;
+  transform: translate(-50%, -50%) rotate(135deg);
+}
+
+.arrow-icon.up {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border: solid rgb(255, 255, 255);
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+
+.slide-in {
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+}
+
+.slide-out {
+  transition: transform 0.3s ease;
+  transform: translateX(-41%);
+}

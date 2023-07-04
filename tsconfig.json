@@ -1,0 +1,21 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "preserveValueImports": false,
+    "lib": ["dom", "esnext"],
+    // "typeRoots": ["./node_modules/@types", "./src/types"],
+    "target": "es2017",
+    "ignoreDeprecations": "5.0",
+ 
+  },
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

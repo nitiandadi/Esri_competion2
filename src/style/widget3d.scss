@@ -1,0 +1,78 @@
+.widget3d{
+   &-drawbutton {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        pointer-events: auto;
+        height: auto;
+        width: auto;
+        background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+        color: #e2f1fb
+    }
+    &-drawer{
+        pointer-events: auto;
+        background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+        border-radius: 5px;
+    }
+    &-closebutton{
+        height: auto;
+        width: auto;
+        background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+        color: #e2f1fb
+    } 
+    &-visualization{
+        height: auto;
+        width: auto;
+        background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+        color: #e2f1fb
+    }
+    &-monitor{
+        height: auto;
+        width: auto;
+        background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+        color: #e2f1fb
+    }  
+    &-area{
+        height: auto;
+        width: auto;
+        background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+        color: #e2f1fb
+    }
+}
+.el-drawer.ltr, .el-drawer.rtl {
+    height: auto;
+    top: 42%;
+    bottom: auto;
+    right: auto;
+    left: 0%;
+    pointer-events: auto;
+    /* width: 10%; */
+}
+
+.el-drawer__body{
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+}
+
+.el-button+.el-button{
+    margin-left: 0;
+}
+
+.el-message-box{
+    height: auto;
+    background-image: linear-gradient(-90deg, #182940 0%, #184f75 100%);
+    &__title{
+        color: #e2f1fb
+    }
+}
+
+.el-result{
+    &__title p{
+        color: #e2f1fb
+    }
+    &__subtitle p{
+        color: #1eb3ca
+    }
+}

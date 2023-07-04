@@ -1,0 +1,1 @@
+import{e as a,y as l,a as i}from"./MapView-d4248bee.js";const o=r=>{let e=class extends r{get availableFields(){return this.layer.fieldsIndex.fields.map(t=>t.name)}};return a([l()],e.prototype,"layer",void 0),a([l({readOnly:!0})],e.prototype,"availableFields",null),e=a([i("esri.views.layers.OGCFeatureLayerView")],e),e};export{o};
