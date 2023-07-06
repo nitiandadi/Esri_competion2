@@ -27,7 +27,7 @@ import { worldLayer } from '@/features/Layer/visitorLayer1';
 import { useViewStore } from '../../../store/mapViewstore';
 import EchartLayer from '../../../hooks/EhcartsLayer';
 import type FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import { ECharts, EChartsOption, init,graphic } from "echarts";
+import { ECharts, EChartsOption, init, graphic } from "echarts";
 import visitostyle from '@/style/visitor.scss?inline'
 const body = ref<HTMLElement | null>(null);
 const store = useViewStore();
@@ -182,7 +182,11 @@ let option2: echarts.EChartsOption = {
         type: 'effectScatter',
         coordinateSystem: 'arcgis',
         itemStyle: {
-            color: '#b02a02'
+            color: new graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#83bff6' },
+                { offset: 0.5, color: '#188df0' },
+                { offset: 1, color: '#188df0' }
+            ])
         },
         rippleEffect: {
             brushType: 'stroke'
