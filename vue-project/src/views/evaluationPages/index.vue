@@ -65,6 +65,7 @@ import  type { ECharts } from "echarts";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import axios from 'axios';
 import { useDownload } from '@/hooks/useDownload';
+import { useUpdate } from '@/hooks/useUpdata';
 const mainboxRef = ref<HTMLElement|null>(null);
 useScreen(mainboxRef);
 // 默认 chart 参数
@@ -161,13 +162,22 @@ const downloadFile = async () => {
         useDownload(getCommentsData, footertitle.value + "评论列表")
     );
 };
+// 导入用户列表
+const BatchAddUser = async (data: any) => {
+    try {
+        const response = await axios.post('http://81.70.22.42:9000/attraction/upload',data);
+        return response.data;
+    }catch (error) {
+        console.log(error);
+    }
+};
 // 批量添加用户
 const dialogRef = ref();
 const batchAdd = () => {
 	let params = {
 		title: "评论列表",
 		tempApi: getCommentsData,
-		// importApi: BatchAddUser,
+		importApi: BatchAddUser,
 	};
 	dialogRef.value.acceptParams(params);
 };

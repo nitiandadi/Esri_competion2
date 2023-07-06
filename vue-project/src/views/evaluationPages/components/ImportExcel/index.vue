@@ -26,9 +26,6 @@
 					</template>
 				</el-upload>
 			</el-form-item>
-			<el-form-item label="数据覆盖 :">
-				<el-switch v-model="isCover" />
-			</el-form-item>
 		</el-form>
 	</el-dialog>
 </template>
@@ -46,8 +43,6 @@ export interface ExcelParameterProps {
 }
 // 获得评论列表筛选条件，用于导入数据时的初始化评论列表
 const selectFilterValues = inject("selectFilterValues") as any;
-// 是否覆盖数据
-const isCover = ref(false);
 // 最大文件上传数
 const excelLimit = ref(1);
 // dialog状态
@@ -71,9 +66,8 @@ const downloadTemp = () => {
 const uploadExcel = async (param: any) => {
 	let excelFormData = new FormData();
 	excelFormData.append("file", param.file);
-	excelFormData.append("isCover", isCover.value as unknown as Blob);
 	/****************************  后端数据库交互 **************************************** */
-	// await parameter.value.importApi!(excelFormData);
+	await parameter.value.importApi!(excelFormData);
 	selectFilterValues.value.userStatus = 0;
 	selectFilterValues.value.userRole = [""];
 	dialogVisible.value = false;
