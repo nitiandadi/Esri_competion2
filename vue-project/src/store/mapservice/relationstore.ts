@@ -109,7 +109,6 @@ export const useRelationStore = defineStore('relation', () =>  {
             field: "name",  // 要根据哪个字段的值进行渲染
             uniqueValueInfos: []     
         });
-        debugger
         ListData.value.forEach((item:any) => {
             //@ts-ignore
             renderer.uniqueValueInfos.push({
@@ -122,7 +121,7 @@ export const useRelationStore = defineStore('relation', () =>  {
         myFeatureLayer.refresh();
     }
     // 与组件数据通信，进行特征关联
-    function RelateFeatures(typeName: string, view: __esri.MapView,points:any[]) {   
+    function RelateFeatures(typeName: string, view: __esri.MapView,points:any[],flag:any) {   
         // 根据typeName改变checked的值
         switch (typeName) {
             case '游山玩水':
@@ -212,6 +211,7 @@ export const useRelationStore = defineStore('relation', () =>  {
                     setTimeout(() => {
                         instance.confirmButtonLoading = false;
                         instance.confirmButtonText = '分析成功';
+                        flag.value++;
                     }, 300);
                     setTimeout(() => {
                         done();
@@ -232,6 +232,8 @@ export const useRelationStore = defineStore('relation', () =>  {
         disabled3.value = false;
         checked4.value = false;
         disabled4.value = false;
+        checked5.value = false;
+        disabled5.value = false;
     }
-    return { RelateFeatures,reset  }
+    return { RelateFeatures,reset }
 })

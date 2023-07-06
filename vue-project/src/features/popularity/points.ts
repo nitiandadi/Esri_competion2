@@ -10,7 +10,8 @@ interface points {
     tags: string[],
     features: any,
     typeName: string,
-    img: string
+    img: string,
+    hot: number,
 }
 const pointsdata: points[] = [];
   //获得景点数据
@@ -36,7 +37,8 @@ async function getpointsdata(){
               //@ts-ignore
               features: pointsTags[feature.attributes.name]["features"],
               typeName: feature.attributes.typeName,
-              img: item.image
+              img: item.image,
+              hot: feature.attributes.userScore,
             })
           }
         });

@@ -121,8 +121,8 @@ onMounted(() => {
     store.ispointslayerLoaded(isDisabled);      
     // 时间轴
     TimesliderStore.createTimeslider( timeSliderRef );
-    // 创建热力图
-    HeatmapStore.createTimeHeatmap( lengendRef.value , percentage, isActive);
+    // // 创建热力图
+    // HeatmapStore.createTimeHeatmap( lengendRef.value , percentage, isActive);
   }, 100);
   // 监听value2的变化
   watch(value2, (newVal) => {

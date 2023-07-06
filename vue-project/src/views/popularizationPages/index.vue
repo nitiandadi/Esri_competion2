@@ -37,7 +37,7 @@
                     <span>标签</span>
                     <dl>
                         <dd>
-                            <p>旅游评估：优</p>
+                            <p>游客评估：优</p>
                             <p>设施评估：良</p>
                             <p>环境评估：{{ commentData.environment }}</p>
                         </dd>
@@ -57,6 +57,7 @@
                     </el-tag>
                 </div>
                 <cluster ref="clusterRef" v-if="iscluster"/>
+                <div style="position: absolute; bottom: 5%;left: 33%;width: 30%;height: 40%;" ref="legend" v-if="ishotspot"></div>
             </div>
             <div class="screen2d-ct-top-rg">
                 <div class="screen2d-ct-rg-top">
@@ -121,6 +122,7 @@ interface ChartExpose {
 const showchartRef = ref<ChartExpose>();
 const serviceRef = ref<ChartExpose>();
 const bufferRef = ref<ChartExpose>();
+const clusterRef = ref<ChartExpose>();
 const tagchartRef = ref<HTMLElement | null>(null);
 const screen2dRef = ref<HTMLElement | null>(null);
 const MapchartRef = ref<HTMLDivElement | null>(null);
@@ -143,7 +145,9 @@ import PopupTemplate from '@arcgis/core/PopupTemplate';
 import { SimpleRenderer, UniqueValueRenderer } from '@arcgis/core/renderers';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 import { useBufferStore } from  '@/store/mapservice/bufferstore';
+import { useClusterStore } from '@/store/mapservice/clusterstore';
 import {useRelationStore} from '@/store/mapservice/relationstore';
+import Legend from '@arcgis/core/widgets/Legend';
 // 获得景点数据
 interface points {
     name: string,
@@ -242,6 +246,7 @@ const dataScreen: ChartProps = {
 	chartshow: null,
     chartservice: null,
     chartbuffer: null,
+    chartcluster: null,
 };
 // 初始化show echarts
 const initCharts = ( data:any ): void => {
@@ -256,6 +261,10 @@ const initServiceCharts = ( data:any ): void => {
 // 初始化buffer echarts
 const initBufferCharts = ( data:any ): void => {
     dataScreen.chartbuffer = bufferRef.value?.initChart(data) as ECharts;
+};
+// 初始化cluster echarts
+const initClusterCharts = ( data:any ): void => {
+    dataScreen.chartcluster = clusterRef.value?.initChart(data) as ECharts;
 };
 // 创建手柄
 let handle: __esri.Handle | null = null;
@@ -447,7 +456,7 @@ function getListData(data:any[],typeName:string){
                 id: i,
                 name: data[i].name,
                 location: data[i].location,
-                hot: 0,
+                hot: data[i].hot,
                 type: data[i].typeName,
                 content: data[i].intro,
                 img: data[i].img,
@@ -622,6 +631,7 @@ function resetRenderer(){
     isbuffer.value = false;
     isservice.value = false;
     iscluster.value = false;
+    ishotspot.value = false;
     view!.zoom = 6;
     const myFeatureLayer = view?.map.findLayerById("points") as __esri.FeatureLayer;
     // 创建一个新的符号
@@ -680,15 +690,62 @@ const createBuffer = () => {
 }
 
 // 创建关联服务
+const flag = ref(0);
 const createrelation = async () => {
-    useRelationStore().RelateFeatures(typeName.value,view!,points);
+    flag.value = 0;
+    useRelationStore().RelateFeatures(typeName.value,view!,points,flag);
 }
 
 // 创建聚合服务
 const iscluster = ref(false);
+const ishotspot = ref(false);
+const legend: Ref<HTMLElement| null> = ref(null);
 const createCluster = () => {
-    iscluster.value = true;      
+    flag.value = 1;
+    alert(`请确定地图只显示当前${typeName.value}特征下的所有景点`);
+    useRelationStore().reset();
+    useRelationStore().RelateFeatures(typeName.value,view!,points,flag);
 }
+watch(flag, async (newval) => {
+    if(newval != 2) return;
+    flag.value = 0;
+    iscluster.value = true; 
+    let c_nameList:string[] = ListData.value.map((item:any) => item.name);
+    const { chunkedArray,chartData }= await useClusterStore().runStats( view!,6,c_nameList); 
+    initClusterCharts( chartData );
+    dataScreen.chartcluster?.on('mousemove', (event: any) => {
+        const index = event.dataIndex;
+        // 高亮显示index对应区域的要素
+        useClusterStore().highlightFeatures(view!,chunkedArray[index]);
+    });
+    dataScreen.chartcluster?.on('mouseout', () => {
+        // 取消高亮显示
+        useClusterStore().clearStatsInfo(view!);
+    });
+});
+provide('ishotspot',ishotspot);
+watch(ishotspot,(newval) => {
+    if(newval){
+        let c_nameList:string[] = ListData.value.map((item:any) => item.name);
+        useClusterStore().gethotspot(view!,"userScore",c_nameList)
+        setTimeout(() => {
+            if (legend.value) {
+            // 为view上的一个热力图创建图例，用于显示热力图的颜色分布
+            const showlegend = new Legend({
+                container: legend.value as HTMLDivElement,
+                view: view!,
+                layerInfos: [{
+                    layer: view!.map.allLayers.find((layer) => { return layer.id === 'giLayer' }) as __esri.FeatureLayer,
+                    title: '冷热点示例'
+                }],
+                style: "card",
+            });
+        }
+        }, 1000);
+    }else{
+        useClusterStore().rest(view!)
+    }
+})
 onMounted(() => {
     // 初始化show图表
     chartdata.value = getChartdata(points[0].features)

@@ -191,6 +191,18 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                     //为图层提供数据
                         for(let index in res.data){
                             if(index === 'ph' || index === 'dissolvedoxygen' || index === 'permanganateindex' || index === 'totalnitrogen'){
+                                if(res.data[index] === null ) {
+                                    i++
+                                    // 每次请求的进度和状态
+                                    percentage.value = Math.floor((i / (features.length * 8)) * 100)
+                                    if (i === (features.length * 8)) {
+                                        setTimeout(() => {
+                                            isActive.value = false
+                                        }, 600);
+                                    }
+                                    return;
+                                }
+                                console.log(res.data[index])
                                 attributeUpdates[index.toLowerCase()] = res.data[index].toString();                       
                                 i++
                                 // 每次请求的进度和状态

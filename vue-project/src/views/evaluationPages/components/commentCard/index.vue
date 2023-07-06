@@ -50,9 +50,16 @@ import axios from "axios";
 import { ref,onMounted, onBeforeMount, computed ,watch,inject, toRaw, Ref} from "vue";
 import { selectFilterData,ageData } from "@/features";
 import  type { ECharts } from "echarts";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import { useUpdate } from "@/hooks/useUpdata";
 const score = inject("score") as any;
 const chart = inject("chart") as any;
 const textFlag = inject("textFlag") as any;
+// 获取到景点图层
+const pointslayer = new FeatureLayer({
+  url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/attraction2/FeatureServer",
+  id: "points",
+});
 // 图标组件
 interface ChartProps {
 	[key: string]: ECharts | null;
@@ -64,7 +71,7 @@ const dataScreen: Ref<ChartProps> = ref({
 const commentList = ref<any[]>([]);
 onBeforeMount(async () => {
   if(props.initParam) {
-    getTableList() 
+    getTableList();
   }
 });
 // text列表
@@ -322,7 +329,6 @@ async function getCommentFeature() {
       //填充筛选数据
       //@ts-ignore
       selectFilterData.value[1].options.push({label: key, value: value});
-      console.log(selectFilterData.value[1].options);
       //填充text列表
       textList.value.push({name: key, value: count});
     });  
