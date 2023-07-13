@@ -195,12 +195,12 @@ const isWindowVisible = ref(true);
 const toggleWindow = () => {
   isWindowVisible.value = !isWindowVisible.value;
 };
+
 function keyDownListener(event: KeyboardEvent) {
   const keyInput = event.key;
   bufferEnabled = keyInput === 'b' && !bufferEnabled;
   bufferMode.value = bufferEnabled ? 'navigation' : 'buffering';
-  
-  if(bufferEnabled===false){bufferstore.addtotable(bufferstore.buffer,bufferLayerview)}else{bufferLayerview.remove(bufferstore.hotelsWithinBuffer)}
+
 }
 async function exebuffer(){
     bufferLayer.removeAll();
@@ -221,7 +221,7 @@ function bufferstarts() {
   view.map.add(pointLayerview);
   view.map.add(bufferLayerview);
   view.on('key-down', keyDownListener);
-  view.on(['click', 'pointer-move'], (event: any) => {
+  view.on(['click', 'pointer-move'], async (event: any) => {
     if (!continueExecution) {
       view.removeHandles('key-down', keyDownListener);
       view.map.remove(pointLayerview);
@@ -229,8 +229,9 @@ function bufferstarts() {
       return; // 中止函数执行
     }
     const radiusInput = document.getElementById('radius').value;
-    bufferstore.createBufferview(event, view, radiusInput,bufferLayerview,pointLayerview,bufferEnabled);
-    
+    await bufferstore.createBufferview(event, view, radiusInput,bufferLayerview,pointLayerview,bufferEnabled);
+   
+    //if(bufferEnabled===false){bufferstore.addtotable(querybuffer,bufferLayerview)}else{bufferLayerview.remove(bufferstore.hotelsWithinBuffer)}
   });
 }
 function removeall(){
