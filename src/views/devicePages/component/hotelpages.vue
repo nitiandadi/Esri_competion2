@@ -2,7 +2,7 @@
   <div class="hotel">
       <div class="hotel-panel line">
       <div class="hotel-panel-title">
-        <span>酒店信息查询</span>>
+        <span>酒店信息查询</span>
         </div>
         <select v-model="selectedLocation">
           <option value="">请选择地区</option>
@@ -79,8 +79,8 @@
           <option v-for="hotel in hotels" :value="hotel">{{ hotel.name }}</option>
         </select>
         <div class="hotel-panel-chart" ref="radarchart">
-        <div class="hotel-panel-footer"></div>
       </div>
+      <div class="hotel-panel-footer"></div>
       </div>
   </div>
   <div id="mytest" :class="{ 'slide-in': isWindowVisible, 'slide-out': !isWindowVisible }">

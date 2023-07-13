@@ -6,7 +6,7 @@ import { useTime } from '@/hooks/useTime';
 const time = useTime();
 //获得当前时间为中心的连续五天的日期
 function getFivecities() {
-    const fiveCities: string[] = ['西宁', 'City2', 'City3', 'City4', 'City5'];
+    const fiveCities: string[] = ['西宁', '海东', '德令哈', '格尔木', '玉树'];
     return fiveCities;
 }
 

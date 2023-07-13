@@ -1,6 +1,4 @@
 import { defineStore } from 'pinia'
-//@ts-ignore
-import { useViewStore } from '@/store/mapviewstore';
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
 import axios from 'axios';
 import { xyToLngLat } from '@arcgis/core/geometry/support/webMercatorUtils';
@@ -15,7 +13,6 @@ export const useroadconditionStore = defineStore('roadcondition',() => {
       const url = '/api/traffic/v1/road?';
       try {
         const roadNames = ['金塔路', '清泉路','林秀路','庄隆路','香安大道','团结南路','团结北路','通宁路','环城北路']; // 替换为要查询的多条道路名称数组
-
         for (const roadName of roadNames) {
         const response = await axios.get(url, {
           params: {
@@ -42,7 +39,6 @@ export const useroadconditionStore = defineStore('roadcondition',() => {
       } catch (error) {
         console.error('Failed to fetch congestion evaluation data:', error);
       }
-    
     }
     // 在组件初始化时获取数据
     function updateFeatureLayerAttributes(layer:FeatureLayer, roadDataArray: RoadData[]) {

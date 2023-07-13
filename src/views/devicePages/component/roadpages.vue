@@ -29,13 +29,13 @@
             </div>
           <div class="device-panel line">
             <div class="device-panel-title" @click="toggleRoadConditionVisibility">
-              <span>景区实时路况</span>></div>
+              <span>景区实时路况</span></div>
               <div ref="roadchart" class="device-panel-chart"> </div>
               <div class="device-panel-footer"></div>
             </div>
           <div class="device-panel line">
             <div class="device-panel-title">
-            <span>旅游景区今日实时客流</span></div>
+            <span>景区今日实时客流</span></div>
             <div ref="visitorschart" class="device-panel-chart"> </div>
             <div class="device-panel-footer"></div>
             </div>
