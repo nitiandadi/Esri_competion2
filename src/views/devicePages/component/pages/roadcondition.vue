@@ -14,7 +14,7 @@ let roadNetworkData: {coords: number[][];index: any; }[] = [];
 let echartLayer: EchartLayer | null = null;
 onMounted(async ()=>{
     let roadline=new Featurelayer({
-        url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E6%80%BB%E8%B7%AF%E7%BD%91/FeatureServer",
+        url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%A1%94%E5%B0%94%E5%AF%BA%E5%91%A8%E8%BE%B9%E8%B7%AF%E7%BD%91/FeatureServer",
     })
     
     let view=useViewStore().getView();
