@@ -8,11 +8,14 @@ const lineStyle = {
 const basicoption: echarts.EChartsOption = {
     backgroundColor: '',
     color: ["#00f2f1", "#ed3f35"],
+    //@ts-ignore
     tooltip: {
       trigger: 'axis',
       formatter: function (params, ticket, callback) {
         var htmlStr = '';
+        //@ts-ignore
         for(var i=0;i<params.length;i++){
+          //@ts-ignore
           var param = params[i];
           var xName = param.name;//x轴的名称
           var seriesName = param.seriesName;//图例名称

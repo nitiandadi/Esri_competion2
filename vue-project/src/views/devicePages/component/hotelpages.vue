@@ -108,6 +108,7 @@
   
 <script setup lang="ts">
 import { ref,computed, onUnmounted, onMounted, watch, nextTick  } from 'vue';
+//@ts-ignore
 import { useViewStore  } from '@/store/mapviewstore';
 import { useEcharts } from "@/hooks/useEcharts";
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
@@ -157,7 +158,7 @@ const symbol = new SimpleMarkerSymbol({
 const render = new SimpleRenderer({
     symbol:symbol
 });
-let view=useViewStore().getView();
+let view=useViewStore().getView() as __esri.MapView;
 let heatmapstore=useHeatmap();
 let continueExecution = true;
 const tbodyRef = ref<HTMLTableSectionElement | null>(null);
@@ -196,8 +197,8 @@ const sortedHotels = computed(() => {
   if(selectedLocation.value==="塔尔寺"){
       view.goTo({
         center: [[
-        96.945438,
-        35.850631
+        101.5732,
+        36.5332
         ]],
         zoom: 12,
     });
@@ -231,9 +232,13 @@ function keyDownListener(event: KeyboardEvent) {
 }
 async function exebuffer(){
     bufferLayer.removeAll();
+    //@ts-ignore
     const longitudeInput =document.getElementById('longitude').value; // 替换为实际获取的经度输入值
+    //@ts-ignore
     const latitudeInput = document.getElementById('latitude').value; // 替换为实际获取的纬度输入值
+    //@ts-ignore
     const radiusInput = document.getElementById('radius').value; // 替换为实际获取的缓冲半径输入值
+    //@ts-ignore
     await bufferstore.createBuffer(longitudeInput, latitudeInput, radiusInput, view,bufferLayer,pointLayer);
     view.goTo({
         center: [[
@@ -247,15 +252,20 @@ function bufferstarts() {
   view.map.remove(bufferLayer);
   view.map.add(pointLayerview);
   view.map.add(bufferLayerview);
+  //@ts-ignore
   view.on('key-down', keyDownListener);
+  //@ts-ignore
   view.on(['click', 'pointer-move'], async (event: any) => {
     if (!continueExecution) {
+      //@ts-ignore
       view.removeHandles('key-down', keyDownListener);
       view.map.remove(pointLayerview);
       view.map.remove(bufferLayerview);
       return; // 中止函数执行
     }
+    //@ts-ignore
     const radiusInput = document.getElementById('radius').value;
+    //@ts-ignore
     await bufferstore.createBufferview(event, view, radiusInput,bufferLayerview,pointLayerview,bufferEnabled);
    
     //if(bufferEnabled===false){bufferstore.addtotable(querybuffer,bufferLayerview)}else{bufferLayerview.remove(bufferstore.hotelsWithinBuffer)}
@@ -289,6 +299,7 @@ function updateRadarData() {
       [price, rating, location, hygiene, service, synthesis]
     ];
     //const filteredData = data.filter((value) => typeof value === 'number');
+    //@ts-ignore
     hotelradar.series[0].data = data; // 使用补全后的数据项设置雷达图的数据
     radar?.setOption(hotelradar); 
     useEcharts(radar as echarts.ECharts, hotelradar);
@@ -298,7 +309,7 @@ function updateRadarData() {
 //定时器
 let refHotelSelect = ref<HTMLSelectElement | null>(null);
 let currentIndex = 1;
-let timerId: number | null = null; 
+let timerId: any = null; 
 function startTimer() {
   timerId = setInterval(() => {
   currentIndex = currentIndex + 1; // 更新当前选中酒店的索引
@@ -326,10 +337,11 @@ onMounted(async ()=>{
     view.map.add(hoteldata);
     view.goTo({
         center: [[
-          96.945438,
-          35.850631
+        101.5732,
+        36.5332
         ]],
-        zoom: 5,}),
+        zoom: 12,
+    });
     hoteldata.popupTemplate = popupTemplate;
     hoteldata.renderer=render;
     view.on('click', (event) => {
@@ -341,6 +353,7 @@ onMounted(async ()=>{
           // 在弹出窗口中显示点要素的信息
           view.popup.open({
             title: attributes.name, // 使用酒店名称作为弹出窗口标题
+            //@ts-ignore
             content: popupTemplate.content, // 使用弹出窗口模板显示内容
             location: event.mapPoint, // 弹出窗口位置为点击的地图点坐标
           });

@@ -8,6 +8,7 @@ import { HeatmapRenderer } from '@arcgis/core/renderers';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import EchartsLayer from '@/hooks/EhcartsLayer';
 import  * as echarts from 'echarts';
+//@ts-ignore
 import { useViewStore  } from '@/store/mapviewstore';
 export const useHeatmap = defineStore('hotelheatmap', () => {
   //图例
@@ -25,6 +26,7 @@ async function createHeatmap( LegendRef: HTMLDivElement | null ,percentage: Ref<
     legendRef = LegendRef;
        const heatmapRenderer = new HeatmapRenderer({
         field: "price", // 根据需求权重字段进行渲染
+        //@ts-ignore
         blurRadius: 10,
         maxDensity: 0.9,
         minDensity: 0,
@@ -54,12 +56,6 @@ async function createHeatmap( LegendRef: HTMLDivElement | null ,percentage: Ref<
       });
       // 将热力图图层添加到地图中
       view.map.add(heatmap);
-      view.goTo({
-        center: [[
-          96.945438,
-          35.850631
-        ]],
-        zoom: 5,}),
       heatmapVisible.value=true;
     }
     return {createHeatmap}
