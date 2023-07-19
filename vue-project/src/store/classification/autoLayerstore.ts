@@ -146,17 +146,21 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
     }
 
     /**更新图层*/
-    async function Uplayerdata(percentage: Ref<number>, isActive: Ref<boolean>,LegendRef:HTMLDivElement | null ){
+    async function Uplayerdata(percentage: Ref<number>, isActive: Ref<boolean>,LegendRef:HTMLDivElement | null,count: Ref<number> ){
         //获取图层
         const pointslayer = view.map.findLayerById('points') as __esri.FeatureLayer;
         // 遍历要素图层中的所有要素
         const query = pointslayer.createQuery();
         query.where = "1=1";
+        if(count.value === 0){
         /***********************只执行一次*************************** */
             await pointslayer.queryFeatures(query).then(({features}) => {
                 isActive.value = true
                 percentage.value = 0
                 let i = 0
+                setTimeout(() => {
+                    isActive.value = false
+                }, 20000);
                 features.forEach(async (feature) => {
                     //获得feature的坐标
                     const geometry = feature.geometry;
@@ -251,6 +255,8 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                     });
                 });
             });
+            count.value++;
+        }
         // 为view上的一个图创建图例
         const legend = new Legend({
             container: LegendRef as HTMLDivElement,

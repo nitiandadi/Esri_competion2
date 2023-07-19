@@ -789,7 +789,7 @@ onMounted(() => {
     }, 200);
 });
 // 定义show定时器 ID 和计数器变量
-let intervalId: number | undefined;
+let intervalId: any;
 const showtimer = ( ()=> {
     intervalId = setInterval(function () {
         var dataLen = chartdata.value.length;
@@ -808,7 +808,7 @@ const showtimer = ( ()=> {
 });
 showtimer();
 // 定义service定时器 ID 和计数器变量
-let serviceIntervalId: number | undefined;
+let serviceIntervalId: any;
 const serviceShowtimer = (()=> {
     let num = 6;
     serviceIntervalId = setInterval(function () {

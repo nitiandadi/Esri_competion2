@@ -5,7 +5,7 @@
 				<div class="header-lf">
 					<span class="header-vistors" v-on:click="router.push('/home/VisitorManage')">游客管理</span>
 					<span class="header-facility" v-on:click="router.push('/home/deviceManage')" >设施管理</span>
-					<span class="header-science"  v-on:click="router.push('/home/PopularizationManage')">科普管理</span>
+					<span class="header-science"  v-on:click="router.push('/home/AttractionManage')">环境管理</span>
 				</div>
 				<div class="header-ct">
 					<div class="header-ct-title">
@@ -14,8 +14,8 @@
 					</div>
 				</div>
 				<div class="header-rg">
-					<span class="header-download" v-on:click="router.push('/home/AttractionManage')">景点管理</span>
-					<span class="header-feedback"  v-on:click="router.push('/home/evaluationManage')">反馈管理</span>
+					<span class="header-download" v-on:click="router.push('/home/evaluationManage')">反馈管理</span>
+					<span class="header-feedback"  v-on:click="router.push('/home/PopularizationManage')">景点综合服务</span>
 					<span class="header-protection" v-on:click="router.push('/home/ProtectionManage')">景点保护</span>
 				</div>
 			</div>

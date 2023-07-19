@@ -50,9 +50,9 @@ const chartBarRef = ref<HTMLElement | null>(null);
 
 // 时间滑块
 const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
-// 创建图层点击事件
-OnlayerStore.createOnlayer();
 onMounted(() => { 
+    // 创建图层点击事件
+    OnlayerStore.createOnlayer();
     // 实例化ECharts对象
     let ChartLine: echarts.ECharts | null = null;
     let ChartRadar: echarts.ECharts | null = null;

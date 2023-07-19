@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { useScreen } from '@/hooks/useScreen';
 import { ElText, ElSwitch, ElRow, ElCol, ElCard,ElProgress } from 'element-plus'
-import { ref, onMounted, onUnmounted, provide,watch} from 'vue'
+import { ref, onMounted, onUnmounted, provide,watch,inject,Ref} from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import environment from './components/environment.vue'
 import classification from './components/classification.vue'
@@ -90,7 +90,7 @@ useScreen(screenRef);
 /**进度条 */
 const percentage = ref(0)
 const isActive = ref(false)
-
+const flag = inject('flag') as Ref<boolean>
 let switchList = [value1, value2, value3];
 function checkSwitch(index: number) {
   if (index === 0) {
@@ -121,8 +121,11 @@ onMounted(() => {
     store.ispointslayerLoaded(isDisabled);      
     // 时间轴
     TimesliderStore.createTimeslider( timeSliderRef );
-    // // 创建热力图
-    // HeatmapStore.createTimeHeatmap( lengendRef.value , percentage, isActive);
+    // 创建热力图
+    HeatmapStore.createTimeHeatmap( lengendRef.value , percentage, isActive,flag);
+    if(flag.value === false){
+      loading.value = false;
+    }
   }, 100);
   // 监听value2的变化
   watch(value2, (newVal) => {

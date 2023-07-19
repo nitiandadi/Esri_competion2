@@ -41,8 +41,8 @@ export const useOnlayerStore = defineStore('onlayer', () => {
         // 获取上述图层的视图
         const pointslayerView = view.layerViews.find(layerView => layerView.layer.id === "points") as __esri.FeatureLayerView;
 
-        // 将view缩小级别
-        view.zoom = 10;
+        // 创建查询对象
+        view.zoom = 6;
         // 查找要素图层中objectid为1的要素，选中该要素
         const query = pointslayer.createQuery();
         query.where = "OBJECTID = 1";
@@ -63,9 +63,9 @@ export const useOnlayerStore = defineStore('onlayer', () => {
             if (handle) handle.remove();
             // 获得点击位置的要素ID
             view.hitTest(event).then(async function(response: __esri.HitTestResult){
+                console.log("一点击");
                 if (response.results.length === 1) {
                     view.goTo((response.results[0]as __esri.GraphicHit).graphic);
-                    view.zoom = 10;
                     // 获取查询到的要素的唯一值id
                     IdRef.value = (response.results[0] as __esri.GraphicHit).graphic.attributes["ObjectId"];
                     // 查找要素图层中FID的要素,为图表添加新的数据

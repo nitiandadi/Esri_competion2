@@ -87,7 +87,7 @@ const { Uplayerdata,classifyAnalysis,cancelrender }  = useAutoUpdataStore ();
 
 /**拿到watchV2 */
 const watchV2 = inject('watchV2') as Ref<boolean>;
-
+const count = inject('count') as Ref<number>;
 /**图例 */
 const IlengendRef = ref<HTMLDivElement | null>(null);
 
@@ -225,8 +225,8 @@ function handleSliderChange(item: TableData, value: Arrayable<number>) {
 }
 
 onMounted(() => {
-    /**自动更新图层要素数据 */
-    Uplayerdata( percentage,isActive,IlengendRef.value);
+
+    Uplayerdata( percentage,isActive,IlengendRef.value,count);
 });
 
 onUnmounted(() => {

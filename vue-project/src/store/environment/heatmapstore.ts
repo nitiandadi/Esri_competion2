@@ -22,7 +22,7 @@ export const useHeatmapStore = defineStore('heatmap', () => {
     //图例容器
     let legendRef: HTMLDivElement | null = null;
     //创建带有时间属性的热力图
-    async function createTimeHeatmap(  LegendRef: HTMLDivElement | null ,percentage: Ref<number>, isActive: Ref<boolean> ) {
+    async function createTimeHeatmap(  LegendRef: HTMLDivElement | null ,percentage: Ref<number>, isActive: Ref<boolean> ,falg: Ref<boolean>) {
         //获取mapview实例
         const view = useViewStore().getView() as __esri.MapView;
         //图例容器
@@ -42,83 +42,87 @@ export const useHeatmapStore = defineStore('heatmap', () => {
             date = new Date(year.value, month.value - 1, day.value + i);
             dates.push(date);
         }
-        await reactiveUtils.whenOnce(() => view.ready).then(async () => {
-            isActive.value = true
-            percentage.value = 0
-            let i = 0;
-            try {
-                //获取城市的aqi
-                const cityAQI:[{city: string,AQIs: number[];}] = [] as any;
-                for (const feature of city) {
-                    for (const coordinate of feature.coordinates) {
-                            //将坐标转换为json格式
-                            const data = {
-                            "location": coordinate,
+        if(falg.value){
+            await reactiveUtils.whenOnce(() => view.ready).then(async () => {
+                isActive.value = true
+                percentage.value = 0
+                let i = 0;
+                setTimeout(() => { isActive.value = false; }, 30000);
+                try {
+                    //获取城市的aqi
+                    const cityAQI:[{city: string,AQIs: number[];}] = [] as any;
+                    for (const feature of city) {
+                        for (const coordinate of feature.coordinates) {
+                                //将坐标转换为json格式
+                                const data = {
+                                "location": coordinate,
+                            };
+                            try {
+                                await axios.post("http://81.70.22.42:9000/quality/airLast5d",data).then(async (res) => {
+                                    i++
+                                    percentage.value = Math.floor((i / (city.length*3 + AQIfeatures.length*5)) * 100);
+                                    console.log(percentage.value);
+                                    cityAQI.push({city: feature.name, AQIs: res.data.aqi});
+                                });
+                            } catch (error) {
+                                console.log(error);
+                            }
                         };
-                        try {
-                            await axios.post("http://81.70.22.42:9000/quality/airLast5d",data).then(async (res) => {
-                                i++
-                                percentage.value = Math.floor((i / (city.length*3 + AQIfeatures.length*5)) * 100);
+                    }
+                    // 创建 GraphicsLayers
+                    const graphicsLayers = [];
+                    for(let j = 0; j < 5; j++){
+                        const graphicsLayer = new GraphicsLayer({
+                            id: `AQI${j}`
+                        });
+                        graphicsLayers.push(graphicsLayer);
+                    }   
+                    // //为图层提供AQI数据
+                    for (const feature of AQIfeatures) {
+                        const query = timepointslaers[0].createQuery();
+                        query.where = `name='${feature.name}'`;
+                        const results = await timepointslaers[0].queryFeatures(query);
+                        if (results.features.length > 0) {
+                            const city = results.features[0].attributes.city;
+                            //随机获得该城市的一个AQI序列
+                            const AQIs = cityAQI.filter((item) => item.city === city).map((item) => item.AQIs);
+                            const randomAQIs = AQIs[Math.floor(Math.random() * AQIs.length)];
+                            console.log(city,randomAQIs);
+                            // 创建 Graphic 对象
+                            for (let j = 0; j < timepointslaers.length; j++) {
+                                const graphic = new Graphic({
+                                    geometry: results.features[0].geometry,
+                                    attributes: {
+                                        name: results.features[0].attributes.name,
+                                        city: results.features[0].attributes.city,
+                                        aqi: randomAQIs[j],
+                                        date: dates[j].getTime(),
+                                    }
+                                });
+                                // 添加或更新 Graphic 对象
+                                const graphicsLayer = graphicsLayers[j];
+                                graphicsLayer.add(graphic);
+                                i++;
+                                percentage.value = Math.floor((i /  (city.length*3 + AQIfeatures.length*5)) * 100);
+                                if (i ===  (city.length*3 + AQIfeatures.length*5)) {
+                                    setTimeout(() => { isActive.value = false; }, 600);
+                                }
                                 console.log(percentage.value);
-                                cityAQI.push({city: feature.name, AQIs: res.data.aqi});
-                            });
-                        } catch (error) {
-                            console.log(error);
+                            }
                         }
                     };
-                }
-                // 创建 GraphicsLayers
-                const graphicsLayers = [];
-                for(let j = 0; j < 5; j++){
-                    const graphicsLayer = new GraphicsLayer({
-                        id: `AQI${j}`
-                    });
-                    graphicsLayers.push(graphicsLayer);
-                }   
-                // //为图层提供AQI数据
-                for (const feature of AQIfeatures) {
-                    const query = timepointslaers[0].createQuery();
-                    query.where = `name='${feature.name}'`;
-                    const results = await timepointslaers[0].queryFeatures(query);
-                    if (results.features.length > 0) {
-                        const city = results.features[0].attributes.city;
-                        //随机获得该城市的一个AQI序列
-                        const AQIs = cityAQI.filter((item) => item.city === city).map((item) => item.AQIs);
-                        const randomAQIs = AQIs[Math.floor(Math.random() * AQIs.length)];
-                        console.log(city,randomAQIs);
-                        // 创建 Graphic 对象
-                        for (let j = 0; j < timepointslaers.length; j++) {
-                            const graphic = new Graphic({
-                                geometry: results.features[0].geometry,
-                                attributes: {
-                                    name: results.features[0].attributes.name,
-                                    city: results.features[0].attributes.city,
-                                    aqi: randomAQIs[j],
-                                    date: dates[j].getTime(),
-                                }
-                            });
-                            // 添加或更新 Graphic 对象
-                            const graphicsLayer = graphicsLayers[j];
-                            graphicsLayer.add(graphic);
-                            i++;
-                            percentage.value = Math.floor((i /  (city.length*3 + AQIfeatures.length*5)) * 100);
-                            if (i ===  (city.length*3 + AQIfeatures.length*5)) {
-                                setTimeout(() => { isActive.value = false; }, 600);
-                            }
-                            console.log(percentage.value);
-                        }
+                    // 进行热力图渲染
+                    for (const [index,graphicsLayer] of graphicsLayers.entries()) {
+                        const heatMapLayer = await initHeatmap(graphicsLayer as __esri.GraphicsLayer, 'AQI',dates[index]) as __esri.FeatureLayer;
+                        view.map.add(heatMapLayer);
                     }
-                };
-                // 进行热力图渲染
-                for (const [index,graphicsLayer] of graphicsLayers.entries()) {
-                    const heatMapLayer = await initHeatmap(graphicsLayer as __esri.GraphicsLayer, 'AQI',dates[index]) as __esri.FeatureLayer;
-                    view.map.add(heatMapLayer);
+                    falg.value = false;
+                } catch (error) {
+                    // 在这里处理请求失败的情况，例如输出错误日志或者给出一个提示
+                    console.error(error);
                 }
-            } catch (error) {
-                // 在这里处理请求失败的情况，例如输出错误日志或者给出一个提示
-                console.error(error);
-            }
-        });
+            });
+        }
     }
 
 
