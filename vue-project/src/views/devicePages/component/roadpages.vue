@@ -58,7 +58,7 @@ import roadline from './pages/roadline.vue';
 import Radaroptions from './pages/radar';
 import basicoption from './pages/basic';
 import roadcondition from './pages/roadcondition.vue'
-import { useViewStore } from '@/store/mapViewstore';
+import { useViewStore } from '@/store/mapviewstore';
 import { useTime } from '@/hooks/useTime';
 
 const time = useTime();
@@ -68,7 +68,7 @@ useScreen(screenRef);
 const radar = ref<HTMLElement | null>(null);
 const roadchart = ref<HTMLElement | null>(null);
 const visitorschart = ref<HTMLElement | null>(null);
-let view=useViewStore().getView();
+let view=useViewStore().getView() as __esri.MapView;
 //控制拥堵指数
 function getRealTimeData() {
   return {
@@ -82,11 +82,11 @@ function updateRealTimeData() {
 
   // 更新拥堵指数
   const congestionIndexElement = document.querySelector('.device-card-indexNum');
-  congestionIndexElement.textContent = realTimeData.congestionIndex;
+  congestionIndexElement!.textContent = realTimeData.congestionIndex.toString();
 
   // 更新排名
   const rankingElement = document.querySelector('.device-card-order span');
-  rankingElement.textContent = realTimeData.ranking;
+  rankingElement!.textContent = realTimeData.ranking.toString();
 }
 
 // 定时更新实时数据
@@ -138,7 +138,7 @@ for (let i = 0; i < timeSegments.length; i++) {
   const hour = parseInt(timeString.split(':')[0]);
   //console.log(hour);
   // 只生成当前时间之前的数据
-  if (currentHours > hour || (currentHours === hour)) {
+  if (currentHours as number > hour || (currentHours === hour)) {
     let num = 0;
     if (hour >= 0 && hour < 6) {
       num = Math.floor(randomNum * 50 / 1000); // 夜间时段人数不超过50
@@ -161,7 +161,11 @@ for (let i = 0; i < timeSegments.length; i++) {
 }
 
 // 更新 basicoption 中 series 的 data
+if(Array.isArray(basicoption.series) && basicoption.series.length > 0)
+{
   basicoption.series[0].data = data;
+}
+  
   useEcharts(basicChart as echarts.ECharts, basicoption);  
   view.goTo({
         center: [[

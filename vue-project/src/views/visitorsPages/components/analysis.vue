@@ -26,7 +26,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { useViewStore } from '@/store/mapViewstore';
+import { useViewStore } from '@/store/mapviewstore';
 import { onMounted, reactive, ref, onUnmounted, nextTick, provide } from 'vue'
 import * as echarts from 'echarts';
 import { useoptionStore } from '@/store/visitor/optionStore';

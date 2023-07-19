@@ -48,7 +48,6 @@
 </template>
 
 <script setup lang='ts'>
-//@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D.js";
 //@ts-ignore

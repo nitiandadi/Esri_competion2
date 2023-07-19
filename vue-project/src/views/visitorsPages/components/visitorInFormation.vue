@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import { computed, markRaw, onMounted, onUnmounted, reactive, ref, toRaw, watch } from 'vue'
 import myTable from './table.vue'
-import { useViewStore } from '@/store/mapViewstore';
+import { useViewStore } from '@/store/mapviewstore';
 import VisitorHandler from '@/store/visitor/visitor2Store';
 import type { tableData1 } from '@/type/table';
 //@ts-ignore

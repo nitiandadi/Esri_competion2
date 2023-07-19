@@ -6,7 +6,6 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref ,provide} from 'vue';
 import styles from "@/style/esri.scss?inline";
-//@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 
 

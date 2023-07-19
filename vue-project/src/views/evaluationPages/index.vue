@@ -50,7 +50,7 @@
 <script setup lang="ts" name="useSelectFilter">
 import { ref, reactive, watch,onMounted, onUnmounted,provide } from 'vue'
 import { useScreen } from '@/hooks/useScreen';
-import { useViewStore } from '@/store/mapViewstore';
+import { useViewStore } from '@/store/mapviewstore';
 import TreeFilter from "./components/TreeFilter/index.vue";
 import SelectFilter from "./components/SelectFilter/index.vue";
 import commentCard from "./components/commentCard/index.vue";

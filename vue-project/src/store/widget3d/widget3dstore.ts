@@ -2,8 +2,7 @@ import { defineStore } from 'pinia'
 //@ts-ignore
 import { Ref,ref } from "vue";
 
-//@ts-ignore
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import { buildData } from '@/features';
 
 export const usewidget3dStore = defineStore('widget3d', () => {

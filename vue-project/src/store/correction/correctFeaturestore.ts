@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-//@ts-ignore
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import FeatureForm from "@arcgis/core/widgets/FeatureForm.js";
 import formTemplate from "@arcgis/core/form/FormTemplate.js";
 import type { Ref } from 'vue';

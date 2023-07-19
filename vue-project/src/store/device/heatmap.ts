@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-//@ts-ignore
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import Legend from "@arcgis/core/widgets/Legend.js";
 // @ts-ignore
 import { Ref, ref } from 'vue';
@@ -8,8 +7,6 @@ import { HeatmapRenderer } from '@arcgis/core/renderers';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import EchartsLayer from '@/hooks/EhcartsLayer';
 import  * as echarts from 'echarts';
-//@ts-ignore
-import { useViewStore  } from '@/store/mapviewstore';
 export const useHeatmap = defineStore('hotelheatmap', () => {
   //图例
   let legend: __esri.Legend | null = null;

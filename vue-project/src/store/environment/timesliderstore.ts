@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { Ref, ref, toRaw,onMounted } from "vue";
-//@ts-ignore
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import { initTimeSlider } from '@/utils/timesliderUtils'
 import { useTime } from '@/hooks/useTime';
 

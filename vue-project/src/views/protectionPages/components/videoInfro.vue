@@ -37,7 +37,7 @@ import * as echarts from 'echarts';
 //@ts-ignore
 import realTimeVisitorOptions from './chartOptions/realTimeVisitorOption';
 import { useEcharts } from '@/hooks/useEcharts';
-import { useViewStore } from '@/store/mapViewstore';
+import { useViewStore } from '@/store/mapviewstore';
 import { ElMessage, ElMessageBox, ElResult } from 'element-plus';
 import { usewidget3dStore } from '@/store/widget3d/widget3dstore'
 import { useTime } from '@/hooks/useTime';

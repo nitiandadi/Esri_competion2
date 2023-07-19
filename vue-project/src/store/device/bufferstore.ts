@@ -1,4 +1,4 @@
-import { Query } from '@arcgis/core/rest/support/Query.js';
+
 import { defineStore } from 'pinia'
 // @ts-ignore
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
@@ -74,7 +74,7 @@ export const usebuffer = defineStore('bufferlyer', () => {
           }
     function bufferPoint(point: __esri.Geometry,radius: number | number[],bufferLayer:FeatureLayer,pointLayer:FeatureLayer) { 
             point.hasZ = false;
-            point.z = undefined;
+            // point.z = undefined;
   
             if (pointLayer.graphics.length === 0) {
               pointLayer.add(

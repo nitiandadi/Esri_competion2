@@ -115,20 +115,6 @@ import { ElButton,ElTag,ElIcon,ElInput } from 'element-plus';
 import { ChatLineSquare, Edit, Clock } from '@element-plus/icons-vue'
 import 'echarts-liquidfill';
 import type { ECharts, number } from "echarts";
-// 获取子组件的ref
-interface ChartExpose {
-	initChart: (params: any) => ECharts;
-}
-const showchartRef = ref<ChartExpose>();
-const serviceRef = ref<ChartExpose>();
-const bufferRef = ref<ChartExpose>();
-const clusterRef = ref<ChartExpose>();
-const tagchartRef = ref<HTMLElement | null>(null);
-const screen2dRef = ref<HTMLElement | null>(null);
-const MapchartRef = ref<HTMLDivElement | null>(null);
-useScreen(screen2dRef);
-
-//@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 import WebMap from '@arcgis/core/WebMap';
 import { createPointslayer,AQIfeatures,getpoints } from '@/features';
@@ -148,6 +134,18 @@ import { useBufferStore } from  '@/store/mapservice/bufferstore';
 import { useClusterStore } from '@/store/mapservice/clusterstore';
 import {useRelationStore} from '@/store/mapservice/relationstore';
 import Legend from '@arcgis/core/widgets/Legend';
+// 获取子组件的ref
+interface ChartExpose {
+	initChart: (params: any) => ECharts;
+}
+const showchartRef = ref<ChartExpose>();
+const serviceRef = ref<ChartExpose>();
+const bufferRef = ref<ChartExpose>();
+const clusterRef = ref<ChartExpose>();
+const tagchartRef = ref<HTMLElement | null>(null);
+const screen2dRef = ref<HTMLElement | null>(null);
+const MapchartRef = ref<HTMLDivElement | null>(null);
+useScreen(screen2dRef);
 // 获得景点数据
 interface points {
     name: string,

@@ -11,15 +11,12 @@
 <script setup lang='ts'>
 import { ref, onMounted, onUnmounted, provide } from 'vue';
 import { useScreen } from '@/hooks/useScreen';
-import buildingInfro from "./components/buildingInfro.vue";
-const screen3dRef = ref<HTMLElement | null>(null);
-useScreen(screen3dRef);
-//@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
+import { SimpleRenderer } from "@arcgis/core/renderers";
+import buildingInfro from "./components/buildingInfro.vue";
 import Map from '@arcgis/core/Map';
 import SceneLayer from '@arcgis/core/layers/SceneLayer';
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import { SimpleRenderer } from "@arcgis/core/renderers";
 import PolygonSymbol3D from "@arcgis/core/symbols/PolygonSymbol3D.js";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
 import NavigationToggle from "@arcgis/core/widgets/NavigationToggle.js";
@@ -27,6 +24,8 @@ import videoInfro from './components/videoInfro.vue';
 import areaInfro from './components/areaInfro.vue';
 import widget3d from "./components/widget3d.vue";
 import esriConfig from "@arcgis/core/config.js";
+const screen3dRef = ref<HTMLElement | null>(null);
+useScreen(screen3dRef);
 const navigationRef = ref<HTMLElement | null>(null);
 const buildvisual = ref(false);
 const videovisual = ref(false);

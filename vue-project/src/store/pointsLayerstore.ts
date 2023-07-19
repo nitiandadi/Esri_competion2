@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-//@ts-ignore
-import { useViewStore } from '@/store/mapViewstore' 
+import { useViewStore } from '@/store/mapviewstore' 
 import { createPointslayer } from '@/features'
 import PopupTemplate from "@arcgis/core/PopupTemplate.js";
 //@ts-ignore

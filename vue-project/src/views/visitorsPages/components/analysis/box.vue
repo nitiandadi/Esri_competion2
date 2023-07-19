@@ -31,7 +31,7 @@ import { ElInput, ElSelect, ElTimePicker, ElButton, ElOption, ElMessageBox } fro
 import { ref, onMounted, reactive, toRaw, inject, computed } from 'vue';
 import visitostyle3 from '@/style/visitorhead2.scss?inline'
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel.js";
-import { useViewStore } from '@/store/mapViewstore';
+import { useViewStore } from '@/store/mapviewstore';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import { tableData2 } from '@/type/table';
 import { useTime } from '@/hooks/useTime';

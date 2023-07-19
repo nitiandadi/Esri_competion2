@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import { Ref,ref } from "vue";
-
-//@ts-ignore
-import { useViewStore } from '@/store/mapViewstore'
+import { useViewStore } from '@/store/mapviewstore'
 import { useGetdata } from '@/hooks/useGetseries'
 
 export const useOnlayerStore = defineStore('onlayer', () => {
