@@ -1,143 +1,152 @@
-const dataBJ = [
-  [180, 100, 200,3, 80, 10, 10],
-];
+// const dataBJ = [
+//   [180, 100, 200,3, 80, 10, 10],
+// ];
+import { useTime } from '@/hooks/useTime';
 
-const dataGZ = [
-  [26, 37, 27, 1.163, 27, 13, 1],
-  [85, 62, 71, 1.195, 60, 8, 2],
-  [78, 38, 74, 1.363, 37, 7, 3],
-  [21, 21, 36, 0.634, 40, 9, 4],
-  [41, 42, 46, 0.915, 81, 13, 5],
-  [56, 52, 69, 1.067, 92, 16, 6],
-  [64, 30, 28, 0.924, 51, 2, 7],
-  [55, 48, 74, 1.236, 75, 26, 8],
-  [76, 85, 113, 1.237, 114, 27, 9],
-  [91, 81, 104, 1.041, 56, 40, 10],
-  [84, 39, 60, 0.964, 25, 11, 11],
-  [64, 51, 101, 0.862, 58, 23, 12],
-  [70, 69, 120, 1.198, 65, 36, 13],
-  [77, 105, 178, 2.549, 64, 16, 14],
-  [109, 68, 87, 0.996, 74, 29, 15],
-  [73, 68, 97, 0.905, 51, 34, 16],
-  [54, 27, 47, 0.592, 53, 12, 17],
-  [51, 61, 97, 0.811, 65, 19, 18],
-  [91, 71, 121, 1.374, 43, 18, 19],
-  [73, 102, 182, 2.787, 44, 19, 20],
-  [73, 50, 76, 0.717, 31, 20, 21],
-  [84, 94, 140, 2.238, 68, 18, 22],
-  [93, 77, 104, 1.165, 53, 7, 23],
-  [99, 130, 227, 3.97, 55, 15, 24],
-  [146, 84, 139, 1.094, 40, 17, 25],
-  [113, 108, 137, 1.481, 48, 15, 26],
-  [81, 48, 62, 1.619, 26, 3, 27],
-  [56, 48, 68, 1.336, 37, 9, 28],
-  [82, 92, 174, 3.29, 0, 13, 29],
-  [106, 116, 188, 3.628, 101, 16, 30],
-  [118, 50, 0, 1.383, 76, 11, 31]
-];
+const time = useTime();
+//获得当前时间为中心的连续五天的日期
+function getFivecities() {
+    const fiveCities: string[] = ['西宁', '海东', '德令哈', '格尔木', '玉树'];
+    return fiveCities;
+}
 
-const dataSH = [
-  [91, 45, 125, 0.82, 34, 23, 1],
-  [65, 27, 78, 0.86, 45, 29, 2],
-  [83, 60, 84, 1.09, 73, 27, 3],
-  [109, 81, 121, 1.28, 68, 51, 4],
-  [106, 77, 114, 1.07, 55, 51, 5],
-  [109, 81, 121, 1.28, 68, 51, 6],
-  [106, 77, 114, 1.07, 55, 51, 7],
-  [89, 65, 78, 0.86, 51, 26, 8],
-  [53, 33, 47, 0.64, 50, 17, 9],
-  [80, 55, 80, 1.01, 75, 24, 10],
-  [117, 81, 124, 1.03, 45, 24, 11],
-  [99, 71, 142, 1.1, 62, 42, 12],
-  [95, 69, 130, 1.28, 74, 50, 13],
-  [116, 87, 131, 1.47, 84, 40, 14],
-  [108, 80, 121, 1.3, 85, 37, 15],
-  [134, 83, 167, 1.16, 57, 43, 16],
-  [79, 43, 107, 1.05, 59, 37, 17],
-  [71, 46, 89, 0.86, 64, 25, 18],
-  [97, 71, 113, 1.17, 88, 31, 19],
-  [84, 57, 91, 0.85, 55, 31, 20],
-  [87, 63, 101, 0.9, 56, 41, 21],
-  [104, 77, 119, 1.09, 73, 48, 22],
-  [87, 62, 100, 1, 72, 28, 23],
-  [168, 128, 172, 1.49, 97, 56, 24],
-  [65, 45, 51, 0.74, 39, 17, 25],
-  [39, 24, 38, 0.61, 47, 17, 26],
-  [39, 24, 39, 0.59, 50, 19, 27],
-  [93, 68, 96, 1.05, 79, 29, 28],
-  [188, 143, 197, 1.66, 99, 51, 29],
-  [174, 131, 174, 1.55, 108, 50, 30],
-  [187, 143, 201, 1.39, 89, 53, 31]
-];
-
-const lineStyle = {
-  width: 1,
-  opacity: 0.5
-};
-const Radaroptions: echarts.EChartsOption={
-  backgroundColor: '',
-  title: {
-    text: '青海-交通',
-    left: 'left',
-    textStyle: {
-      color: '#eee',
-      fontSize: 14
-    }
-  },
-  
-  radar: {
-    indicator: [
-      { name: '路网高延时运行时间占比', max: 300 },
-      { name: '路网拥堵路段里程比', max: 250 },
-      { name: '常发拥堵路段里程比', max: 300 },
-      { name: '路网高峰行程延时指数', max: 5 },
-      { name: '骨干道路运行速度偏差率', max: 200 },
-      { name: '高峰平均速度', max: 100 }
+const Radaroptions: echarts.EChartsOption = {
+    baseOption: {
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: '10',
+            top: '-10',
+            feature: {},
+            itemSize: 25,
+        },
+        legend: {
+            left:"9%",
+            top:"0px",
+          
+            orient:'vertical',
+            itemWidth: 30,
+            itemHeight: 20,
+            itemGap: 0.2,
+            data:[
+            {name:'拥堵',icon:'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaUlEQVR4nO3X0QnAMAgEUGe8/Sfxp9mhFA6a98AFPKNkBgAAAAAAAAAAAAAAAAAAAIDf2ORRed0DAaQ7QAKIAK5eYeMGRADtKVwvoN+ItYL6zdhClX8RAAAAAAAAAAAAAAAAAAAAAMx3Drl3iNud/LkQAAAAAElFTkSuQmCC'},
+            {name:'通畅',icon:'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaklEQVR4nO3XgQnAMAgEQJdzJsd1lHSHUnho7sAFfKOkCgAAAAAAAAAAAAAAAAAAAIDf6J2j5nUPBLDZARLACuDqFVZuwAggPYXtBeQb0VZQvhkdqPAvAgAAAAAAAAAAAAAAAAAAAID6zgMM5oFbSrb6AwAAAABJRU5ErkJggg=='},
+            {name:'未知',icon:'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAY0lEQVR4nO3UwRGAQAgEQfJPesxBH3jaXUUAsMAMAAAAAAAAAAAAAAAAAAAAAN9Rqe7PQADtLpAAEsCvX9hj2w10eAkgAaxvYS5gfxCd+oIAAAAAAAAAAAAAAAAAAAAAmJe4AAcpeOouzH0EAAAAAElFTkSuQmCC'}
+        ],
+        textStyle:{
+            fontSize: 10,//字体大小
+            color: '#4c9bfd'//字体颜色
+        }  
+        
+        },
+        animation: true,
+        timeline: {
+            data: [],
+            axisType: 'category',
+            orient: 'vertical',
+            right: '0%',  // 调整时间轴位置
+            top: 'center',
+            width: '15%',  // 设置时间轴的宽度
+            height: '200px',
+            autoPlay: true,
+            playInterval: 1500, 
+            label: {
+                fontSize: 12,
+                color: '#4c9bfd'
+            },
+            tooltip: {
+                show: false,
+            }
+        },
+        tooltip:  {
+            trigger: 'axis',
+        },
+        radar: {
+            indicator: [
+              { name: '路网高延时运行时间占比', max: 300,color:'#4c9bfd'},
+              { name: '路网拥堵路段里程比', max: 250,color:'#4c9bfd' },
+              { name: '常发拥堵路段里程比', max: 300 ,color:'#4c9bfd'},
+              { name: '路网高峰行程延时指数', max: 5,color:'#4c9bfd' },
+              { name: '骨干道路运行速度偏差率', max: 200,color:'#4c9bfd' },
+              { name: '高峰平均速度', max: 100 ,color:'#4c9bfd'}
+            ],  
+            center: ['42%', '52%'],             
+        },
+        series: [
+            {                       
+            name: '拥堵',
+            type: 'radar',
+            data: [],
+        },
+        {                       
+            name: '通畅',
+            type: 'radar',
+            data: [],
+        },
+        {                       
+            name: '未知',
+            type: 'radar',
+            data: [],
+        },
     ],
-    shape: 'circle',
-    splitNumber: 5,
-    axisName: {
-      color: 'rgb(238, 197, 102)'
-    },
-    splitLine: {
-      lineStyle: {
-        color: [
-          'rgba(238, 197, 102, 0.1)',
-          'rgba(238, 197, 102, 0.2)',
-          'rgba(238, 197, 102, 0.4)',
-          'rgba(238, 197, 102, 0.6)',
-          'rgba(238, 197, 102, 0.8)',
-          'rgba(238, 197, 102, 1)'
-        ].reverse()
-      }
-    },
-    splitArea: {
-      show: false
-    },
-    axisLine: {
-      lineStyle: {
-        color: 'rgba(238, 197, 102, 0.5)'
-      }
-    }
-  },
-  series: [
-    {
-      name: 'Beijing',
-      type: 'radar',
-      lineStyle: lineStyle,
-      data: dataBJ,
-      symbol: 'none',
-      itemStyle: {
-        color: '#F9713C'
-      },
-      areaStyle: {
-        opacity: 0.5
-      }
-    },
-   
-  ]
     
-        }
-        
-        
-        export default Radaroptions;
+    },
+    options: [],
+};
+// 获取五天的日期
+const fiveCities = getFivecities();
+
+// 配置数据
+const dataMap: { [key: string]: number[] }  = {
+    [fiveCities[0]]:  [180, 100, 200,3, 80, 10, 10],
+    [fiveCities[1]]:  [150, 100, 200,2, 50, 20, 40],
+    [fiveCities[2]]:  [180, 100, 200,3, 80, 10, 10],
+    [fiveCities[3]]:  [180, 100, 200,3, 80, 10, 10],
+    [fiveCities[4]]:  [180, 100, 200,3, 80, 10, 10],
+};  
+// 获取雷达图的指标信息
+const radarOption: echarts.RadarComponentOption = Radaroptions.baseOption?.radar as echarts.RadarComponentOption;
+// 填充雷达图的配置项
+for (let city in dataMap) {
+    let data = dataMap[city];
+    console.log(city);
+    let item: echarts.EChartsOption = {
+        series:{
+            data: [{
+                value: data,
+                name: city,
+                itemStyle: {
+                    color: '#17e3f5', // 系列折线颜色
+                },
+            }],                    
+        },
+        tooltip:  {
+            trigger: 'item',
+            backgroundColor: '#115687',
+            borderColor: '#ccc',
+            borderWidth: 1,
+            padding: [5, 10],
+            textStyle: {
+                color: '#fff',
+                fontSize: 12,
+            },
+            extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);max-width: 200px; max-height: 130px;',
+            formatter: function (params: any) {
+                let html = '<div style="font-size: 18px; font-weight: bold;height: 30px; ">' + params.name + '</div>';
+                if(radarOption.indicator){
+                    // 显示各项指标数据
+                    for (let i = 0; i < params.value.length; i++) {                                       
+                        html += '<span style="display: inline-block; width: 10px; height: 10px; margin-right: 5px;font-size: 18px; border-radius: 50%; background-color: ' + params.color + ';"></span>' + radarOption.indicator[i].name + '：' +  params.value[i]+ '<br>';
+                    }
+                }
+                return html;
+            },
+        },
+    };
+    // 将数据添加到雷达图的options中
+    Radaroptions.options?.push(item);
+    // 将时间添加到时间轴中
+    Radaroptions.baseOption?.timeline?.data?.push(city);
+}
+
+export default Radaroptions;

@@ -1,56 +1,82 @@
 <template>
-  <div id="main">/*style="width: 400px; height: 400px" */
-  <slot></slot>
+  <div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, provide, reactive, ref, toRef } from 'vue';
-import Featurelayer from "@arcgis/core/layers/FeatureLayer"
-import MapImageLayer from "@arcgis/core/layers/MapImageLayer.js";
-import { createPointslayer } from '@/features';
-import { useViewStore } from "@/store/mapViewstore";
-//import myChart from '@/features/device/radar';
-import * as echarts from "echarts";
-import { viewDepthKey } from 'vue-router';
-onMounted(() => {
-  let roadline=new Featurelayer({
-    // 图层配置参数
-    // ...
-    url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E9%9D%92%E6%B5%B7%E7%9C%81/FeatureServer",
-})
-  let poplayer=new MapImageLayer({
-    // 图层配置参数
-    // ...
-    url: "https://edutrial.geoscene.cn/geoscene/rest/services/青海省人口密度/MapServer",
-  });
+import { onMounted ,onUnmounted, reactive} from 'vue';
+import * as echarts from 'echarts';
+import EchartLayer from '@/hooks/EhcartsLayer';
+//@ts-ignore
+import { useViewStore  } from '@/store/mapviewstore';
+import { useroadconditionStore } from '@/store/device/roadcondition'
+import  FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+const store = useViewStore();
+let echartLayer: EchartLayer | null = null;
+let roadconditionStore = useroadconditionStore();
+let roadline=new FeatureLayer({
+      url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/%E5%A1%94%E5%B0%94%E5%AF%BA%E5%91%A8%E8%BE%B9%E8%B7%AF%E7%BD%91/FeatureServer",
+  })
+let roadNetworkData: {[x: string]: any; coords: number[][]; }[] = [];
+onMounted(async ()=>{
   let view=useViewStore().getView();
-  let feature = createPointslayer();
-  view.map.add(roadline);
-  view.map.add(feature); 
+  roadNetworkData=await roadconditionStore.extractRoadNetworkData(roadline);
+  let hStep = 300 / (roadNetworkData.length - 1);
+  const roaddata=roadNetworkData.map((roadNetworkData,index) => ({
+    name: roadNetworkData.name,
+    coords: roadNetworkData.coords,
+    lineStyle: {
+      normal: {
+        color: echarts.color.modifyHSL('#5A94DF', Math.round(hStep * index))
+      }
+    }
+  }));
+   const option: echarts.EChartsOption={
+      series: [
+        {
+          type: 'lines',
+          coordinateSystem: 'arcgis',
+          polyline: true,
+          silent: true,
+          zlevel:1,
+     
+      lineStyle: {
+          //color: '#5A94DF',
+          curveness: 0.8,
+          opacity: 0.4,
+          width: 2
+      },
+       progressiveThreshold: 300,
+       progressive: 300,
+       data:roaddata,
+      },
+        {
+          type: 'lines',
+          coordinateSystem: 'arcgis',
+          polyline: true,
+          data: roaddata,
+          lineStyle: {
+          width: 0
+        },
+        effect: {
+          constantSpeed: 20,
+          show: true,
+          trailLength: 0.2,
+          symbolSize: 3
+        }
+      }
+      ]
+    };
+    echartLayer=new EchartLayer(view,option);
+    
 })
 onUnmounted(() => {
-  // 从地图上移除图层
-  let view=useViewStore().getView();
-  view.map.removeAll();
-});
+  echartLayer?.destroy();
+  echartLayer = null;
+  store.isViewType();
+})
 </script>
-<style scoped lang="scss">
-//加载高德路况数据
-// #main {
-//     display: flex;
-//   flex-wrap: wrap;
-//   margin-top: 0.5rem;
-//   justify-content: center;
-//     position: fixed;
-//     left: 0%;
-//     top: 40%;
-//     width: 25%;
-//     height: 50%;
-//     border-radius: 6px; /* 添加边角弧度 */
-//     // background: linear-gradient(to right, rgba(30, 70, 94, 0.7) 0%,rgba(19, 104, 147, 0.5) 50%);/* 添加渐变半透明背景 */
-//     background-image: linear-gradient(-90deg, #182940 0%, #115687 100%); /* 添加 */
-//     pointer-events: auto;
-//     border: 0px solid var(--el-card-border-color);
-//   }
-//加载高德路况数据
+
+<style>
+
 </style>

@@ -1,25 +1,9 @@
-import Query from "@arcgis/core/rest/support/Query.js";
-//@ts-ignore
 import { useViewStore } from '@/store/mapviewstore';
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
-//import Query from "@arcgis/core/rest/support/Query.js";
-import MapImageLayer from "@arcgis/core/layers/MapImageLayer.js";
-// import AMapLoader from '@amap/amap-jsapi-loader';
-import LineSymbol from "@arcgis/core/symbols/LineSymbol.js";
 import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol.js";
-import Graphic from  "@arcgis/core/Graphic";
-const store = useViewStore();
-let view: __esri.MapView;
 import axios from 'axios';
-
-//import ColorRamp from "esri/ColorRamp";
-
-import Color from "@arcgis/core/Color.js";
-// import { loadModules } from 'esri-loader';
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer.js";
-const layeerr=new FeatureLayer;
-
 interface RoadData {
   roadName: string;
   congestionEvaluation: string;
@@ -28,12 +12,6 @@ const roadDataList: RoadData[] = [];
 
 export async function fetchCongestionEvaluationData() {
   const url = '/api/traffic/v1/road?';
-  const akey = 'IzCONMfUjk7k3lTCIwe5w9shHHyXm5R3';
-  const roadName = '金塔路';
-  const mycity = '西宁';
-  const coordTypeInput = 'gcj02';
-  const coordTypeOutput = 'gcj02';
-
   try {
     const response = await axios.get(url, {
       params: {

@@ -26,7 +26,9 @@
     </transition>
     <!-- <visitor-source v-show="" :visiable="switchList[0].value" />
     <visitorInformation v-show="switchList[1].value" /> -->
-    <Dev v-if="switchList[2].value" />
+    <hotelpages v-if="switchList[0].value"/>
+    <restpages v-if="switchList[1].value"/>
+    <roadpages v-if="switchList[2].value" />
   </div>
 </template>
   
@@ -34,10 +36,10 @@
 import { ElText, ElSwitch, ElRow, ElCol, ElCard } from 'element-plus';
 import { ref, onMounted } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
-// import visitorSource from './components/visitorSource.vue'
-// import visitorInformation from './components/visitorInFormation.vue';
-import Dev from './component/Dev.vue';
+import hotelpages from './component/hotelpages.vue';
+import roadpages from './component/roadpages.vue';
 import { useScreen } from '@/hooks/useScreen';
+import restpages from './component/restpages.vue';
 const value1 = ref(false)
 const value2 = ref(false)
 const value3 = ref(false)
