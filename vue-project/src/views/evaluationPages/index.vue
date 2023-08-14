@@ -149,7 +149,7 @@ const showText = () => {
 // 导出用户列表
 const getCommentsData = async () => {
   try {
-    const response = await axios.post('http://81.70.22.42:9000/attraction/comment', {
+    const response = await axios.post('http://47.108.76.144:9000/attraction/comment', {
         poiID: parseInt(treeFilterValues.departmentId),
     });
     return response.data;
@@ -165,7 +165,7 @@ const downloadFile = async () => {
 // 导入用户列表
 const BatchAddUser = async (data: any) => {
     try {
-        const response = await axios.post('http://81.70.22.42:9000/attraction/upload',data);
+        const response = await axios.post('http://47.108.76.144:9000/attraction/upload',data);
         return response.data;
     }catch (error) {
         console.log(error);

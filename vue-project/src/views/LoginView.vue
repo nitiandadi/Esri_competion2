@@ -82,7 +82,7 @@ export default defineComponent({
           login(data.ruleForm).then((res: any) => {
             console.log(res)
             // 将token进行保存
-            localStorage.setItem("Authorization", 'Bearer ' + res[0])
+            localStorage.setItem("Authorization", 'Bearer ' + res['access_token'])
             // console.log(res.data.token);
             // 跳转页面
             router.push('/')

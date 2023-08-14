@@ -12,6 +12,7 @@ import { useViewStore } from '@/store/mapviewstore';
 
 const store = useViewStore();
 const flag = ref(true)
+const flag2 = ref(true)
 const count = ref(0)
 onMounted(() => {
   let container = document.getElementById("viewDiv") as HTMLDivElement;
@@ -21,6 +22,7 @@ onMounted(() => {
 });
 provide('flag',flag);
 provide('count',count);
+provide('flag2' , flag2);
 //修改popup样式
 const style = document.createElement("style");
 style.setAttribute("lang", "scss");

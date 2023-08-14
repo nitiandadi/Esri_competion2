@@ -46,7 +46,6 @@ export const useHeatmapStore = defineStore('heatmap', () => {
                 isActive.value = true
                 percentage.value = 0
                 let i = 0;
-                setTimeout(() => { isActive.value = false; }, 30000);
                 try {
                     //获取城市的aqi
                     const cityAQI:[{city: string,AQIs: number[];}] = [] as any;
@@ -57,7 +56,7 @@ export const useHeatmapStore = defineStore('heatmap', () => {
                                 "location": coordinate,
                             };
                             try {
-                                await axios.post("http://81.70.22.42:9000/quality/airLast5d",data).then(async (res) => {
+                                await axios.post("http://47.108.76.144:9000/quality/airLast5d",data).then(async (res) => {
                                     i++
                                     percentage.value = Math.floor((i / (city.length*3 + AQIfeatures.length*5)) * 100);
                                     console.log(percentage.value);

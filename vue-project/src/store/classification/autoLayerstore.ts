@@ -189,7 +189,7 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                         "date": '',
                     }
                     //使用axios发送请求，获得feature的数据
-                    await axios.post('http://81.70.22.42:9000/quality/water',waterdata).then((res) => {
+                    await axios.post('http://47.108.76.144:9000/quality/water',waterdata).then((res) => {
                         let attributeUpdates = {} as any;
                         let where =  `name='${feature.attributes['name']}'`;
                     //为图层提供数据
@@ -226,7 +226,7 @@ export const useAutoUpdataStore = defineStore('Autoupdata', () => {
                         useUpdate(pointslayer, queryOpts);
                     });
                     // //使用axios发送请求，获得feature的数据
-                    await axios.post('http://81.70.22.42:9000/quality/now',nowdata).then((res) => {
+                    await axios.post('http://47.108.76.144:9000/quality/now',nowdata).then((res) => {
                         let attributeUpdates = {} as any;
                         let where = `name='${feature.attributes['name']}'`;
                         //为图层提供数据

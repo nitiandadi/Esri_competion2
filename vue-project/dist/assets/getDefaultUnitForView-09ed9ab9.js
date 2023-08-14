@@ -1,0 +1,1 @@
+import{t as i,a5 as l,cg as u,hq as c}from"./mapviewstore-8a6f290e.js";function p(e){var n,s;const t="metric";if(i(e))return t;const r=e.map,a=(r&&"portalItem"in r?(n=r.portalItem)==null?void 0:n.portal:null)??l.getDefault();switch(((s=a.user)==null?void 0:s.units)??a.units){case t:return t;case"english":return"imperial"}return u(c(e.spatialReference),t)}export{p as i};

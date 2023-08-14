@@ -1,0 +1,1 @@
+import{bN as f,bE as i,a6 as n}from"./mapviewstore-8a6f290e.js";import{d as p}from"./queryTopFeatures-771a54a4.js";import"./index-93a23f67.js";async function b(r,a,o,t){const e=f(r),m={...t},{data:s}=await p(e,i.from(a),o,m);return n.fromJSON(s)}export{b as executeTopFeaturesQuery};

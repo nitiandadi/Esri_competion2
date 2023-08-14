@@ -6,7 +6,7 @@ const mockType = 'cbzMock'  // fastMock
 //创建axios实例
 // axios({})
 // const baseURL = '/api'
-const baseURL = 'http://81.70.22.42:9000/'
+const baseURL = 'http://47.108.76.144:9000/'
 const service = axios.create({
     baseURL: baseURL,
     timeout: 5000,

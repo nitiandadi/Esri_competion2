@@ -22,10 +22,11 @@
             <div class="envirment-panel-footer"></div>
         </div>
     </div>
+    <div class="lengend" ref="lengendRef"></div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, toRaw, onUnmounted, onBeforeMount, } from "vue";
+import { ref, onMounted, toRaw, onUnmounted, onBeforeMount, inject,Ref} from "vue";
 import { useEcharts } from "@/hooks/useEcharts";
 import 'echarts-liquidfill';
 import * as echarts from 'echarts';
@@ -41,7 +42,7 @@ const TimesliderStore = useTimesliderStore();
 const OnlayerStore = useOnlayerStore();
 
 const envirmentRef = ref<HTMLElement | null>(null);
-
+const lengendRef = ref<HTMLDivElement | null>(null);
 
 // 定义引用需要渲染的DOM元素的ref对象
 const chartLineRef = ref<HTMLElement | null>(null);
@@ -51,6 +52,11 @@ const chartBarRef = ref<HTMLElement | null>(null);
 // 时间滑块
 const timeslider = toRaw(TimesliderStore.timeSlider) as __esri.TimeSlider;
 onMounted(() => { 
+    const percentage = inject('percentage') as Ref<number>;
+    const isActive = inject('isActive') as Ref<boolean>;
+    const flag = inject('flag2') as Ref<boolean>;
+    percentage.value = 0;
+    isActive.value = false;
     // 创建图层点击事件
     OnlayerStore.createOnlayer();
     // 实例化ECharts对象
@@ -72,15 +78,19 @@ onMounted(() => {
                 title: 'AQI热力图',
                 icon: 'image://https://img.icons8.com/color/48/000000/fire-element.png',
                 onclick: function () {
-                    //判断热力图是否存在
-                    if (HeatmapStore.isHeatmapLoaded()) {
-                        //显示时间热力图
-                        HeatmapStore.toggleHeatmap();
-                        //时间滑块控制显示热力图
-                        timeslider.visible = !timeslider.visible;
-                        timeslider.playRate = 3000;
-                    } else {
-                        alert('请先创建热力图');
+                    // 创建热力图
+                    HeatmapStore.createTimeHeatmap( lengendRef.value , percentage, isActive, flag);
+                    if(flag.value === false){
+                        //判断热力图是否存在
+                        if (HeatmapStore.isHeatmapLoaded()) {
+                            //显示时间热力图
+                            HeatmapStore.toggleHeatmap();
+                            //时间滑块控制显示热力图
+                            timeslider.visible = !timeslider.visible;
+                            timeslider.playRate = 3000;
+                        } else {
+                            alert('请先创建热力图');
+                        }
                     }
                 }
             },
@@ -111,4 +121,12 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 @import '@/style/envirment.scss';
+.lengend{
+    position: absolute;
+    left:  0%;
+    bottom: 40%;
+    height: 20%;
+    width: 20%;
+    pointer-events: auto;
+}
 </style>

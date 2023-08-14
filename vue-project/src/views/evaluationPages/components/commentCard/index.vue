@@ -93,7 +93,7 @@ async function getTableList() {
     textList.value = [];
     let numberList:any = [];//数字核对列表
     //@ts-ignore
-    await axios.post('http://81.70.22.42:9000/attraction/comment', {
+    await axios.post('http://47.108.76.144:9000/attraction/comment', {
       // @ts-ignore
       poiID: parseInt(props.initParam.departmentId),
     }).then(async (res:any) => {
@@ -299,7 +299,7 @@ const changeselectAgeData = (results:any) => {
  * @description 获取评论特征
  */
 async function getCommentFeature() {
-  await axios.post("http://81.70.22.42:9000/attraction/fenci", {
+  await axios.post("http://47.108.76.144:9000/attraction/fenci", {
       // @ts-ignore
       poiID: parseInt(props.initParam.departmentId),
   }).then((res:any) => {

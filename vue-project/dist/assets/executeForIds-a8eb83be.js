@@ -1,0 +1,1 @@
+import{bN as s,tp as e,x as c,uy as f}from"./mapviewstore-8a6f290e.js";async function p(n,t,o){const a=s(n);return e(a,c.from(t),{...o}).then(r=>r.data.count)}async function m(n,t,o){const a=s(n);return f(a,c.from(t),{...o}).then(r=>r.data.objectIds)}export{p as n,m as s};

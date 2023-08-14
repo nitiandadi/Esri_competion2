@@ -16,7 +16,7 @@ interface points {
 const pointsdata: points[] = [];
   //获得景点数据
 async function getpointsdata(){
-  await axios.get("http://81.70.22.42:9000/attraction/all").then(async (res)=>{ 
+  await axios.get("http://47.108.76.144:9000/attraction/all").then(async (res)=>{ 
     const pointslayer = new FeatureLayer({
       url: "https://services7.arcgis.com/R5nxHh77a68zEsEp/arcgis/rest/services/attraction2/FeatureServer",
       id: "points",

@@ -43,7 +43,6 @@
       </el-card> 
     </transition> 
     <div class="timeSlider" ref="timeSliderRef"></div>
-    <div class="lengend" ref="lengendRef"></div>
     <environment v-if="value1" />
     <classification v-if="value2" />
     <correction v-if="value3" />
@@ -61,7 +60,7 @@ import correction from './components/correction.vue';
 import { usepointslayerStore } from '@/store/pointsLayerstore'
 import { useHeatmapStore } from '@/store/environment/heatmapstore'
 import { useTimesliderStore } from '@/store/environment/timesliderstore'
-
+import { usedataStore } from '@/store/environment/datastore'
 const loading = ref(true)
 const svg = `
         <path class="path" d="
@@ -76,7 +75,6 @@ const svg = `
 
 const timeSliderRef = ref<HTMLDivElement | null>(null);
 const screenRef  = ref<HTMLElement | null>(null);
-const lengendRef = ref<HTMLDivElement | null>(null);
 
 const isDisabled = ref(true);
 const value1 = ref(false)
@@ -110,9 +108,8 @@ const triggerCardAnimation = () => {
 onMounted(() => {
   setTimeout(() => {
     const store = usepointslayerStore();
-    const HeatmapStore = useHeatmapStore();
     const TimesliderStore = useTimesliderStore();
-
+    const datastore = usedataStore();
     // 触发卡片进入动画
     triggerCardAnimation();
     // 创建点图层
@@ -121,8 +118,8 @@ onMounted(() => {
     store.ispointslayerLoaded(isDisabled);      
     // 时间轴
     TimesliderStore.createTimeslider( timeSliderRef );
-    // 创建热力图
-    HeatmapStore.createTimeHeatmap( lengendRef.value , percentage, isActive,flag);
+    // 获取环境数据
+    datastore.getdata(percentage, isActive,flag);
     if(flag.value === false){
       loading.value = false;
     }
@@ -147,6 +144,8 @@ onUnmounted(() => {
 
 // 传递给子组件的数据
 provide('watchV2' , watchV2);
+provide('percentage' , percentage);
+provide('isActive' , isActive);
 </script>
 
 <style lang="scss" >
@@ -213,14 +212,6 @@ provide('watchV2' , watchV2);
   height: 20%;
   width: 50%;
   pointer-events: auto;
-}
-.lengend{
-    position: absolute;
-    left:  0%;
-    bottom: 40%;
-    height: 20%;
-    width: 20%;
-    pointer-events: auto;
 }
 
 /* 过渡动画 */
